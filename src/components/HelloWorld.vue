@@ -84,12 +84,18 @@
 </template>
 
 <script>
+// import moment from '../../utils/date'
+import moment from '~utils/date'
 export default {
   name: 'HelloWorld',
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
     }
+  },
+  created() {
+    let a = moment.moment(1520189520000, '=').date
+    console.log(a)
   }
 }
 </script>
