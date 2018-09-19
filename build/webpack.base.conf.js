@@ -29,6 +29,7 @@ module.exports = {
       '@': resolve('src'),
       '~': require('path').resolve(__dirname, '../'),
       '~utils': resolve('utils'),
+      '~input': resolve('src/components/input-components')
     }
   },
   module: {
@@ -66,6 +67,10 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
+      },
+      {
+        test: /\.scss$/,
+        loaders: ["style", "css", "sass"]
       }
     ]
   },
