@@ -77,24 +77,20 @@ export default {
           let errMsg = `值(${invalidOptions})不在select组件-${tag}-(${this.placeholder})的选项中`;
           console.log(errMsg);
         }
-        if (_.valid(val)) {
-          return val;
+        if(!_.valid(val) && this.multiple) {
+          return []
         }
-        //值不有效时
-        if (!_.valid(val)) {
-          if (this.multiple) {
-            return [];
-          } else {
-            return null;
-          }
-        }
+        return val
       },
       set(val) {
         let emitValue = val;
-        if (!this.multiple && !val) {
-          emitValue = null;
-        } else if (this.multiple && _.isEmptyArray(val)) {
-          emitValue = null;
+        // if (!this.multiple && _.invalid(val)) {
+        //   emitValue = null;
+        // } else if (this.multiple && _.isEmptyArray(val)) {
+        //   emitValue = null;
+        // }
+        if (this.multiple && _.isEmptyArray(val)) {
+          emitValue = null
         }
         this.$emit("input", emitValue);
       }
