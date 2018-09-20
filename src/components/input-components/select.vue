@@ -12,80 +12,122 @@
 </template>
 
 <script>
-import _ from '~utils/utils'
+import _ from "~utils/utils";
 export default {
-  name: 'MySelect',
+  name: "MySelect",
   props: {
     value: {
       required: true
     },
     placeholder: {
       type: String,
-      default: 'default placeholder',
+      default: "default placeholder"
     },
     disabled: {
       type: Boolean,
-      default: false,
+      default: false
     },
     filterable: {
       type: Boolean,
-      default: false,
+      default: false
     },
     loading: {
       type: Boolean,
-      default: false,
+      default: false
     },
     remote: {
       type: Boolean,
-      default: false,
+      default: false
     },
     multiple: {
       type: Boolean,
-      default: false,
+      default: false
     },
     options: {
       type: Array,
       default: () => {
-        return []
+        return [];
       }
-    },
+    }
   },
   data() {
     return {
-    }
+    };
   },
   computed: {
     currentOptions() {
-      return this.options.map(item => {
+      let r = this.options.map(item => {
         return {
           key: item.value,
           value: item.value,
           label: item.label,
           disabled: item.disabled || false
-        }
-      })
+        };
+      });
+      return r
     },
+    //多选只能接受[]，将无效值代理为[]
     currentValue: {
       get() {
-        if(this.multiple && !this.value) {
-          return []
+        let val = this.value
+        //值不再选项中时报错
+        if(!this.inOptions(val)) {
+          let invalidOptions = this.invalidOptions(val)
+          let tag = this.multiple ? "多选" : "单选";
+          let errMsg = `值(${invalidOptions})不在select组件-${tag}-(${this.placeholder})的选项中`;
+          console.log(errMsg);
         }
-        if(!this.multiple && !this.value) {
-          return null
+        if (_.valid(val)) {
+          return val;
         }
-        return this.value
+        //值不有效时
+        if (!_.valid(val)) {
+          if (this.multiple) {
+            return [];
+          } else {
+            return null;
+          }
+        }
       },
       set(val) {
-        let emitValue = val
-        if(!this.multiple && !val) {
-          emitValue = null
-        }else if(this.multiple && _.isEmptyArray(val)) {
-          emitValue = null
+        let emitValue = val;
+        if (!this.multiple && !val) {
+          emitValue = null;
+        } else if (this.multiple && _.isEmptyArray(val)) {
+          emitValue = null;
         }
-        this.$emit('input', emitValue)
+        this.$emit("input", emitValue);
       }
     }
   },
-}
+  methods: {
+    has(value) {
+      let r = this.currentOptions.some(item => {
+        return item.value === value;
+      });
+      return r
+    },
+    //普通参数value 是否在currentoptions的.value中
+    //数组参数必须每项都在currentOption的.value中
+    inOptions(value) {
+      if (!_.isArray(value)) {
+        return this.has(value);
+      }
+      return value.every(e => {
+        let r = this.has(e);
+        return r;
+      });
+    },
+    //不再选项中的值
+    invalidOptions(value) {
+      if(!_.isArray(value) && !this.has(value)) {
+        return value
+      }
+      return value.filter(e => {
+        return !this.has(e);
+      });
+    },
+  },
+};
 </script>
 

@@ -13,7 +13,7 @@ export default {
   },
   data() {
     return {
-      model: null,
+      model: [1,3,'value_1'],
       placeholder: 'select',
       multiple: true,
       options: [{
@@ -32,6 +32,11 @@ export default {
     model(val) {
       console.log('watch model', val)
     }
+  },
+  mounted() {
+    // setTimeout(() => {
+    //   this.model = [2,5]
+    // }, 2000)
   }
 }
 </script>
