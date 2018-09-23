@@ -1,14 +1,4 @@
 import _ from 'lodash'
-
-// class Utils {
-//   constructor() {
-//     this._ = _
-//   }
-
-//   isEmpty(arg) {
-//     return this._.isEmpty(arg)
-//   }
-// }
 export default {
   isArray(arg) {
     return _.isArray(arg)
