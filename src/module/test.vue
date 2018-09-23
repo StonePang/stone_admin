@@ -3,12 +3,12 @@
     <p>test page</p>
     <!-- <my-select v-model='model' :placeholder="placeholder" :options='options' :multiple='multiple'></my-select>
     <my-radio v-model='model' :options='options'></my-radio> -->
-    <!-- <my-checkbox v-model='model' :options='options'></my-checkbox> -->
+    <my-checkbox v-model='model' :options='options'></my-checkbox>
     <!-- <el-date-picker v-model="date" type="datetime" placeholder="选择日期" value-format='timestamp' :picker-options='pickerOptions'/> -->
     <!-- <el-time-picker v-model="date" placeholder="选择日期" value-format='timestamp' :picker-options="pickerOptions"/> -->
     <!-- <my-week-picker v-model='date' :picker-options="pickerOptions"/> -->
     <date-adapt v-model='date' :type='type' :start='start' :end='end' v-if='show'/>
-    <el-input-number v-model='index'/>
+    <!-- <el-input-number v-model='index'/> -->
     <!-- <div ></div> -->
   </div>
 </template>
@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       show: true,
-      model: [1, 2, "value_1"],
+      model: [1,"value_1"],
       placeholder: "select",
       multiple: false,
       date: null,
@@ -63,7 +63,7 @@ export default {
         {
           value: "value_3",
           label: "label_3",
-          disabled: true
+          disabled: false
         }
       ],
       pickerOptions: {

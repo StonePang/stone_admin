@@ -1,9 +1,12 @@
 <template>
+<div>
+  <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" v-if='showChooseAll'>全选</el-checkbox>
   <el-checkbox-group v-model='currentValue' :disabled="disabled">
     <el-checkbox v-for="(item, index) in currentOptions" :key="item.value + '_' + index" :label="item.value" :disabled="item.disabled">
       {{item.label}}
     </el-checkbox>
   </el-checkbox-group>
+</div>
 </template>
 
 <script>
@@ -27,6 +30,10 @@ export default {
       default: () => {
         return [];
       }
+    },
+    showChooseAll: {
+      type: Boolean,
+      default: true,
     }
   },
   data() {
@@ -44,6 +51,12 @@ export default {
         };
       });
       return r
+    },
+    //选项value组成的数组
+    optionsValue() {
+      return this.currentOptions.map(item => {
+        return item.value
+      })
     },
     currentValue: {
       get() {
@@ -64,6 +77,33 @@ export default {
         }
         this.$emit("input", emitValue);
       }
+    },
+    //全选框的值true: 选中； false: 没选中
+    //所有选项值均在value中时为true
+    checkAll: {
+      get() {
+        return this.optionsValue.every(item => {
+          let temp = this.currentValue.some(e => {
+            return e === item
+          })
+          return temp
+        })
+      },
+      set(val) {
+        if(val) {
+          this.currentValue = this.optionsValue
+        } else {
+          this.currentValue = []
+        }
+      }
+    },
+    //全选框中间状态
+    //value有但不是包含全部options时是中间状态
+    isIndeterminate() {
+      let allInCurrentValue = this.optionsValue.every(item => {
+        return this.currentValue.indexOf(item) >= 0
+      })
+      return !allInCurrentValue && this.currentValue.length > 0
     }
   },
   methods: {
