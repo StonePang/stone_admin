@@ -3,13 +3,14 @@
     <p>test page</p>
     <!-- <my-select v-model='model' :placeholder="placeholder" :options='options' :multiple='multiple'></my-select>
     <my-radio v-model='model' :options='options'></my-radio> -->
-    <my-checkbox v-model='model' :options='options'></my-checkbox>
+    <!-- <my-checkbox v-model='model' :options='options'></my-checkbox> -->
     <!-- <el-date-picker v-model="date" type="datetime" placeholder="选择日期" value-format='timestamp' :picker-options='pickerOptions'/> -->
     <!-- <el-time-picker v-model="date" placeholder="选择日期" value-format='timestamp' :picker-options="pickerOptions"/> -->
     <!-- <my-week-picker v-model='date' :picker-options="pickerOptions"/> -->
-    <date-adapt v-model='date' :type='type' :start='start' :end='end' v-if='show'/>
+    <!-- <date-adapt v-model='date' :type='type' :start='start' :end='end' v-if='show'/> -->
     <!-- <el-input-number v-model='index'/> -->
-    <!-- <div ></div> -->
+    <!-- <el-input v-model='inputValue' :placeholder="this.column.placeholder"/> -->
+    <input-adapt :column='column' v-model='inputValue'/>
   </div>
 </template>
 
@@ -21,13 +22,15 @@ import MyCheckbox from "~input/checkbox";
 import MyWeekPicker from "~input/week-picker";
 // import DateAdapt from "~input/date-adaptive";
 import DateAdapt from "~input/date-adapt";
+import InputAdapt from "~input/input-adapt";
 export default {
   components: {
     MySelect,
     MyRadio,
     MyCheckbox,
     MyWeekPicker,
-    DateAdapt
+    DateAdapt,
+    InputAdapt,
   },
   data() {
     return {
@@ -72,6 +75,32 @@ export default {
         //   return time.getTime() > Date.now();
         // }
         disabledDate: this.disabledDate
+      },
+      inputValue: null,
+      column: {
+        type: 'input',
+        placeholder: 'column',
+        disabled: true,
+        multiple: true,
+        filterable: false,
+        loading: false,
+        remote: false,
+        showChooseAll: true,
+        start: null,
+        end: null,
+        rows: 3,
+        options: [{
+          value: "value_1",
+          label: "label_1"
+        }, {
+          value: "",
+          label: "label_2"
+        }, {
+          value: "value_3",
+          label: "label_3",
+          disabled: false
+        }],
+
       }
     };
   },
@@ -105,8 +134,8 @@ export default {
     // setTimeout(() => {
     //   this.model = [2,5]
     // }, 2000)
-    let r = dateUtil.moment(null);
-    console.log(r);
+    // let r = dateUtil.moment(null);
+    // console.log(r);
   }
 };
 </script>

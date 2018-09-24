@@ -15,6 +15,11 @@ export default {
   valid(arg) {
     return !_.isNull(arg) && arg !== undefined && arg !== ''
   },
-
+  cloneDeep(arg) {
+    return _.cloneDeep(arg)
+  },
+  includes(...arg) {
+    return _.includes(...arg)
+  }
   
 }
