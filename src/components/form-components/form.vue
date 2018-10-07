@@ -46,170 +46,34 @@ export default {
     inputAdapt,
   },
   props: {
-    // formData: {
-    //   type: Object,
-    //   required: true,
-    // },
-    // value: {
-    //   required: true,
-    // },
-    // titlePosition: {
-    //   default: 'none'
-    // },
-    // showErrMessage: {
-    //   default: true,
-    // },
-    // labelWidth: {
-    //   default: '100px',
-    // }
+    columns: {
+      type: Array,
+    },
+    formModel: {
+      type: Object,
+    },
+    //加载完成后是否校验
+    loadingCheck: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
-      colWidth: '300px',
-      columnData:[{
-        type: 'input',
-        prop: 'input',
-        label: 'input',
-        placeholder: 'input',
-        disabled: false,
-        isFull: false,
-        isShow: true,
-        required: true,
-        rules: [{
-          ruleType: 'length',
-          min:2, 
-          max: 13
-        }, {
-          ruleType: 'custom',
-          reg: /(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/,
-          message: '手机号码格式不正确',
-        }]
-      }, {
-        type: 'select',
-        prop: 'select',
-        label: 'select',
-        required: true,
-        placeholder: 'select',
-        disabled: false,
-        isFull: false,
-        isShow: false,
-        rules: null,
-        options: [{
-          value: 'value_1',
-          label: 'label_1',
-        }, {
-          value: 'value_2',
-          label: 'label_2',
-        }, {
-          value: 'value_3',
-          label: 'label_3',
-        }, ]
-      }, {
-        type: 'checkbox',
-        prop: 'checkbox',
-        label: 'checkbox',
-        placeholder: 'checkbox',
-        disabled: false,
-        required: true,
-        isFull: false,
-        isShow: true,
-        rules: [{
-          ruleType: 'type',
-          type: 'array',
-        }],
-        showChooseAll: false,
-        options: [{
-          value: 'value_1',
-          label: 'label_1',
-        }, {
-          value: 'value_2',
-          label: 'label_2',
-        }, {
-          value: 'value_3',
-          label: 'label_3',
-        }]
-      }, {
-        type: 'datetime',
-        prop: 'datetime',
-        label: 'datetime',
-        placeholder: 'datetime',
-        disabled: false,
-        required: true,
-        isFull: false,
-        isShow: true,
-        rules: []
-      }],
-
-      /**
-       * formModel
-       */
-      formModel: {
-        input: null,
-        select: null,
-        checkbox: null,
-        datetime: null,
-        input1: null,
-      }
     }
   },
   computed: {
-    // formModel: {
-    //   get() {
-    //     return this.value
-    //   },
-    //   set(newValue) {
-    //     // this.value = newValue
-    //     this.$emit('input', newValue)
-    //   }
-    // },
-    // hideLabel() {
-    //   return this.formData.showLabel === false
-    // },
-    // showLabel() {
-    //   return this.formData.showLabel === undefined || this.formData.showLabel === true
-    // },
-    // titleNone() {
-    //   return this.titlePosition === 'none'
-    // },
-    // titleTop() {
-    //   return this.titlePosition === 'top'
-    // },
-    // marginBottom() {
-    //   if (!this.showErrMessage) {
-    //     return '0'
-    //   }
-    // },
   },
   methods: {
-    // fullStatus(item) {
-    //   if(this.formData.inline) {
-    //     return 'inline'
-    //   }
-    //   if(item.full === undefined) {
-    //     return 'full'
-    //   }
-    //   let r = item.full === true ? 'full' : 'half'
-    //   return r
-    // },
-    // showFormItem(show) {
-    //   if(show === undefined) {
-    //     return true
-    //   }
-    //   return show
-    // },
     validate() {
       return new Promise((resolve, reject) => {
         this.$refs.form.validate((valid) => {
-          // setTimeout(() =>{
-            if (valid && this.formModel) {
-              // let result = {}
-              // result[this.formData.formName] = this.formModel
-              resolve();
-            } else {
-              console.log('error')
-              reject(false);
-            }
-          // });
+          if (valid && this.formModel) {
+            resolve();
+          } else {
+            console.log('error')
+            reject(false);
+          }
         });
       });
     },
@@ -217,12 +81,15 @@ export default {
       this.$refs.form.resetFields();
     },
   },
-  created() {
-    let columns = this.columnData.map(data => {
-      return new Column(data)
-    })
-    this.columns = columns
-    console.log(this.columns)
+  mounted() {
+    // let columns = this.columnData.map(data => {
+    //   return new Column(data)
+    // })
+    // this.columns = columns
+    // console.log(this.columns)
+    if(this.loadingCheck) {
+      this.validate()
+    }
   }
 }
 </script>

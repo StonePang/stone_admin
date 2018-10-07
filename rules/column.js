@@ -1,7 +1,8 @@
 import ValidateRule from './validate-rule'
 import _ from '~utils/utils'
 class Column {
-  constructor(columnData) {
+  constructor(columnData, view) {
+    this.view = view
     this.placeholder = _.defaultValue(columnData.placeholder, null)
     this.disabled = _.defaultValue(columnData.disabled, false)
     this.prop = _.defaultValue(columnData.prop, null)
@@ -33,6 +34,7 @@ class Column {
   
   triggerChange(formModel) {
     console.log(`${this.prop}触发column内的change,此时value为(${formModel})`)
+    this.view.triggerChange(this, formModel)
     //TODO:字段的改变事件
   }
 }
