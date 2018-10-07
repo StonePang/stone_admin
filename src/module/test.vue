@@ -86,6 +86,7 @@ export default {
       viewData: {
         columnData: [
           {
+            id: 1,
             type: "input",
             prop: "input",
             label: "input",
@@ -108,6 +109,7 @@ export default {
             ]
           },
           {
+            id: 2,
             type: "select",
             prop: "select",
             label: "select",
@@ -115,7 +117,7 @@ export default {
             placeholder: "select",
             disabled: false,
             isFull: false,
-            isShow: false,
+            isShow: true,
             rules: null,
             options: [
               {
@@ -133,11 +135,12 @@ export default {
             ]
           },
           {
+            id: 3,
             type: "checkbox",
             prop: "checkbox",
             label: "checkbox",
             placeholder: "checkbox",
-            disabled: false,
+            disabled: true,
             required: true,
             isFull: false,
             isShow: true,
@@ -151,7 +154,8 @@ export default {
             options: [
               {
                 value: "value_1",
-                label: "label_1"
+                label: "label_1",
+                // disabled: true,
               },
               {
                 value: "value_2",
@@ -164,6 +168,7 @@ export default {
             ]
           },
           {
+            id: 4,
             type: "datetime",
             prop: "datetime",
             label: "datetime",
@@ -175,8 +180,33 @@ export default {
             rules: []
           }
         ],
+        viewRuleData:[{
+          affectColumns: [4],
+          type: 'hidden',
+          conditions: [{
+            bindColumn: 1,
+            conditionType: 3,
+            conditionValue: 'r'
+          }, {
+            bindColumn: 2,
+            conditionType: 3,
+            conditionValue: 'value_2'
+          }]
+        }, {
+          affectColumns: [3],
+          type: 'disabled',
+          conditions: [{
+            bindColumn: 1,
+            conditionType: 3,
+            conditionValue: '123'
+          }, {
+            bindColumn: 2,
+            conditionType: 3,
+            conditionValue: 'value_1'
+          }]
+        }],
         formModel: {
-          input: 123,
+          input: 'r',
           select: null,
           checkbox: null,
           datetime: null,

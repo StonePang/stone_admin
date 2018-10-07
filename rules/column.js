@@ -3,6 +3,7 @@ import _ from '~utils/utils'
 class Column {
   constructor(columnData, view) {
     this.view = view
+    this.id = columnData.id
     this.placeholder = _.defaultValue(columnData.placeholder, null)
     this.disabled = _.defaultValue(columnData.disabled, false)
     this.prop = _.defaultValue(columnData.prop, null)
