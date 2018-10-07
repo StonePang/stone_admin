@@ -68,7 +68,15 @@ export default {
     },
   },  
   watch: {
-
+    currentValue(val) {
+      let column = this.column
+      let emitData = {
+        column,
+        value: val,
+      }
+      this.$emit('input-change', emitData)
+      this.column.triggerChange(val)
+    }
   },
   methods: {
     //input,textarea 没有做封装，input回调把''-->null
@@ -114,7 +122,6 @@ export default {
       config.props.type = 'text'
       config.props.clearable = true
       config.on.input = this.onInput
-      console.log(config)
       return (<el-input {...config} placeholder={config.props.placeholder}></el-input>)
     }
 

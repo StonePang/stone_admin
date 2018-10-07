@@ -10,7 +10,8 @@
     <!-- <date-adapt v-model='date' :type='type' :start='start' :end='end' v-if='show'/> -->
     <!-- <el-input-number v-model='index'/> -->
     <!-- <el-input v-model='inputValue' :placeholder="this.column.placeholder"/> -->
-    <input-adapt :column='column' v-model='inputValue'/>
+    <!-- <input-adapt :column='column' v-model='inputValue'/> -->
+    <my-form />
   </div>
 </template>
 
@@ -23,6 +24,7 @@ import MyWeekPicker from "~input/week-picker";
 // import DateAdapt from "~input/date-adaptive";
 import DateAdapt from "~input/date-adapt";
 import InputAdapt from "~input/input-adapt";
+import MyForm from '~form/form'
 export default {
   components: {
     MySelect,
@@ -31,6 +33,7 @@ export default {
     MyWeekPicker,
     DateAdapt,
     InputAdapt,
+    MyForm,
   },
   data() {
     return {

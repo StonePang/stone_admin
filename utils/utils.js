@@ -20,6 +20,12 @@ export default {
   },
   includes(...arg) {
     return _.includes(...arg)
+  },
+  defaultValue(arg, defaultValue) {
+    if(this.invalid(arg)) {
+      return defaultValue
+    }
+    return arg
   }
   
 }

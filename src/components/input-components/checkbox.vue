@@ -1,12 +1,12 @@
 <template>
-<div>
-  <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" v-if='showChooseAll'>全选</el-checkbox>
-  <el-checkbox-group v-model='currentValue' :disabled="disabled">
-    <el-checkbox v-for="(item, index) in currentOptions" :key="item.value + '_' + index" :label="item.value" :disabled="item.disabled">
-      {{item.label}}
-    </el-checkbox>
-  </el-checkbox-group>
-</div>
+  <div>
+    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" v-if='showChooseAll' class='check-all'>全选</el-checkbox>
+    <el-checkbox-group v-model='currentValue' :disabled="disabled" class='group'>
+      <el-checkbox v-for="(item, index) in currentOptions" :key="item.value + '_' + index" :label="item.value" :disabled="item.disabled">
+        {{item.label}}
+      </el-checkbox>
+    </el-checkbox-group>
+  </div>
 </template>
 
 <script>
@@ -123,4 +123,15 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+  .check-all {
+    display: inline-block;
+    margin-right: 30px;
+  }
+  .group {
+    display: inline-block
+  }
+</style>
+
 

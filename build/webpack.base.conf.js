@@ -29,7 +29,9 @@ module.exports = {
       '@': resolve('src'),
       '~': require('path').resolve(__dirname, '../'),
       '~utils': resolve('utils'),
-      '~input': resolve('src/components/input-components')
+      '~input': resolve('src/components/input-components'),
+      '~form': resolve('src/components/form-components'),
+      '~rules': resolve('rules'),
     }
   },
   module: {
