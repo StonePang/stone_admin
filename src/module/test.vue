@@ -84,6 +84,7 @@ export default {
       view: null,
       loading: true,
       viewData: {
+        id: 1,
         columnData: [
           {
             id: 1,
@@ -181,6 +182,7 @@ export default {
           }
         ],
         viewRuleData:[{
+          id: 21,
           affectColumns: [4],
           type: 'hidden',
           conditions: [{
@@ -193,6 +195,7 @@ export default {
             conditionValue: 'value_2'
           }]
         }, {
+          id: 22,
           affectColumns: [3],
           type: 'disabled',
           conditions: [{
@@ -207,7 +210,7 @@ export default {
         }],
         formModel: {
           input: 'r',
-          select: null,
+          select: 'value_2',
           checkbox: null,
           datetime: null,
           input1: null

@@ -1,7 +1,16 @@
 import ValidateRule from './validate-rule'
 import _ from '~utils/utils'
+const BUSMAP = {
+  created: 'created',
+  update: 'update'
+}
+
 class Column {
   constructor(columnData, view) {
+    this.handlerCreated(columnData, view)
+  }
+
+  handlerCreated(columnData, view) {
     this.view = view
     this.id = columnData.id
     this.placeholder = _.defaultValue(columnData.placeholder, null)
@@ -21,22 +30,39 @@ class Column {
     this.isFull = _.defaultValue(columnData.isFull, false)
     this.isShow = _.defaultValue(columnData.isShow, true)
     this.showChooseAll = _.defaultValue(columnData.showChooseAll, false)
-    this.rules = this.handlerRule({
+    this.initValidateRule({
       label: this.label,
       required: this.required,
       rules: _.defaultValue(columnData.rules, [])
     })
   }
 
-  handlerRule({label, required, rules}) {
+  //初始化validate-rules
+  initValidateRule({label, required, rules}) {
     let validateRule =  new ValidateRule({label, required, rules})
-    return validateRule.rules
+    this.rules = validateRule.rules
+  }
+
+  //将指定函数注册到view的事件中心，定义字段的创建/更新事件
+  registerEvent(type, callback) {
+    let eventName = `column:${this.id}`
+    let busType = BUSMAP[type]
+    if (!busType) {
+      console.log(`column---(${type})类型的事件总线不存在，事件注册失败`)
+      return
+    }
+    this.view.registerEvent(busType, eventName, callback)
   }
   
-  triggerChange(formModel) {
-    console.log(`${this.prop}触发column内的change,此时value为(${formModel})`)
-    this.view.triggerChange(this, formModel)
-    //TODO:字段的改变事件
+
+  triggerEvent(type, ...arg) {
+    if (type !== 'created' && type !== 'update') {
+      console.log(`column---triggerEvent---(${type})类型的字段事件不存在`)
+      return
+    }
+    let eventName = `column:${this.id}`
+    // this.view.handlerColumn(type, eventName, ...arg)
+    this.view.triggerEvent(type, eventName, ...arg)
   }
 }
 

@@ -17,7 +17,11 @@ import _ from '~utils/utils'
 class ViewRule {
   constructor(viewRuleData, view) {
     this.init(viewRuleData, view)
-    this.handler()
+    //初始化时注册事件中心
+    this.registerEvent('created')
+    this.registerEvent('update')
+    //初始化时执行一次
+    this.triggerEvent('created')
   }
 
   get viewRuleMap() {
@@ -40,6 +44,8 @@ class ViewRule {
   init(viewRuleData, view) {
     let columnMap = view.columnMap
     let affectColumnIds = viewRuleData.affectColumns
+    this.view = view
+    this.id = viewRuleData.id
     this.type = viewRuleData.type
     this.formModel = view.formModel
     this.affectColumns = affectColumnIds.map(id => {
@@ -57,7 +63,7 @@ class ViewRule {
       }
     })
     this.bindColumns = viewRuleData.conditions.map(item => {
-      return item.bindColumn
+      return columnMap[item.bindColumn]
     })
   }
 
@@ -78,26 +84,48 @@ class ViewRule {
 
   //对当前的视图规则进行计算，得出规则结果
   //在初始化和chang时均要触发
+  //利用闭包实现对this的保留,跨作用域保存到事件中心
   handler() {
-    let result = this.conditions.every(item => {
-      let bindValue = this.formModel[item.bindColumn.prop]
-      let conditionType = item.conditionType
-      let conditionValue = item.conditionValue
-      let res = this.conditionResult({bindValue, conditionType, conditionValue})
-      return res
-    });
-    let prop = this.viewRuleMap[this.type]
-    let status = null
-    if(_.invalid(prop)) {
-      return
+    return () => {
+      let result = this.conditions.every(item => {
+        let bindValue = this.formModel[item.bindColumn.prop]
+        let conditionType = item.conditionType
+        let conditionValue = item.conditionValue
+        let res = this.conditionResult({
+          bindValue,
+          conditionType,
+          conditionValue
+        })
+        return res
+      });
+      console.log(this,'视图条件运行结果', result)
+      let prop = this.viewRuleMap[this.type]
+      let status = null
+      if (_.invalid(prop)) {
+        return
+      }
+      if (result) {
+        status = this.statusMap[this.type]
+      } else {
+        status = !this.statusMap[this.type]
+      }
+      this.affectColumns.forEach(column => {
+        column[prop] = status
+      })
     }
-    if(result) {
-      status = this.statusMap[this.type]
-    } else {
-      status = !this.statusMap[this.type]
-    }
-    this.affectColumns.forEach(column => {
-      column[prop] = status
+  }
+
+  //将规则处理函数作为绑定字段的事件
+  //type: created, update
+  registerEvent(type) {
+    this.bindColumns.forEach(column => {
+      column.registerEvent(type, this.handler())
+    })
+  }
+
+  triggerEvent(type) {
+    this.bindColumns.forEach(column => {
+      column.triggerEvent(type)
     })
   }
 }

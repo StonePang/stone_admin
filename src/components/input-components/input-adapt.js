@@ -75,7 +75,7 @@ export default {
         value: val,
       }
       this.$emit('input-change', emitData)
-      this.column.triggerChange(val)
+      this.column.triggerEvent('update', val)
     }
   },
   methods: {
