@@ -30,6 +30,7 @@ class Column {
     this.isFull = _.defaultValue(columnData.isFull, false)
     this.isShow = _.defaultValue(columnData.isShow, true)
     this.showChooseAll = _.defaultValue(columnData.showChooseAll, false)
+    this.componentRender = columnData.componentRender || null
     this.initValidateRule({
       label: this.label,
       required: this.required,

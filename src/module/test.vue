@@ -18,7 +18,7 @@
 <script>
 // import dateUtil from "~utils/date";
 // import MySelect from "~input/select";
-// import MyRadio from "~input/radio";
+import MyRadio from "~input/radio";
 // import MyCheckbox from "~input/checkbox";
 // import MyWeekPicker from "~input/week-picker";
 // // import DateAdapt from "~input/date-adaptive";
@@ -29,7 +29,7 @@ import View from "~rules/view";
 export default {
   components: {
     // MySelect,
-    // MyRadio,
+    MyRadio,
     // MyCheckbox,
     // MyWeekPicker,
     // DateAdapt,
@@ -133,13 +133,17 @@ export default {
                 value: "value_3",
                 label: "label_3"
               }
-            ]
+            ],
+            //委托渲染
+            componentRender: (h, config) => {
+              return (<my-radio {...config}/>)
+            }
           },
           {
             id: 3,
             type: "checkbox",
             prop: "checkbox",
-            label: "checkbox",
+            label: "checkbox",    
             placeholder: "checkbox",
             disabled: true,
             required: true,

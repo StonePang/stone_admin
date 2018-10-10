@@ -40,29 +40,15 @@ export default {
     }
   },
   computed: {
-    // placeholder() {
-    //   return this.column.placeholder
-    // },
-    // disabled() {
-    //   return this.column.disabled
-    // },
     type() {
       return this.column.type
     },
     currentValue: {
       get() {
         let val = this.value
-        // if(_.invalid(val)) {
-        //   return null
-        // }
         return val
       },
       set(val) {
-        // let emitValue = null
-        // if(_.valid(val)) {
-        //   emitValue = val
-        // }
-        // this.$emit('input', emitValue)
         this.$emit('input', val)
       }
     },
@@ -87,79 +73,75 @@ export default {
       }
       this.$emit('input', emitValue)
     },
-    selectRender(config) {
-      config.props.options = this.column.options
-      config.props.filterable = this.column.filterable
-      config.props.loading = this.column.loading
-      config.props.remote = this.column.remote
-      config.props.multiple = this.column.multiple
-      return (<my-select {...config}></my-select>)
+    //不同的type的config不同
+    handlerConfig() {
+      let config = {
+        props: {
+          placeholder: this.column.placeholder,
+          disabled: this.column.disabled,
+          value: this.currentValue,
+        },
+        on: {
+          input: (val) => {
+            this.currentValue = val
+          }
+        },
+      }
+      if (this.type === 'select') {
+        config.props.options = this.column.options
+        config.props.filterable = this.column.filterable
+        config.props.loading = this.column.loading
+        config.props.remote = this.column.remote
+        config.props.multiple = this.column.multiple
+      }else if (this.type === 'radio') {
+        config.props.options = this.column.options
+      } else if (this.type === 'checkbox') {
+        config.props.options = this.column.options
+        config.props.showChooseAll = this.column.showChooseAll
+      } else if (_.includes(this.dateType, this.type)) {
+        config.props.type = this.column.type
+        config.props.start = this.column.start
+        config.props.end = this.column.end
+      } else if (this.type === 'textarea') {
+        config.props.type = 'textarea'
+        config.props.rows = this.column.rows
+        config.props.resize = 'none'
+        config.props.clearable = true
+        config.on.input = this.onInput
+      } else {
+        config.props.type = 'text'
+        config.props.clearable = true
+        config.on.input = this.onInput
+      }
+      return config
     },
-    radioRender(config) {
-      config.props.options = this.column.options
-      return (<my-radio {...config}></my-radio>)
-    },
-    checkboxRender(config) {
-      config.props.options = this.column.options
-      config.props.showChooseAll = this.column.showChooseAll
-      return (<my-checkbox {...config}></my-checkbox>)
-    },
-    dateAdaptRender(config) {
-      config.props.type = this.column.type
-      config.props.start = this.column.start
-      config.props.end = this.column.end
-      return (<date-adapt {...config}></date-adapt>)
-    },
-    textareaRender(config) {
-      config.props.type = 'textarea'
-      config.props.rows = this.column.rows
-      config.props.resize = 'none'
-      config.props.clearable = true
-      config.on.input = this.onInput
-      return (<el-input {...config} placeholder={config.props.placeholder}></el-input>)
-    },
-    inputRender(config) {
-      config.props.type = 'text'
-      config.props.clearable = true
-      config.on.input = this.onInput
-      return (<el-input {...config} placeholder={config.props.placeholder}></el-input>)
-    }
-
   },
   render(h) {
-    let config = {
-      props: {
-        placeholder: this.column.placeholder,
-        disabled: this.column.disabled,
-        value: this.currentValue,
-      },
-      on: {
-        input: (val) => {
-          this.currentValue = val
-        }
-      },
+    let config = this.handlerConfig()
+    //委托渲染
+    if(this.column.componentRender) {
+      console.log(`字段(${this.column.id}-${this.column.prop})执行委托渲染, column-->`, this.column, 'config-->', config)
+      return this.column.componentRender(h, config)
     }
-    // console.log(config)
     if(this.type === 'select') {
-      return this.selectRender(config)
+      return (<my-select {...config}></my-select>)
     } 
     if (this.type === 'radio') {
-      return this.radioRender(config)
+      return (<my-radio {...config}></my-radio>)
     } 
     if(this.type === 'checkbox') {
-      return this.checkboxRender(config)
+      return (<my-checkbox {...config}></my-checkbox>)
     } 
     if(_.includes(this.dateType, this.type)) {
-      return this.dateAdaptRender(config)
+      return (<date-adapt {...config}></date-adapt>)
     } 
     if(this.type === 'textarea') {
-      return this.textareaRender(config)
+      return (<el-input {...config} placeholder={config.props.placeholder}></el-input>)
     }
     if(this.type === 'input') {
-      return this.inputRender(config)
+      return (<el-input {...config} placeholder={config.props.placeholder}></el-input>)
     }
-    return this.inputRender(config)
-    
+    return (<el-input {...config} placeholder={config.props.placeholder}></el-input>)
   }
 
 }
