@@ -21,7 +21,7 @@ class ViewRule {
     this.registerEvent('created')
     this.registerEvent('update')
     //初始化时执行一次
-    this.triggerEvent('created')
+    // this.triggerEvent('created')
   }
 
   get viewRuleMap() {

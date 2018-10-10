@@ -11,7 +11,7 @@
     <!-- <el-input-number v-model='index'/> -->
     <!-- <el-input v-model='inputValue' :placeholder="this.column.placeholder"/> -->
     <!-- <input-adapt :column='column' v-model='inputValue'/> -->
-    <my-form v-if='!loading' :columns='view.columns' :formModel='view.formModel' />
+    <my-form v-if='!loading' :view='view' />
   </div>
 </template>
 

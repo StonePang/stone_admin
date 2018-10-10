@@ -34,6 +34,7 @@
       </my-col> -->
       <!-- <div :style='{"clear": "both"}'></div> -->
     </el-form>
+    <!-- <my-form :view/> -->
   </div>
 
 </template>
@@ -42,15 +43,19 @@
 import inputAdapt from '~input/input-adapt'
 import Column from '~rules/column'
 export default {
+  name: 'MyForm',
   components: {
     inputAdapt,
   },
   props: {
-    columns: {
-      type: Array,
-    },
-    formModel: {
-      type: Object,
+    // columns: {
+    //   type: Array,
+    // },
+    // formModel: {
+    //   type: Object,
+    // },
+    view: {
+      type: Object
     },
     //加载完成后是否校验
     loadingCheck: {
@@ -60,6 +65,8 @@ export default {
   },
   data() {
     return {
+      columns: this.view.columns,
+      formModel: this.view.formModel,
     }
   },
   computed: {
@@ -90,6 +97,9 @@ export default {
     if(this.loadingCheck) {
       this.validate()
     }
+  },
+  beforeDestroy() {
+    this.view.destroy()
   }
 }
 </script>

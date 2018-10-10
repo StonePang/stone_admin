@@ -72,6 +72,9 @@ class View {
       return
     }
     this[bus].register(name, callback)
+    if(type === 'created') {
+      this.triggerEvent('created', name)
+    }
   }
 
   triggerEvent(type, eventName, ...args) {
@@ -90,17 +93,9 @@ class View {
   }
 
   destroy() {
-    this.eventBus.destroy()
+    this.createdBus.destroy()
+    this.updateBus.destroy()
   }
-
-  // handlerColumn(type, eventName, value) {
-  //   console.log('view---handlerColumn', type, eventName, value)
-  //   if(type !== 'created' && type !== 'update') {
-  //     console.log(`view---(${type})类型的字段事件不存在`)
-  //     return
-  //   }
-  //   this.triggerEvent(type, eventName)
-  // }
 }
 
 export default View

@@ -29,6 +29,7 @@ class EventBus {
     for (const eventName in this.eventBus) {
       delete this.eventBus[eventName]
     }
+    console.log('eventBus destroy.', this.eventBus)
   }
 }
 

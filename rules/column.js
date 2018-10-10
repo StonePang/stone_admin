@@ -1,10 +1,5 @@
 import ValidateRule from './validate-rule'
 import _ from '~utils/utils'
-const BUSMAP = {
-  created: 'created',
-  update: 'update'
-}
-
 class Column {
   constructor(columnData, view) {
     this.handlerCreated(columnData, view)
@@ -47,12 +42,11 @@ class Column {
   //将指定函数注册到view的事件中心，定义字段的创建/更新事件
   registerEvent(type, callback) {
     let eventName = `column:${this.id}`
-    let busType = BUSMAP[type]
-    if (!busType) {
+    if (type !== 'created' && type !== 'update') {
       console.log(`column---(${type})类型的事件总线不存在，事件注册失败`)
       return
     }
-    this.view.registerEvent(busType, eventName, callback)
+    this.view.registerEvent(type, eventName, callback)
   }
   
 
@@ -62,7 +56,6 @@ class Column {
       return
     }
     let eventName = `column:${this.id}`
-    // this.view.handlerColumn(type, eventName, ...arg)
     this.view.triggerEvent(type, eventName, ...arg)
   }
 }
