@@ -17,12 +17,16 @@ class View {
     this.createdBus = new EventBus()
     this.updateBus = new EventBus()
     this.id = viewData.id
+    this.isShow = _.defaultValue(viewData.isShow, true)
+    this.prop = _.defaultValue(viewData.prop, 'defaultProp')
     this.columnData = _.defaultValue(viewData.columnData, [])
     this.formModel = _.defaultValue(viewData.formModel, {})
     this.viewRuleData = _.defaultValue(viewData.viewRuleData, [])
+    this.subViewData = _.defaultValue(viewData.subViewData, [])
     this.initColumns(this.columnData, this)
     this.initColumnMap(this.columns)
     this.initViewRules(this.viewRuleData, this)
+    this.initSubForm(this.subViewData, this)
     // for (const eventName in this.createdBus.eventBus) {
     //   this.trigger('created', eventName)
     // }
@@ -59,6 +63,23 @@ class View {
     })
     this.viewRules = viewRules
   }
+
+  initSubForm(subViewData, view) {
+    view.subView = []
+    subViewData.forEach(item => {
+      let subView = new View(item)
+      view.subView.push(subView)
+      let subFormModel = subView.formModel
+      let prop = subView.prop
+      if(_.invalid(view.formModel[prop])) {
+        view.formModel[prop] = subFormModel
+      } else {
+        console.log(`subView--->(${subView.id})的prop与上级view的formModel中prop重合，subFormModel挂载失败`)
+      }
+    })
+    // view.subView = subViews
+    // view.formModel[subView.]
+  }
   
   registerEvent(type, eventName, callback) {
     let viewPrefix = `view:${this.id}_`
@@ -72,6 +93,7 @@ class View {
       return
     }
     this[bus].register(name, callback)
+    //created注册后立即执行
     if(type === 'created') {
       this.triggerEvent('created', name)
     }

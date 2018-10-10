@@ -1,5 +1,5 @@
 <template>
-  <div class='group-form'>
+  <div>
     <!-- <div :class='{"form-title-none":titleNone, "form-title-top":titleTop}'>{{formData.title}}</div> -->
     <!-- 隐藏label -->
     <!-- <el-form :inline="formData.inline" :model="formModel" ref='form' class='form-content' :show-message='showErrMessage' v-if='hideLabel'>
@@ -19,7 +19,7 @@
     </el-form> -->
     <!-- 显示label -->
     <el-button @click='validate'>validate</el-button>
-    <el-form :model="formModel" ref='form' class='form-content' show-message label-width="100px" validate-on-rule-change style='width: 1200px'>
+    <el-form :model="formModel" v-if='view.isShow' ref='form' class='form-content' show-message label-width="100px" validate-on-rule-change style='width: 1200px'>
       <el-col v-for='(item, index) in columns' v-if='item.isShow' :key='index' :is-full='item.isFull' :span='item.isFull?24:12'>
         <el-form-item  :label="item.label" :prop='item.prop' :rules='item.rules' class='form-item'>
           <input-adapt v-model='formModel[item.prop]' :column='item'></input-adapt>
@@ -34,7 +34,7 @@
       </my-col> -->
       <!-- <div :style='{"clear": "both"}'></div> -->
     </el-form>
-    <!-- <my-form :view/> -->
+    <my-form v-for='subView in view.subView' :key='subView.id' :view='subView' />
   </div>
 
 </template>

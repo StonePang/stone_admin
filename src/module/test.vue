@@ -85,6 +85,8 @@ export default {
       loading: true,
       viewData: {
         id: 1,
+        isShow: true,
+        prop: 'form',
         columnData: [
           {
             id: 1,
@@ -218,7 +220,62 @@ export default {
           checkbox: null,
           datetime: null,
           input1: null
-        }
+        },
+        subViewData: [{
+          id: 100,
+          isShow: false,
+          prop: 'subForm',
+          columnData: [
+          {
+            id: 11,
+            type: "input",
+            prop: "input",
+            label: "input",
+            placeholder: "input",
+            disabled: false,
+            isFull: false,
+            isShow: true,
+            required: true,
+            rules: [
+              {
+                ruleType: "length",
+                min: 2,
+                max: 13
+              },
+              {
+                ruleType: "custom",
+                reg: /(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/,
+                message: "手机号码格式不正确"
+              }
+            ]
+          }, {
+            id: 42,
+            type: "date",
+            prop: "date",
+            label: "date",
+            placeholder: "date",
+            disabled: false,
+            required: true,
+            isFull: false,
+            isShow: true,
+            rules: []
+          }
+          ],
+        viewRuleData:  [{
+          id: 222,
+          affectColumns: [42],
+          type: 'hidden',
+          conditions: [{
+            bindColumn: 11,
+            conditionType: 3,
+            conditionValue: 'r'
+          }]
+        }], 
+          formModel: {
+            input: 'gua', 
+            date: null,
+          }
+        }]
       }
     };
   },
