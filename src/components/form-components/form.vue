@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class='form-wrap'>
     <!-- <div :class='{"form-title-none":titleNone, "form-title-top":titleTop}'>{{formData.title}}</div> -->
     <!-- 隐藏label -->
     <!-- <el-form :inline="formData.inline" :model="formModel" ref='form' class='form-content' :show-message='showErrMessage' v-if='hideLabel'>
@@ -18,13 +18,17 @@
       <div :style='{"clear": "both"}'></div>
     </el-form> -->
     <!-- 显示label -->
-    <el-button @click='validate'>validate</el-button>
+    <el-button class='opration-top' @click='validate'>validate</el-button>
+    <p class='form-title'>{{view.title}}</p>
     <el-form :model="formModel" v-if='view.isShow' ref='form' class='form-content' show-message label-width="100px" validate-on-rule-change style='width: 1200px'>
-      <el-col v-for='(item, index) in columns' v-if='item.isShow' :key='index' :is-full='item.isFull' :span='item.isFull?24:12'>
-        <el-form-item  :label="item.label" :prop='item.prop' :rules='item.rules' class='form-item'>
-          <input-adapt v-model='formModel[item.prop]' :column='item'></input-adapt>
-        </el-form-item>
-      </el-col>
+      <el-row :gutter='gutter'>
+        <el-col v-for='(item, index) in columns' v-if='item.isShow' :key='index' :span='item.isFull?24:12' :push='0'>
+          <el-form-item  :label="item.label + ' : '" :prop='item.prop' :rules='item.rules' class='form-item'>
+            <input-adapt v-model='formModel[item.prop]' :column='item' class='form-input'></input-adapt>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
       <!-- <el-form-item  label="input1" prop='input1' :rules='columns[0].rules' class='form-item'>
         <el-input v-model='formModel.input1' :column='columns[0]'></el-input>
       </el-form-item> -->
@@ -67,6 +71,7 @@ export default {
     return {
       columns: this.view.columns,
       formModel: this.view.formModel,
+      gutter: 30,
     }
   },
   computed: {
@@ -104,30 +109,36 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  .group-form{
-    width: 100%;
-    .form-title-none {
-      display: none;
+  .form-wrap{
+    width: 1200px;
+    margin-top: 50px;
+    background-color: #a39c9c10;
+    .opration-top {
+      // text-align: left;
     }
-    .form-title-top {
+    .form-title {
       font-family: STHeitiSC-Medium;
       font-size: 18px;
       color: #2f3748;
-      background: #fcfdff;
+      // background: #fcfdff;
       line-height: 43px;
       height: 43px;
-      padding-left: 20px;
-      border-bottom: solid 1px #f1f1f1;
+      // padding-left: 20px;
+      // border-bottom: solid 1px #f1f1f1;
+      // text-align: left
     }
     .form-content {
-      max-width: 1000px;
+      max-width: 100%;
       // padding: 20px 20px 0 0;
       background-color: rgba(201, 196, 196, 0.24);
       font-family: STHeitiSC-Medium;
       font-size: 14px;
       color: #a39c9c;
       .form-item {
-        background-color: #2f374846
+        background-color: #bfc6d446;
+        .form-input {
+          // background-color: #2f374846;
+        }
       }
     }
   }

@@ -4,9 +4,9 @@ import _ from '~utils/utils'
  * viewRuleData是单个试图规则对象
  * {
  *  type: disabled, show, hidden
- *  affectcolumns: [1,2] 影响字段id数组
- *  bindColumns: [3,4] 所有绑定字段的id数组
- *  -->conditions 为&&关系
+ *  affectType: 影响对象类型 column, subView(只有show,hidden)
+ *  affectItems: [1,2] 影响字段id数组
+ *  -->conditions 为&&关系,规则生效条件
  *  conditions: [{
  *    bindcolumn: 12 绑定字段id
  *    coditiontype: 条件关系 1-8
@@ -40,17 +40,33 @@ class ViewRule {
     }
   }
 
+  //规则影响类型，字段和子表对应的itemMap不同
+  get affectTypeMap() {
+    return {
+      column: 'columnMap',
+      subView: 'subViewMap'
+    }
+  }
+
   //初始化实例
   init(viewRuleData, view) {
     let columnMap = view.columnMap
-    let affectColumnIds = viewRuleData.affectColumns
+    //影响对象ids
+    let affectItemIds = viewRuleData.affectItems
     this.view = view
     this.id = viewRuleData.id
+    //规则效果类型
     this.type = viewRuleData.type
+    //规则影响对象类型
+    this.affectType = viewRuleData.affectType
     this.formModel = view.formModel
-    this.affectColumns = affectColumnIds.map(id => {
-      return columnMap[id]
+    //规则影响对象map
+    this.itemMap = view[this.affectTypeMap[this.affectType]]
+    //影响对象实例数组
+    this.affectItems = affectItemIds.map(id => {
+      return this.itemMap[id]
     })
+    //规则生效条件
     this.conditions = viewRuleData.conditions.map(item => {
       let bindColumnId = item.bindColumn
       let bindColumn = columnMap[bindColumnId]
@@ -62,6 +78,7 @@ class ViewRule {
         conditionValue,
       }
     })
+    //绑定字段实例集合
     this.bindColumns = viewRuleData.conditions.map(item => {
       return columnMap[item.bindColumn]
     })
@@ -102,6 +119,7 @@ class ViewRule {
       let prop = this.viewRuleMap[this.type]
       let status = null
       if (_.invalid(prop)) {
+        console.log(this, '视图条件失败，没有此种生效类型--->', this.type)
         return
       }
       if (result) {
@@ -109,8 +127,8 @@ class ViewRule {
       } else {
         status = !this.statusMap[this.type]
       }
-      this.affectColumns.forEach(column => {
-        column[prop] = status
+      this.affectItems.forEach(item => {
+        item[prop] = status
       })
     }
   }

@@ -17,6 +17,7 @@ class View {
     this.createdBus = new EventBus()
     this.updateBus = new EventBus()
     this.id = viewData.id
+    this.title = _.defaultValue(viewData.title, `视图-${this.id}`)
     this.isShow = _.defaultValue(viewData.isShow, true)
     this.prop = _.defaultValue(viewData.prop, 'defaultProp')
     this.columnData = _.defaultValue(viewData.columnData, [])
@@ -25,8 +26,9 @@ class View {
     this.subViewData = _.defaultValue(viewData.subViewData, [])
     this.initColumns(this.columnData, this)
     this.initColumnMap(this.columns)
+    this.initSubView(this.subViewData, this)
+    this.initSubViewMap(this.subView)
     this.initViewRules(this.viewRuleData, this)
-    this.initSubForm(this.subViewData, this)
     // for (const eventName in this.createdBus.eventBus) {
     //   this.trigger('created', eventName)
     // }
@@ -64,7 +66,7 @@ class View {
     this.viewRules = viewRules
   }
 
-  initSubForm(subViewData, view) {
+  initSubView(subViewData, view) {
     view.subView = []
     subViewData.forEach(item => {
       let subView = new View(item)
@@ -77,8 +79,21 @@ class View {
         console.log(`subView--->(${subView.id})的prop与上级view的formModel中prop重合，subFormModel挂载失败`)
       }
     })
-    // view.subView = subViews
-    // view.formModel[subView.]
+  }
+
+  initSubViewMap(subView) {
+    let map = {}
+    subView.forEach(view => {
+      let key = view.id
+      let e = map[key]
+      if (_.invalid(e)) {
+        map[key] = view
+      } else {
+        console.log(`子视图(${key})已经存在于subViewMap,不覆盖`)
+      }
+    })
+    // return map
+    this.subViewMap = map
   }
   
   registerEvent(type, eventName, callback) {

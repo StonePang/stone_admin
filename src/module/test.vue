@@ -189,7 +189,8 @@ export default {
         ],
         viewRuleData:[{
           id: 21,
-          affectColumns: [4],
+          affectItems: [4],
+          affectType: 'column',
           type: 'hidden',
           conditions: [{
             bindColumn: 1,
@@ -202,7 +203,8 @@ export default {
           }]
         }, {
           id: 22,
-          affectColumns: [3],
+          affectItems: [3],
+          affectType: 'column',
           type: 'disabled',
           conditions: [{
             bindColumn: 1,
@@ -212,6 +214,20 @@ export default {
             bindColumn: 2,
             conditionType: 3,
             conditionValue: 'value_1'
+          },],
+        }, {
+          id: 25,
+          affectItems: [100],
+          affectType: 'subView',
+          type: 'hidden',
+          conditions: [{
+            bindColumn: 1,
+            conditionType: 3,
+            conditionValue: 'r'
+          }, {
+            bindColumn: 2,
+            conditionType: 3,
+            conditionValue: 'value_3'
           }]
         }],
         formModel: {
@@ -223,7 +239,7 @@ export default {
         },
         subViewData: [{
           id: 100,
-          isShow: false,
+          isShow: true,
           prop: 'subForm',
           columnData: [
           {
@@ -263,8 +279,9 @@ export default {
           ],
         viewRuleData:  [{
           id: 222,
-          affectColumns: [42],
+          affectItems: [42],
           type: 'hidden',
+          affectType: 'column',
           conditions: [{
             bindColumn: 11,
             conditionType: 3,
