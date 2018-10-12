@@ -66,7 +66,7 @@ export default {
         }
         if(!this.inOptions(val)) {
           let errMsg = `值(${val})不在checkbox组件(${this.placeholder})的选项中`;
-          console.log(errMsg);
+          console.warn(errMsg);
         }
         return val
       },

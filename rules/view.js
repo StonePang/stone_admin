@@ -28,10 +28,9 @@ class View {
     this.initColumnMap(this.columns)
     this.initSubView(this.subViewData, this)
     this.initSubViewMap(this.subView)
+    this.registerEvent('update', 'clearFormModel', this.clearFormModel())
+    this.registerEvent('update', 'disabledView', this.disabledView())
     this.initViewRules(this.viewRuleData, this)
-    // for (const eventName in this.createdBus.eventBus) {
-    //   this.trigger('created', eventName)
-    // }
   }
 
   //生成columns
@@ -78,6 +77,7 @@ class View {
       } else {
         console.log(`subView--->(${subView.id})的prop与上级view的formModel中prop重合，subFormModel挂载失败`)
       }
+      view.columnMap = Object.assign(view.columnMap, subView.columnMap)
     })
   }
 
@@ -94,6 +94,24 @@ class View {
     })
     // return map
     this.subViewMap = map
+  }
+
+  clearFormModel() {
+    return () => {
+      for (const key in this.formModel) {
+        if (this.formModel.hasOwnProperty(key)) {
+          this.formModel[key] = null;
+        }
+      }
+    }
+  }
+
+  disabledView() {
+    return (status) => {
+      this.columns.forEach(column => {
+        column.disabled = status
+      })
+    }
   }
   
   registerEvent(type, eventName, callback) {

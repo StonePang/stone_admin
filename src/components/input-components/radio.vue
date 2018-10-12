@@ -50,7 +50,7 @@ export default {
         let val = this.value
         if(!this.inOptions(val)) {
           let errMsg = `值(${val})不在radio组件(${this.placeholder})的选项中`;
-          console.log(errMsg);
+          console.warn(errMsg);
         }
         return val
       },

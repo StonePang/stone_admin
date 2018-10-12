@@ -24,7 +24,7 @@ class ViewRule {
     // this.triggerEvent('created')
   }
 
-  get viewRuleMap() {
+  get viewRulePropMap() {
     return {
       disabled: 'disabled',
       hidden: 'isShow',
@@ -55,6 +55,9 @@ class ViewRule {
     let affectItemIds = viewRuleData.affectItems
     this.view = view
     this.id = viewRuleData.id
+    this.desc = viewRuleData.desc
+    this.desc = viewRuleData.desc
+    this.isClear = _.defaultValue(viewRuleData.isClear, false)
     //规则效果类型
     this.type = viewRuleData.type
     //规则影响对象类型
@@ -116,21 +119,63 @@ class ViewRule {
         return res
       });
       console.log(this,'视图条件运行结果', result)
-      let prop = this.viewRuleMap[this.type]
-      let status = null
-      if (_.invalid(prop)) {
-        console.log(this, '视图条件失败，没有此种生效类型--->', this.type)
-        return
+      if (this.affectType === 'column') {
+        this.handlerColumnType(result)
+      }else if (this.affectType === 'subView') {
+        this.handlerSubViewType(result)
       }
-      if (result) {
-        status = this.statusMap[this.type]
-      } else {
-        status = !this.statusMap[this.type]
-      }
-      this.affectItems.forEach(item => {
-        item[prop] = status
-      })
     }
+  }
+
+  //column  subView 类型对试图条件结果的处理(找到影响字段的相应prop并赋值)
+  handlerColumnType(result) {
+    let prop = this.viewRulePropMap[this.type]
+    let status = null
+    if (_.invalid(prop)) {
+      console.log(this, '视图条件失败，没有此种生效类型--->', this.type)
+      return
+    }
+    if (result) {
+      status = this.statusMap[this.type]
+    } else {
+      status = !this.statusMap[this.type]
+    }
+    //所有影响字段的对应属性修改
+    //处理字段值清空的情况
+    this.affectItems.forEach(item => {
+      item[prop] = status
+      if (result && this.isClear) {
+        this.formModel[item.prop] = null
+      }
+    })
+  }
+
+  //column  subView 类型对试图条件结果的处理(找到影响字段的相应prop并赋值)
+  handlerSubViewType(result) {
+    let prop = this.viewRulePropMap[this.type]
+    let status = null
+    if (_.invalid(prop)) {
+      console.log(this, '视图条件失败，没有此种生效类型--->', this.type)
+      return
+    }
+    if (result) {
+      status = this.statusMap[this.type]
+    } else {
+      status = !this.statusMap[this.type]
+    }
+    //所有影响视图的对应属性修改
+    //处理视图值清空的情况
+    this.affectItems.forEach(view => {
+      //先执行清空视图操作
+      if (result && this.isClear) {
+        view.triggerEvent('update', 'clearFormModel')
+      }
+      if (this.type === 'hidden' || this.type === 'show') {
+        view[prop] = status
+      }else if(this.type === 'disabled') {
+        view.triggerEvent('update', 'disabledView', status)
+      }
+    })
   }
 
   //将规则处理函数作为绑定字段的事件

@@ -1,24 +1,7 @@
 <template>
   <div class='form-wrap'>
-    <!-- <div :class='{"form-title-none":titleNone, "form-title-top":titleTop}'>{{formData.title}}</div> -->
-    <!-- 隐藏label -->
-    <!-- <el-form :inline="formData.inline" :model="formModel" ref='form' class='form-content' :show-message='showErrMessage' v-if='hideLabel'>
-      <my-col v-for='(item, index) in formData.head' :key='index' :status='fullStatus(item)'>
-        <el-form-item :prop='item.prop' :rules='item.rules' :style='{"margin-bottom": marginBottom}' v-if='showFormItem(item.show)'>
-          <input-adapt :type='item.type' v-model='formModel[item.prop]' :placeholder='item.placeholder' 
-            :options='item.options' :filterable='item.filterable' :changeEvent='item.changeEvent' :visibleChange='item.visibleChange'></input-adapt>
-        </el-form-item>
-      </my-col>
-      <my-col status='inline'>
-        <slot name='puiInput'></slot>
-      </my-col>
-      <my-col status='inline'>
-        <slot name='button'></slot>
-      </my-col>
-      <div :style='{"clear": "both"}'></div>
-    </el-form> -->
-    <!-- 显示label -->
-    <el-button class='opration-top' @click='validate'>validate</el-button>
+    <el-button class='opration-top' @click='validateTest'>validate</el-button>
+    <el-button class='opration-top' @click='resetForm'>resetForm</el-button>
     <p class='form-title'>{{view.title}}</p>
     <el-form :model="formModel" v-if='view.isShow' ref='form' class='form-content' show-message label-width="100px" validate-on-rule-change style='width: 1200px'>
       <el-row :gutter='gutter'>
@@ -28,17 +11,10 @@
           </el-form-item>
         </el-col>
       </el-row>
-
-      <!-- <el-form-item  label="input1" prop='input1' :rules='columns[0].rules' class='form-item'>
-        <el-input v-model='formModel.input1' :column='columns[0]'></el-input>
-      </el-form-item> -->
-
-      <!-- <my-col status='inline'>
-        <slot name='button'></slot>
-      </my-col> -->
-      <!-- <div :style='{"clear": "both"}'></div> -->
     </el-form>
-    <my-form v-for='subView in view.subView' :key='subView.id' :view='subView' />
+    <template v-if='view.subView'>
+      <my-form v-for='subView in view.subView' :key='subView.id' :view='subView' ref='subforms'/>
+    </template>
   </div>
 
 </template>
@@ -52,12 +28,6 @@ export default {
     inputAdapt,
   },
   props: {
-    // columns: {
-    //   type: Array,
-    // },
-    // formModel: {
-    //   type: Object,
-    // },
     view: {
       type: Object
     },
@@ -78,27 +48,41 @@ export default {
   },
   methods: {
     validate() {
-      return new Promise((resolve, reject) => {
+      let formValidate = new Promise((resolve, reject) => {
         this.$refs.form.validate((valid) => {
           if (valid && this.formModel) {
             resolve();
           } else {
-            console.log('error')
             reject(false);
           }
         });
       });
+      if(!this.$refs.subforms) {
+        return formValidate
+      }
+      let promises = this.$refs.subforms.map(item => {
+        return item.validate()
+      })
+      promises.push(formValidate)
+      return Promise.all(promises)
     },
     resetForm() {
       this.$refs.form.resetFields();
+      if(this.$refs.subforms) {
+        this.$refs.subforms.forEach(item => {
+          item.resetForm()
+        })
+      }
     },
+    validateTest() {
+      this.validate().then(() => {
+        console.log(`form-->(${this.view.title})校验成功`)
+      }).catch(() => {
+        console.log(`form-->(${this.view.title})校验失败`)
+      })
+    }
   },
   mounted() {
-    // let columns = this.columnData.map(data => {
-    //   return new Column(data)
-    // })
-    // this.columns = columns
-    // console.log(this.columns)
     if(this.loadingCheck) {
       this.validate()
     }
