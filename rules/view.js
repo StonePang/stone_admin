@@ -23,7 +23,8 @@ class View {
     this.isShow = _.defaultValue(viewData.isShow, true)
     // this.prop = _.defaultValue(viewData.prop, 'defaultProp')
     this.prop = `V${TAG}${this.id}`
-    this.viewProp = this.prop
+    // this.viewProp = _.defaultValue(viewData.viewProp, this.prop)
+    this.viewProp = viewData.fatherViewProp ? `${viewData.fatherViewProp}${DEVIDE}${this.prop}` : this.prop
     this.columnData = _.defaultValue(viewData.columnData, [])
     // this.formModel = _.defaultValue(viewData.formModel, {})
     this.initFormModel(viewData.formModel)
@@ -81,6 +82,7 @@ class View {
   initSubView(subViewData, view) {
     view.subView = []
     subViewData.forEach(item => {
+      item.fatherViewProp = view.viewProp
       let subView = new View(item)
       view.subView.push(subView)
       let subFormModel = subView.formModel
@@ -115,6 +117,7 @@ class View {
       let r = arr.slice(0, i).join(DEVIDE)
       path.push(r)
     }
+    console.log('path', path)
     _.setObjectValue(this.formModel, path, value)
   }
 

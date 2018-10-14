@@ -58,6 +58,7 @@ class ViewRule {
     this.view = view
     this.id = viewRuleData.id
     this.desc = viewRuleData.desc
+    this.changeValue = viewRuleData.changeValue
     // this.targetViewProp = viewRuleData.targetViewProp
     this.targetViewProp = String(viewRuleData.targetViewId).split(DEVIDE).map(e => {
       return `V${TAG}${e}`
@@ -142,8 +143,14 @@ class ViewRule {
   handler() {
     return () => {
       let result = this.conditions.every(item => {
-        // let bindValue = this.formModel[item.bindColumn.prop]
-        let bindValue = this.view.findColumnValue(item.bindColumn.columnProp)
+        console.log(this.formModel, item.bindColumn.columnProp)
+        // let bindValue = undefined
+        // if (_.hasKey(this.formModel, item.bindColumn.columnProp)) {
+        //   bindValue = this.formModel[item.bindColumn.columnProp]
+        // }else {
+        //   bindValue = this.view.findColumnValue(item.bindColumn.columnProp)
+        // }
+        let bindValue = this.findColumnValue(item.bindColumn.columnProp)
         let conditionType = item.conditionType
         let conditionValue = item.conditionValue
         let res = this.conditionResult({
@@ -165,25 +172,37 @@ class ViewRule {
 
   //column  subView 类型对试图条件结果的处理(找到影响字段的相应prop并赋值)
   handlerColumnType(result) {
-    let prop = this.viewRulePropMap[this.type]
-    let status = null
-    if (_.invalid(prop)) {
-      console.log(this, '视图条件失败，没有此种生效类型--->', this.type)
-      return
-    }
-    if (result) {
-      status = this.statusMap[this.type]
-    } else {
-      status = !this.statusMap[this.type]
+    let status = undefined
+    let prop = undefined
+    if (this.viewRulePropMap[this.type]) {
+      prop = this.viewRulePropMap[this.type]
+      // let status = null
+      if (_.invalid(prop)) {
+        console.log(this, '视图条件失败，没有此种生效类型--->', this.type)
+        return
+      }
+      if (result) {
+        status = this.statusMap[this.type]
+      } else {
+        status = !this.statusMap[this.type]
+      }
     }
     //所有影响字段的对应属性修改
     //处理字段值清空的情况
     this.affectItems.forEach(item => {
-      item[prop] = status
-      if (result && this.isClear) {
+      if (this.viewRulePropMap[this.type]) {
+        item[prop] = status
+      }
+      if(!result) {
+        return 
+      }
+      if (this.isClear || this.type === 'clear') {
         console.log('清空', this.formModel, item.columnProp)
-        // this.formModel[item.columnProp] = null
-        this.view.setColumnValue(item.columnProp, null)
+        this.setColumnValue(item.columnProp, null)
+      }else if(this.type === 'changeValue') {
+        console.log('changeValue', this.changeValue)
+        this.setColumnValue(item.columnProp, this.changeValue)
+        //TODO:changeValue
       }
     })
   }
@@ -192,10 +211,10 @@ class ViewRule {
   handlerSubViewType(result) {
     let prop = this.viewRulePropMap[this.type]
     let status = null
-    if (_.invalid(prop)) {
-      console.log(this, '视图条件失败，没有此种生效类型--->', this.type)
-      return
-    }
+    // if (_.invalid(prop)) {
+    //   console.log(this, '视图条件失败，没有此种生效类型--->', this.type)
+    //   return
+    // }
     if (result) {
       status = this.statusMap[this.type]
     } else {
@@ -205,21 +224,35 @@ class ViewRule {
     //处理视图值清空的情况
     this.affectItems.forEach(view => {
       //先执行清空视图操作
-      if (result && this.isClear) {
+      if (result && (this.isClear || this.type === 'clear')) {
         view.triggerEvent('update', 'clearFormModel')
       }
       if (this.type === 'hidden' || this.type === 'show') {
         view[prop] = status
       }else if(this.type === 'disabled') {
+        console.log('clear subView')
         view.triggerEvent('update', 'disabledView', status)
       }
     })
   }
 
-  // findColumnValue(columnProp) {
-  //   //TODO:
-  //   return _.getObjectValue(this.formModel, path)
-  // }
+  findColumnValue(columnProp) {
+    let result
+    if (_.hasKey(this.formModel, columnProp)) {
+      result = this.formModel[columnProp]
+    } else {
+      result = this.view.findColumnValue(columnProp)
+    }
+    return result
+  }
+
+  setColumnValue(columnProp, value) {
+    if (_.hasKey(this.formModel, columnProp)) {
+      this.formModel[columnProp] = value
+    } else {
+      this.view.setColumnValue(columnProp, value)
+    }
+  }
 
   //将规则处理函数作为绑定字段的事件
   //type: created, update

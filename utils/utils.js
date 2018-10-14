@@ -33,6 +33,9 @@ export default {
   setObjectValue(object, path, value) {
     return _.set(object, path, value)
   },
+  hasKey(object, path) {
+    return _.has(object, path)
+  },
   mapKeys(object, callback) {
     return _.mapKeys(object, callback)
   }

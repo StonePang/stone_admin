@@ -1,10 +1,11 @@
     export default {
     1:{
       id: 21,
-      affectItems: [4],
+      affectItems: [4,3],
       targetViewId: '1',
       affectType: 'column',
       type: 'hidden',
+      // changeValue: 'test',
       isClear: true,
       desc: 'datetime隐藏<--input && select',
       conditions: [{
@@ -24,6 +25,7 @@
       affectItems: [3],
       affectType: 'column',
       targetViewId: '1',
+      isClear: true,
       type: 'disabled',
       isClear: true,
       desc: 'checkbox禁用<--input && select',
@@ -44,8 +46,8 @@
       affectItems: [2],
       affectType: 'subView',
       targetViewId: '1',
-      type: 'disabled',
-      isClear: true,
+      type: 'clear',
+      isClear: false,
       desc: 'subView隐藏<--input && select',
       conditions: [{
         targetViewId: '1',
@@ -63,6 +65,7 @@
       id: 222,
       affectItems: [42],
       affectType: 'column',
+      isClear: true,
       targetViewId: '1-2',
       type: 'hidden',
       desc: '子表date隐藏<--textarea',
@@ -75,9 +78,10 @@
     },
     5: {
       id: 123,
-      affectItems: [42],
+      affectItems: [42, 11],
       affectType: 'column',
       targetViewId: '1-2',
+      isClear: true,
       type: 'hidden',
       desc: '子表date隐藏<--input',
       isClear: true,
@@ -87,5 +91,54 @@
         conditionType: 3,
         conditionValue: '321'
       }]
-    }
+    },
+    6: {
+      id: 124,
+      affectItems: [42],
+      affectType: 'column',
+      targetViewId: '1-2',
+      isClear: true,
+      type: 'disabled',
+      desc: '6->子表date隐藏<--input,主表中做子表视图条件',
+      isClear: true,
+      conditions: [{
+        targetViewId: '1-2',
+        bindColumn: 11,
+        conditionType: 3,
+        conditionValue: '6'
+      }]
+    },
+    7: {
+      id: 125,
+      affectItems: [1],
+      affectType: 'column',
+      targetViewId: '1',
+      isClear: true,
+      type: 'disabled',
+      desc: '7->date-->input,子表的视图条件，影响主表.不能执行',
+      isClear: true,
+      conditions: [{
+        targetViewId: '1-2',
+        bindColumn: 11,
+        conditionType: 3,
+        conditionValue: '7'
+      }]
+    },
+    8: {
+      id: 29,
+      affectItems: [1],
+      targetViewId: '1',
+      affectType: 'column',
+      type: 'changeValue',
+      changeValue: 'test',
+      isClear: false,
+      desc: 'datetime隐藏<--input && select',
+      conditions: [{
+        bindColumn: 2,
+        targetViewId: '1',
+        conditionType: 3,
+        conditionValue: 'value_3'
+      }]
+    },
+
   }

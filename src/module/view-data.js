@@ -16,6 +16,8 @@ export default {
     // viewRuleDataMap['2'],
     viewRuleDataMap['3'],
     // viewRuleDataMap['5'],
+    // viewRuleDataMap['6'],
+    viewRuleDataMap['8'],
   ],
   formModel: {
     // 'V:1': {
@@ -36,12 +38,13 @@ export default {
     ],
     viewRuleData: [
       // viewRuleDataMap['4'],
+      // viewRuleDataMap['7'],
     ],
     formModel: {
-      // 'V#1-V#2-C#11': 'gua',
-      // 'V#1-V#2-C#42': null,
-      'V#2-C#11': 'gua',
-      'V#2-C#42': null,
+      'V#1-V#2-C#11': 'gua',
+      'V#1-V#2-C#42': null,
+      // 'V#2-C#11': 'gua',
+      // 'V#2-C#42': null,
     }
   }]
 }
