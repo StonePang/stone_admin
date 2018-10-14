@@ -1,5 +1,8 @@
 import ValidateRule from './validate-rule'
 import _ from '~utils/utils'
+
+const DEVIDE = '-'
+const TAG = '#'
 class Column {
   constructor(columnData, view) {
     this.handlerCreated(columnData, view)
@@ -11,7 +14,7 @@ class Column {
     this.desc = columnData.desc
     this.placeholder = _.defaultValue(columnData.placeholder, null)
     this.disabled = _.defaultValue(columnData.disabled, false)
-    this.prop = _.defaultValue(columnData.prop, null)
+    // this.prop = _.defaultValue(columnData.prop, null)
     this.label = _.defaultValue(columnData.label, null)
     this.required = _.defaultValue(columnData.required, true)
     this.multiple = _.defaultValue(columnData.multiple, false)
@@ -27,6 +30,7 @@ class Column {
     this.isShow = _.defaultValue(columnData.isShow, true)
     this.showChooseAll = _.defaultValue(columnData.showChooseAll, false)
     this.componentRender = columnData.componentRender || null
+    this.initProp()
     this.initValidateRule({
       label: this.label,
       required: this.required,
@@ -34,6 +38,12 @@ class Column {
     })
   }
 
+  initProp() {
+    // console.log(this.view)
+    this.prop = `C${TAG}${this.id}`
+    let columnProp = `${this.view.viewProp}${DEVIDE}${this.prop}`
+    this.columnProp = _.defaultValue(columnProp, null)
+  }
   //初始化validate-rules
   initValidateRule({label, required, rules}) {
     let validateRule =  new ValidateRule({label, required, rules})

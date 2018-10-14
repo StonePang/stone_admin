@@ -6,8 +6,8 @@
     <el-form :model="formModel" v-if='view.isShow' ref='form' class='form-content' show-message label-width="100px" validate-on-rule-change style='width: 1200px'>
       <el-row :gutter='gutter'>
         <el-col v-for='(item, index) in columns' v-if='item.isShow' :key='index' :span='item.isFull?24:12' :push='0'>
-          <el-form-item  :label="item.label + ' : '" :prop='item.prop' :rules='item.rules' class='form-item'>
-            <input-adapt v-model='formModel[item.prop]' :column='item' class='form-input'></input-adapt>
+          <el-form-item  :label="item.label + ' : '" :prop='item.columnProp' :rules='item.rules' class='form-item'>
+            <input-adapt v-model='formModel[item.columnProp]' :column='item' class='form-input'></input-adapt>
           </el-form-item>
         </el-col>
       </el-row>

@@ -47,9 +47,9 @@ export default {
       label: "label_3"
     }],
     //委托渲染
-    componentRender: (h, config) => {
-      return ( < my-radio {...config} />)
-    }
+    // componentRender: (h, config) => {
+    //   return ( < my-radio {...config} />)
+    // }
   },
   checkbox: {
     id: 3,

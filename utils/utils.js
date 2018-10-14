@@ -26,6 +26,14 @@ export default {
       return defaultValue
     }
     return arg
+  },
+  getObjectValue(object, path) {
+    return _.get(object, path)
+  },
+  setObjectValue(object, path, value) {
+    return _.set(object, path, value)
+  },
+  mapKeys(object, callback) {
+    return _.mapKeys(object, callback)
   }
-  
 }

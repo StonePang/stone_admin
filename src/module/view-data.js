@@ -12,20 +12,21 @@ export default {
     columnDataMap.datetime,
   ],
   viewRuleData: [
-    viewRuleDataMap['1'],
-    viewRuleDataMap['2'],
+    // viewRuleDataMap['1'],
+    // viewRuleDataMap['2'],
     viewRuleDataMap['3'],
-    viewRuleDataMap['5'],
+    // viewRuleDataMap['5'],
   ],
   formModel: {
-    input: 'r',
-    select: null,
-    checkbox: null,
-    datetime: null,
-    input1: null
+    // 'V:1': {
+      'V#1-C#1': 'r',
+      'V#1-C#2': null,
+      'V#1-C#3': null,
+      'V#1-C#4': null,
+    // }
   },
   subViewData: [{
-    id: 100,
+    id: 2,
     title: '子表',
     isShow: true,
     prop: 'subForm',
@@ -34,11 +35,13 @@ export default {
       columnDataMap.date,
     ],
     viewRuleData: [
-      viewRuleDataMap['4'],
+      // viewRuleDataMap['4'],
     ],
     formModel: {
-      textarea: 'gua',
-      date: null,
+      // 'V#1-V#2-C#11': 'gua',
+      // 'V#1-V#2-C#42': null,
+      'V#2-C#11': 'gua',
+      'V#2-C#42': null,
     }
   }]
 }

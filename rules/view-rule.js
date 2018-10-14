@@ -1,5 +1,7 @@
 import _ from '~utils/utils'
 
+const DEVIDE = '-'
+const TAG = '#'
 /**
  * viewRuleData是单个试图规则对象
  * {
@@ -50,13 +52,16 @@ class ViewRule {
 
   //初始化实例
   init(viewRuleData, view) {
-    let columnMap = view.columnMap
+    // let columnMap = view.columnMap
     //影响对象ids
     let affectItemIds = viewRuleData.affectItems
     this.view = view
     this.id = viewRuleData.id
     this.desc = viewRuleData.desc
-    this.desc = viewRuleData.desc
+    // this.targetViewProp = viewRuleData.targetViewProp
+    this.targetViewProp = String(viewRuleData.targetViewId).split(DEVIDE).map(e => {
+      return `V${TAG}${e}`
+    }).join(DEVIDE)
     this.isClear = _.defaultValue(viewRuleData.isClear, false)
     //规则效果类型
     this.type = viewRuleData.type
@@ -67,12 +72,45 @@ class ViewRule {
     this.itemMap = view[this.affectTypeMap[this.affectType]]
     //影响对象实例数组
     this.affectItems = affectItemIds.map(id => {
-      return this.itemMap[id]
+      let map = {
+        column: `${this.targetViewProp}${DEVIDE}C${TAG}${id}`,
+        subView: `${this.targetViewProp}${DEVIDE}V${TAG}${id}`,
+      }
+      let key = map[this.affectType]
+      console.log(this.itemMap, key)
+      return this.itemMap[key]
     })
     //规则生效条件
-    this.conditions = viewRuleData.conditions.map(item => {
-      let bindColumnId = item.bindColumn
-      let bindColumn = columnMap[bindColumnId]
+    // this.conditions = viewRuleData.conditions.map(item => {
+    //   let targetViewProp = item.targetViewProp || this.view.viewProp
+    //   let bindColumnKey = targetViewProp + '-' +item.bindColumn
+    //   let bindColumn = columnMap[bindColumnKey]
+    //   let conditionType = item.conditionType
+    //   let conditionValue = item.conditionValue
+    //   return {
+    //     bindColumn,
+    //     conditionType,
+    //     conditionValue,
+    //   }
+    // })
+    this.initConditions(viewRuleData.conditions)
+    //绑定字段实例集合
+    this.bindColumns = this.conditions.map(item => {
+      return item.bindColumn
+    })
+    // console.log('this.bindColumns', this.bindColumns)
+  }
+
+  initConditions(conditionsData) {
+    this.conditions = conditionsData.map(item => {
+      // let targetViewid = item.targetViewId || this.view.viewProp
+      let targetViewProp = item.targetViewId.split(DEVIDE).map(e => {
+        return `V${TAG}${e}`
+      }).join(DEVIDE)
+      // let bindColumnKey = targetViewProp + '-' + item.bindColumn
+      let bindColumnProp = `${targetViewProp}${DEVIDE}C${TAG}${item.bindColumn}`
+      let bindColumn = this.view.columnMap[bindColumnProp]
+      console.log(this.view, bindColumnProp, bindColumn)
       let conditionType = item.conditionType
       let conditionValue = item.conditionValue
       return {
@@ -80,10 +118,6 @@ class ViewRule {
         conditionType,
         conditionValue,
       }
-    })
-    //绑定字段实例集合
-    this.bindColumns = viewRuleData.conditions.map(item => {
-      return columnMap[item.bindColumn]
     })
   }
 
@@ -108,7 +142,8 @@ class ViewRule {
   handler() {
     return () => {
       let result = this.conditions.every(item => {
-        let bindValue = this.formModel[item.bindColumn.prop]
+        // let bindValue = this.formModel[item.bindColumn.prop]
+        let bindValue = this.view.findColumnValue(item.bindColumn.columnProp)
         let conditionType = item.conditionType
         let conditionValue = item.conditionValue
         let res = this.conditionResult({
@@ -116,6 +151,7 @@ class ViewRule {
           conditionType,
           conditionValue
         })
+        console.log(bindValue, res)
         return res
       });
       console.log(this,'视图条件运行结果', result)
@@ -145,7 +181,9 @@ class ViewRule {
     this.affectItems.forEach(item => {
       item[prop] = status
       if (result && this.isClear) {
-        this.formModel[item.prop] = null
+        console.log('清空', this.formModel, item.columnProp)
+        // this.formModel[item.columnProp] = null
+        this.view.setColumnValue(item.columnProp, null)
       }
     })
   }
@@ -177,6 +215,11 @@ class ViewRule {
       }
     })
   }
+
+  // findColumnValue(columnProp) {
+  //   //TODO:
+  //   return _.getObjectValue(this.formModel, path)
+  // }
 
   //将规则处理函数作为绑定字段的事件
   //type: created, update
