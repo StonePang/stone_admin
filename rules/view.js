@@ -3,10 +3,6 @@ import ViewRule from './view-rule'
 import EventBus from './event-bus'
 import _ from '~utils/utils'
 
-const BUSMAP = {
-  created: 'createdBus',
-  update: 'updateBus'
-}
 
 const DEVIDE = '-'
 const TAG = '#'
@@ -16,8 +12,7 @@ class View {
   }
 
   handlerCreated(viewData) {
-    this.createdBus = new EventBus()
-    this.updateBus = new EventBus()
+    this.eventBus = new EventBus()
     this.id = viewData.id
     this.title = _.defaultValue(viewData.title, `视图-${this.id}`)
     this.isShow = _.defaultValue(viewData.isShow, true)
@@ -26,8 +21,8 @@ class View {
     // this.viewProp = _.defaultValue(viewData.viewProp, this.prop)
     this.viewProp = viewData.fatherViewProp ? `${viewData.fatherViewProp}${DEVIDE}${this.prop}` : this.prop
     this.columnData = _.defaultValue(viewData.columnData, [])
-    // this.formModel = _.defaultValue(viewData.formModel, {})
-    this.initFormModel(viewData.formModel)
+    this.formModel = _.defaultValue(viewData.formModel, {})
+    // this.initFormModel(viewData.formModel)
     this.viewRuleData = _.defaultValue(viewData.viewRuleData, [])
     this.subViewData = _.defaultValue(viewData.subViewData, [])
     this.initColumns(this.columnData, this)
@@ -72,10 +67,6 @@ class View {
   }
 
   initFormModel(formModelData) {
-    // let formModel = _.mapKeys(formModelData, (value, key) => {
-    //   return `C${TAG}${key}`
-    // })
-    // this.formModel = _.defaultValue(formModel, {})
     this.formModel = _.defaultValue(formModelData, {})
   }
 
@@ -105,7 +96,7 @@ class View {
       let r = arr.slice(0, i).join(DEVIDE)
       path.push(r)
     }
-    console.log(this.formModel, path)
+    // console.log(this.formModel, path)
     return _.getObjectValue(this.formModel, path)
   }
 
@@ -139,7 +130,7 @@ class View {
   //清空formModel，只清空字段的值，不处理子视图
   clearFormModel() {
     return () => {
-      console.log('clear formModel', this.id, this.formModel)
+      // console.log('clear formModel', this.id, this.formModel)
       for (const key in this.formModel) {
         if (this.formModel.hasOwnProperty(key) && _.includes(key, 'C')) {
           this.formModel[key] = null;
@@ -157,17 +148,16 @@ class View {
   }
   
   registerEvent(type, eventName, callback) {
-    let viewPrefix = `view:${this.id}_`
+    if (type !== 'created' && type !== 'update') {
+      console.warn(`view---(${type})类型的事件中心不存在，事件注册失败`)
+      return
+    }
+    let viewPrefix = `${type}_view:${this.id}_`
     let name = eventName
     if (!_.includes(eventName, viewPrefix)) {
       name = viewPrefix + eventName
     }
-    let bus = BUSMAP[type]
-    if(!bus) {
-      console.log(`view---(${type})类型的事件中心不存在，事件注册失败`)
-      return
-    }
-    this[bus].register(name, callback)
+    this.eventBus.register(name, callback)
     //created注册后立即执行
     if(type === 'created') {
       this.triggerEvent('created', name)
@@ -175,23 +165,22 @@ class View {
   }
 
   triggerEvent(type, eventName, ...args) {
-    let viewPrefix = `view:${this.id}_`
+    if (type !== 'created' && type !== 'update') {
+      console.warn(`view---(${type})类型的事件中心不存在，事件触发失败`)
+      return
+    }
+    let viewPrefix = `${type}_view:${this.id}_`
     let name = eventName
     if (!_.includes(eventName, viewPrefix)) {
       name = viewPrefix + eventName
     }
-    let bus = BUSMAP[type]
-    if (!bus) {
-      console.log(`view---(${type})类型的事件中心不存在，事件触发失败`)
-      return
-    }
-    console.log('view-trigger', type, eventName)
-    this[bus].trigger(name, ...args)
+    console.log('view-triggerEvent', type, eventName)
+    this.eventBus.trigger(name, ...args)
   }
 
   destroy() {
-    this.createdBus.destroy()
-    this.updateBus.destroy()
+    this.eventBus.destroy()
+    console.log('eventBus destroy.')
   }
 
   //暴露给外部的执行自定义时间注册的方法，回调参数是view实例
