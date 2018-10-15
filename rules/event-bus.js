@@ -16,7 +16,7 @@ class EventBus {
   trigger(eventName, ...args) {
     let hasEvent = this.eventBus.hasOwnProperty(eventName)
     if(!hasEvent) {
-      console.log(`(${eventName})不在事件bus中，无法trigger`, this)
+      console.warn(`(${eventName})不在事件bus中，无法trigger`, this)
       return
     }
     let callbacks = this.eventBus[eventName]

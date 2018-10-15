@@ -69,6 +69,12 @@ class Column {
     let eventName = `column:${this.id}`
     this.view.triggerEvent(type, eventName, ...arg)
   }
+
+  addEventListener(type, callback) {
+    this.registerEvent(type, () => {
+      callback(this)
+    })
+  }
 }
 
 export default Column

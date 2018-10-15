@@ -5,11 +5,16 @@ const TAG = '#'
 /**
  * viewRuleData是单个试图规则对象
  * {
- *  type: disabled, show, hidden
+ *  type: disabled, show, hidden, clear, changeValue
  *  affectType: 影响对象类型 column, subView(只有show,hidden)
  *  affectItems: [1,2] 影响字段id数组
+ *  desc:描述
+ *  changeValue: changeValue下的改变值
+ *  isClear: 是否清空影响字段/视图
+ *  targetViewId：所在的视图id，多级用1-2-3的形式表示
  *  -->conditions 为&&关系,规则生效条件
  *  conditions: [{
+ *    targetViewId：绑定字段所在视图id 1-2-3形式
  *    bindcolumn: 12 绑定字段id
  *    coditiontype: 条件关系 1-8
  *    conditionValue: 条件生效时的真实值

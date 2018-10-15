@@ -36,6 +36,9 @@ export default {
   computed: {
   },
   watch: {
+    view() {
+      console.warn(`view: watch change`)
+    }
   },
   methods: {
   },
@@ -44,7 +47,22 @@ export default {
       let view = new View(this.viewData)
       this.view = view
       this.loading = false
-      console.log(this.view)
+      // this.view.addEventListener('created', view => {
+      //   console.log('guagaugua', view.columns)
+      //   view.columns.forEach(column => {
+      //     column.addEventListener('created', column => {
+      //       console.log('column created', column)
+      //     })
+      //     // column.addEventListener('update', column => {
+      //     //   console.log('column update', column)
+      //     // })
+      //   })        
+      // })
+      // this.view.columns.forEach(column => {
+      //   column.addEventListener('update', column => {
+      //     console.log('column update', column)
+      //   })
+      // })
     }, 1000);
   }
 };

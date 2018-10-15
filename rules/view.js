@@ -193,6 +193,14 @@ class View {
     this.createdBus.destroy()
     this.updateBus.destroy()
   }
+
+  //暴露给外部的执行自定义时间注册的方法，回调参数是view实例
+  addEventListener(type, callback) {
+    let eventname = 'customEvent'
+    this.registerEvent(type, eventname, () => {
+      callback(this)
+    })
+  }
 }
 
 export default View
