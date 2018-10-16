@@ -46,9 +46,10 @@
       affectItems: [2],
       affectType: 'subView',
       targetViewId: '1',
+      conditionType: 'OR',
       type: 'clear',
       isClear: false,
-      desc: 'subView隐藏<--input && select',
+      desc: 'subView<--input && select',
       conditions: [{
         targetViewId: '1',
         bindColumn: 1,

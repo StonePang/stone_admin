@@ -55,6 +55,16 @@ class ViewRule {
     }
   }
 
+  //规则条件类型，AND,OR 对应数组的every, some方法
+  get conditionTypeMap() {
+    return {
+      AND: 'every',
+      and: 'every',
+      OR: 'some',
+      or: 'some',
+    }
+  }
+
   //初始化实例
   init(viewRuleData, view) {
     // let columnMap = view.columnMap
@@ -63,6 +73,7 @@ class ViewRule {
     this.view = view
     this.id = viewRuleData.id
     this.desc = viewRuleData.desc
+    this.conditionType = viewRuleData.conditionType || 'AND'
     this.changeValue = viewRuleData.changeValue
     // this.targetViewProp = viewRuleData.targetViewProp
     this.targetViewProp = String(viewRuleData.targetViewId).split(DEVIDE).map(e => {
@@ -83,7 +94,7 @@ class ViewRule {
         subView: `${this.targetViewProp}${DEVIDE}V${TAG}${id}`,
       }
       let key = map[this.affectType]
-      console.log(this.itemMap, key)
+      // console.log(this.itemMap, key)
       return this.itemMap[key]
     })
     //规则生效条件
@@ -116,7 +127,7 @@ class ViewRule {
       // let bindColumnKey = targetViewProp + '-' + item.bindColumn
       let bindColumnProp = `${targetViewProp}${DEVIDE}C${TAG}${item.bindColumn}`
       let bindColumn = this.view.columnMap[bindColumnProp]
-      console.log(this.view, bindColumnProp, bindColumn)
+      // console.log(this.view, bindColumnProp, bindColumn)
       let conditionType = item.conditionType
       let conditionValue = item.conditionValue
       return {
@@ -147,14 +158,12 @@ class ViewRule {
   //利用闭包实现对this的保留,跨作用域保存到事件中心
   handler() {
     return () => {
-      let result = this.conditions.every(item => {
-        console.log(this.formModel, item.bindColumn.columnProp)
-        // let bindValue = undefined
-        // if (_.hasKey(this.formModel, item.bindColumn.columnProp)) {
-        //   bindValue = this.formModel[item.bindColumn.columnProp]
-        // }else {
-        //   bindValue = this.view.findColumnValue(item.bindColumn.columnProp)
-        // }
+      let methodName = this.conditionTypeMap[this.conditionType]
+      if (!methodName) {
+        console.warn(`视图规则(${this.id})的condotionType(${this.conditionType})不存在，此视图规则不会触发`) 
+        return false
+      }
+      let result = this.conditions[methodName](item => {
         let bindValue = this.findColumnValue(item.bindColumn.columnProp)
         let conditionType = item.conditionType
         let conditionValue = item.conditionValue
@@ -163,7 +172,7 @@ class ViewRule {
           conditionType,
           conditionValue
         })
-        console.log(bindValue, res)
+        // console.log(bindValue, res)
         return res
       });
       console.log(this,'视图条件运行结果', result)
