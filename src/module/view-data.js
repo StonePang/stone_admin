@@ -17,7 +17,7 @@ export default {
     viewRuleDataMap['3'],
     // viewRuleDataMap['5'],
     // viewRuleDataMap['6'],
-    viewRuleDataMap['8'],
+    // viewRuleDataMap['8'],
   ],
   formModel: {
     // 'V:1': {

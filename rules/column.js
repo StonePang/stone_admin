@@ -36,6 +36,8 @@ class Column {
       required: this.required,
       rules: _.defaultValue(columnData.rules, [])
     })
+    this.registerEvent('created', this.handlerShowValue())
+    this.registerEvent('update', this.handlerShowValue())
   }
 
   initProp() {
@@ -74,6 +76,16 @@ class Column {
     this.registerEvent(type, () => {
       callback(this)
     })
+  }
+
+  //处理显示值的方法，用与详情table的显示
+  handlerShowValue() {
+    return () => {
+      let value = this.view.formModel[this.columnProp]
+      console.log('showValue', this.columnProp, value)
+      // let showValueMap
+      this.showValue = value
+    }
   }
 }
 

@@ -14,6 +14,7 @@ class View {
   handlerCreated(viewData) {
     this.eventBus = new EventBus()
     this.id = viewData.id
+    this.renderType = _.defaultValue(viewData.renderType, 'form')
     this.title = _.defaultValue(viewData.title, `视图-${this.id}`)
     this.isShow = _.defaultValue(viewData.isShow, true)
     // this.prop = _.defaultValue(viewData.prop, 'defaultProp')

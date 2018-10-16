@@ -58,7 +58,7 @@ export default {
     prop: "checkbox",
     label: "checkbox",
     placeholder: "checkbox",
-    disabled: true,
+    disabled: false,
     required: true,
     isFull: false,
     isShow: true,
@@ -84,7 +84,7 @@ export default {
   datetime: {
     id: 4,
     desc: 'datetime',
-    type: "datetime",
+    type: "month",
     prop: "datetime",
     label: "datetime",
     placeholder: "datetime",
