@@ -16,6 +16,9 @@ class Moment {
   year(moment) {
     return moment.format(`YYYY`)
   }
+  month(moment) {
+    return moment.format(`MM`)
+  }
   yearMonth(moment, devider) {
     return moment.format(`YYYY${devider}MM`)
   }
@@ -28,7 +31,7 @@ class Moment {
   week(moment) {
     return moment.week()
   }
-  now(devider = '/') {
+  now(devider = '-') {
     let now = momentService()
     return {
       unix: this.unix(now),
@@ -37,12 +40,13 @@ class Moment {
       dateTime: this.dateTime(now, devider),
       time: this.time(now),
       year: this.year(now),
+      month: this.month(now),
       yearMonth: this.yearMonth(now, devider),
       week: this.week(now),
       dateTimeAll: this.dateTimeAll(now, devider),
     }
   }
-  moment(date, devider = '/') {
+  moment(date, devider = '-') {
     //null,'', 不能转换成时间对象,直接返回为null
     if(date === null || date === '') {
       return {
@@ -52,6 +56,7 @@ class Moment {
         dateTime: null,
         time: null,
         year: null,
+        month: null,
         yearMonth: null,
         week: null,
         dateTimeAll: null,
@@ -65,6 +70,7 @@ class Moment {
       dateTime: this.dateTime(dateObj, devider),
       time: this.time(dateObj),
       year: this.year(dateObj),
+      month: this.month(dateObj),
       yearMonth: this.yearMonth(dateObj, devider),
       week: this.week(dateObj),
       dateTimeAll: this.dateTimeAll(dateObj, devider),

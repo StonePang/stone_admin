@@ -4,54 +4,77 @@ import date from '~utils/date'
 class ValueRule {
   constructor(column) {
     this.column = column
-    this.type = column.type
-    this.value = column.view.formModel[column.columnProp]
+    // // this.column.type = column.type
+    // this.value = this.column.view.formModel[this.column.columnProp]
+    this.registerEvent('created')
+    this.registerEvent('update')
+  }
+
+  get type() {
+    return this.column.type
+  }
+
+  get value() {
+    return this.column.view.formModel[this.column.columnProp]
   }
 
   get typeMap() {
     return {
-      input: this.value,
-      textarea: this.value,
-      select: this.handlerDict(),
-      radio: this.handlerDict(),
-      checkbox: this.handlerDict(),
-      date: this.handlerDate('date'),
-      datetime: this.handlerDate('datetime'),
-      year: this.handlerDate('year'),
-      month: this.handlerDate('month'),
-      week: this.handlerDate('week'),
-      dates,
-      daterange,
-      time: this.handlerDate('time'),
-      timerange,
+      input: this.handlerInput.bind(this),
+      textarea: this.handlerInput.bind(this),
+      select: this.handlerDict.bind(this),
+      radio: this.handlerDict.bind(this),
+      checkbox: this.handlerDict.bind(this),
+      date: this.handlerDate.bind(this),
+      datetime: this.handlerDate.bind(this),
+      year: this.handlerDate.bind(this),
+      month: this.handlerDate.bind(this),
+      week: this.handlerDate.bind(this),
+      dates: this.handlerDates.bind(this),
+      daterange: this.handlerDates.bind(this),
+      time: this.handlerDate.bind(this),
+      timerange: this.handlerDates.bind(this),
     }
   }
 
-  hendler() {
-    let value = this.value
-    let type = this.type
-    if(!this.typeMap[type]) {
-      console.log(`显示值处理--->(${type})类型无法处理，返回原值(${value})`)
-      return value
+  handler() {
+    return () => {
+      console.log('this.value', this.value, this.type)
+      let value = this.value
+      let type = this.type
+      let showValue = ''
+      if (!this.typeMap[type]) {
+        console.warn(`显示值处理--->(${type})类型无法处理，返回原值(${value})`)
+        showValue = value
+      }else if (_.invalid(value) || _.isEmptyArray(value)) {
+        showValue = ''
+      }else {
+        showValue = this.typeMap[type](type)
+      }
+      this.showValue = showValue
+      this.column.showValue = this.showValue
     }
-    let showValue = this.typeMap[type]
+  }
+
+  handlerInput() {
+    return this.value
   }
 
   handlerDict() {
     let value = this.value
     let options = this.column.options
-    if (_.invalid(value) || _.isEmptyArray(value)) {
-      return ''
-    }
     let oneLabel = gua => {
-      gua.map((val) => {
+      if(!_.isArray(gua)) {
+        gua = [gua]
+      }
+      return gua.map((val) => {
         let valueItem = options.find(option => {
           return option.value === val
         })
         if (valueItem) {
           return valueItem.label
         }
-        console.log(`字段${this.column}的值(${val})不在options中，显示原值`)
+        console.log(`字段${this.column.id}的值(${val})不在options中，显示原值`)
         return val
       })
     }
@@ -71,11 +94,37 @@ class ValueRule {
       date: moment.date,
       datetime: moment.dateTime,
       year: moment.year + '年',
-      month: `${moment.year}年${moment.month}月`,
+      month: `${moment.year}-${moment.month}`,
       week: `${moment.year}年第${moment.week}周`,
       time: moment.time,
     }
     return map[type]
+  }
+
+  handlerDates(type) {
+    let devideMap = {
+      dates: ',',
+      daterange: '至',
+      timerange: '至'
+    }
+    let devide = devideMap[type]
+    let result = this.value.map(val => {
+      if(_.invalid(val)) {
+        return ''
+      }
+      let moment = date.moment(val)
+      let dateMap = {
+        dates: moment.date,
+        daterange: moment.date,
+        timerange: moment.time,
+      }
+      return dateMap[type]
+    }).join(devide)
+    return result
+  }
+
+  registerEvent(type) {
+    this.column.registerEvent(type, this.handler())
   }
 }
 

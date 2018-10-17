@@ -119,7 +119,7 @@ export default {
   date: {
     id: 42,
     desc: 'date',
-    type: "date",
+    type: "dates",
     prop: "date",
     label: "date",
     placeholder: "date",

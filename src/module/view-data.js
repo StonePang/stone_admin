@@ -22,8 +22,8 @@ export default {
   formModel: {
     // 'V:1': {
       'V#1-C#1': 'r',
-      'V#1-C#2': null,
-      'V#1-C#3': null,
+      'V#1-C#2': 'gua',
+      'V#1-C#3': ['value_1', 'gua_2'],
       'V#1-C#4': null,
     // }
   },

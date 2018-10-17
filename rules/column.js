@@ -1,4 +1,5 @@
 import ValidateRule from './validate-rule'
+import ValueRule from './value-rule'
 import _ from '~utils/utils'
 
 const DEVIDE = '-'
@@ -36,8 +37,9 @@ class Column {
       required: this.required,
       rules: _.defaultValue(columnData.rules, [])
     })
-    this.registerEvent('created', this.handlerShowValue())
-    this.registerEvent('update', this.handlerShowValue())
+    this.initValueRule()
+    // this.registerEvent('created', this.handlerShowValue())
+    // this.registerEvent('update', this.handlerShowValue())
   }
 
   initProp() {
@@ -50,6 +52,10 @@ class Column {
   initValidateRule({label, required, rules}) {
     let validateRule =  new ValidateRule({label, required, rules})
     this.rules = validateRule.rules
+  }
+
+  initValueRule() {
+    this.valueRule = new ValueRule(this)
   }
 
   //将指定函数注册到view的事件中心，定义字段的创建/更新事件
