@@ -9,10 +9,14 @@ class Column {
     this.handlerCreated(columnData, view)
   }
 
+
+
   handlerCreated(columnData, view) {
     this.view = view
+    this.columnData = columnData
     this.id = columnData.id
-    this.desc = columnData.desc
+    this.desc = _.defaultValue(columnData.desc, '')
+    this.renderType = _.defaultValue(columnData.renderType, 'form') //form  table
     this.placeholder = _.defaultValue(columnData.placeholder, null)
     this.disabled = _.defaultValue(columnData.disabled, false)
     // this.prop = _.defaultValue(columnData.prop, null)

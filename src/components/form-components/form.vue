@@ -2,13 +2,15 @@
   <div class='form-wrap'>
     <el-button class='opration-top' @click='validateTest'>validate</el-button>
     <el-button class='opration-top' @click='resetForm'>resetForm</el-button>
+    <el-button class='opration-top' @click='changeRenderType'>rendertype</el-button>
     <p class='form-title'>{{view.title}}</p>
     <el-form :model="formModel" v-if='view.isShow' ref='form' class='form-content' show-message label-width="100px" validate-on-rule-change style='width: 1200px'>
       <el-row :gutter='gutter'>
         <el-col v-for='(item, index) in columns' v-if='item.isShow' :key='index' :span='item.isFull?24:12' :push='0'>
           <el-form-item  :label="item.label + ' : '" :prop='item.columnProp' :rules='item.rules' class='form-item'>
-            <input-adapt v-if='view.renderType==="form"' v-model='formModel[item.columnProp]' :column='item' class='form-input'></input-adapt>
-            <span v-else>{{item.showValue}}</span>
+            <input-adapt v-if='item.renderType==="form"' v-model='formModel[item.columnProp]' :column='item' class='form-input'></input-adapt>
+            <!-- <span v-else >{{item.showValue}}</span> -->
+            <detail-form-item v-else :model='formModel[item.columnProp]' :column='item' />
           </el-form-item>
         </el-col>
       </el-row>
@@ -22,11 +24,13 @@
 
 <script>
 import inputAdapt from '~input/input-adapt'
+import detailFormItem from '~input/detail-form-item'
 import Column from '~rules/column'
 export default {
   name: 'MyForm',
   components: {
     inputAdapt,
+    detailFormItem,
   },
   props: {
     view: {
@@ -80,6 +84,11 @@ export default {
         console.log(`form-->(${this.view.title})校验成功`)
       }).catch(() => {
         console.log(`form-->(${this.view.title})校验失败`)
+      })
+    },
+    changeRenderType() {
+      this.view.columns.forEach(column => {
+        column.renderType = column.renderType === 'form' ? 'table' : 'form'
       })
     }
   },

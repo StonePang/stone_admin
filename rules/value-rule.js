@@ -39,7 +39,7 @@ class ValueRule {
 
   handler() {
     return () => {
-      console.log('this.value', this.value, this.type)
+      // console.log('this.value', this.value, this.type)
       let value = this.value
       let type = this.type
       let showValue = ''
@@ -53,6 +53,7 @@ class ValueRule {
       }
       this.showValue = showValue
       this.column.showValue = this.showValue
+      console.log(`value-rule处理事件执行-->>(${this.column.columnProp}):(${this.column.showValue})`)
     }
   }
 

@@ -36,6 +36,7 @@ class ViewRule {
       disabled: 'disabled',
       hidden: 'isShow',
       show: 'isShow',
+      render: 'renderType'
     }
   }
 
@@ -75,6 +76,7 @@ class ViewRule {
     this.desc = viewRuleData.desc
     this.conditionType = viewRuleData.conditionType || 'AND'
     this.changeValue = viewRuleData.changeValue
+    this.changeRender = viewRuleData.changeRender
     // this.targetViewProp = viewRuleData.targetViewProp
     this.targetViewProp = String(viewRuleData.targetViewId).split(DEVIDE).map(e => {
       return `V${TAG}${e}`
@@ -97,19 +99,6 @@ class ViewRule {
       // console.log(this.itemMap, key)
       return this.itemMap[key]
     })
-    //规则生效条件
-    // this.conditions = viewRuleData.conditions.map(item => {
-    //   let targetViewProp = item.targetViewProp || this.view.viewProp
-    //   let bindColumnKey = targetViewProp + '-' +item.bindColumn
-    //   let bindColumn = columnMap[bindColumnKey]
-    //   let conditionType = item.conditionType
-    //   let conditionValue = item.conditionValue
-    //   return {
-    //     bindColumn,
-    //     conditionType,
-    //     conditionValue,
-    //   }
-    // })
     this.initConditions(viewRuleData.conditions)
     //绑定字段实例集合
     this.bindColumns = this.conditions.map(item => {
@@ -175,7 +164,7 @@ class ViewRule {
         // console.log(bindValue, res)
         return res
       });
-      console.log(this,'视图条件运行结果', result)
+      console.log(this,'view-rule--->>>视图条件事件触发，运行结果', result)
       if (this.affectType === 'column') {
         this.handlerColumnType(result)
       }else if (this.affectType === 'subView') {
@@ -186,15 +175,25 @@ class ViewRule {
 
   //column  subView 类型对试图条件结果的处理(找到影响字段的相应prop并赋值)
   handlerColumnType(result) {
+    let handlerMap = {
+      hidden: this.handlerColumnTypeHiddenShowDisabled.bind(this),
+      show: this.handlerColumnTypeHiddenShowDisabled.bind(this),
+      disabled: this.handlerColumnTypeHiddenShowDisabled.bind(this),
+      clear: this.handlerColumnTypeClearChangValue.bind(this),
+      changeValue: this.handlerColumnTypeClearChangValue.bind(this),
+      changeRender: this.handlerColumnTypeRender.bind(this),
+    }
+    handlerMap[this.type](result)
+  }
+
+  //affectType: column
+  //type: hidden show disabled
+  handlerColumnTypeHiddenShowDisabled(result) {
+    console.log(this)
     let status = undefined
     let prop = undefined
     if (this.viewRulePropMap[this.type]) {
       prop = this.viewRulePropMap[this.type]
-      // let status = null
-      if (_.invalid(prop)) {
-        console.log(this, '视图条件失败，没有此种生效类型--->', this.type)
-        return
-      }
       if (result) {
         status = this.statusMap[this.type]
       } else {
@@ -207,28 +206,61 @@ class ViewRule {
       if (this.viewRulePropMap[this.type]) {
         item[prop] = status
       }
-      if(!result) {
-        return 
-      }
-      if (this.isClear || this.type === 'clear') {
-        console.log('清空', this.formModel, item.columnProp)
+      if (this.isClear && result) {
+        // console.log('清空', this.formModel, item.columnProp)
         this.setColumnValue(item.columnProp, null)
-      }else if(this.type === 'changeValue') {
-        console.log('changeValue', this.changeValue)
-        this.setColumnValue(item.columnProp, this.changeValue)
-        //TODO:changeValue
       }
     })
   }
 
-  //column  subView 类型对试图条件结果的处理(找到影响字段的相应prop并赋值)
+  //affectType: column
+  //type: changeRender
+  handlerColumnTypeRender(result) {
+    let renderType = result => {
+      if(result) {
+        return this.changeRender === 'form' ? 'form' : 'table'
+      }
+      return this.changeRender === 'form' ? 'table' : 'form'
+    }
+    this.affectItems.forEach(column => {
+      column.renderType = renderType(result)
+      if (result && this.isClear) {
+        this.setColumnValue(column.columnProp, null)
+      }
+    })
+  }
+
+  //affectType: column
+  //type: clear changeValue
+  handlerColumnTypeClearChangValue(result) {
+    let valueMap = {
+      clear: null,
+      //深拷贝.否则changeValue是数组的情况下可能会把changeValue值一同改变
+      changeValue: _.cloneDeep(this.changeValue),
+    }
+    let value = valueMap[this.type]
+    this.affectItems.forEach(column => {
+      if(result) {
+        console.log('value', value)
+        this.setColumnValue(column.columnProp, value)
+      }
+    })
+  }
+
   handlerSubViewType(result) {
+    let handlerMap = {
+      hidden: this.handlerSubViewHiddenShow.bind(this),
+      show: this.handlerSubViewHiddenShow.bind(this),
+      disabled: this.handlerSubViewDisabled.bind(this),
+      clear: this.handlerSubViewClear.bind(this),
+      changeRender: this.handlerSubViewChangeRender.bind(this),
+    }
+    handlerMap[this.type](result)
+  }
+
+  handlerSubViewHiddenShow(result) {
     let prop = this.viewRulePropMap[this.type]
     let status = null
-    // if (_.invalid(prop)) {
-    //   console.log(this, '视图条件失败，没有此种生效类型--->', this.type)
-    //   return
-    // }
     if (result) {
       status = this.statusMap[this.type]
     } else {
@@ -237,15 +269,42 @@ class ViewRule {
     //所有影响视图的对应属性修改
     //处理视图值清空的情况
     this.affectItems.forEach(view => {
+      view[prop] = status
       //先执行清空视图操作
-      if (result && (this.isClear || this.type === 'clear')) {
+      if (result && this.isClear) {
         view.triggerEvent('update', 'clearFormModel')
       }
-      if (this.type === 'hidden' || this.type === 'show') {
-        view[prop] = status
-      }else if(this.type === 'disabled') {
-        console.log('clear subView')
-        view.triggerEvent('update', 'disabledView', status)
+    })
+  }
+
+  handlerSubViewDisabled(result) {
+    this.affectItems.forEach(view => {
+      view.triggerEvent('update', 'disabledView', result)
+      if (result && this.isClear) {
+        view.triggerEvent('update', 'clearFormModel')
+      }
+    })
+  }
+
+  handlerSubViewClear(result) {
+    this.affectItems.forEach(view => {
+      if(result) {
+        view.triggerEvent('update', 'clearFormModel')
+      }
+    })
+  }
+
+  handlerSubViewChangeRender(result) {
+    let renderType = result => {
+      if (result) {
+        return this.changeRender === 'form' ? 'form' : 'table'
+      }
+      return this.changeRender === 'form' ? 'table' : 'form'
+    }
+    this.affectItems.forEach(view => {
+      view.triggerEvent('update', 'changeRender', renderType(result))
+      if (result && this.isClear) {
+        view.triggerEvent('update', 'clearFormModel')
       }
     })
   }

@@ -38,5 +38,8 @@ export default {
   },
   mapKeys(object, callback) {
     return _.mapKeys(object, callback)
-  }
+  },
+  cloneDeep(object) {
+    return _.cloneDeep(object)
+  },
 }

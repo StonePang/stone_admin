@@ -1,11 +1,12 @@
     export default {
     1:{
       id: 21,
-      affectItems: [4,3],
+      affectItems: [2],
       targetViewId: '1',
-      affectType: 'column',
-      type: 'hidden',
-      // changeValue: 'test',
+      affectType: 'subView',
+      type: 'clear',
+      changeValue: [1517414400000],
+      changeRender: 'form',
       isClear: true,
       desc: 'datetime隐藏<--input && select',
       conditions: [{

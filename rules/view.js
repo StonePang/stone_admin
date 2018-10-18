@@ -11,8 +11,21 @@ class View {
     this.handlerCreated(viewData)
   }
 
+  get columnData() {
+    return _.defaultValue(this.viewData.columnData, [])
+  }
+
+  get viewRuleData() {
+    return _.defaultValue(this.viewData.viewRuleData, [])
+  }
+
+  get subViewData() {
+    return _.defaultValue(this.viewData.subViewData, [])
+  }
+  
   handlerCreated(viewData) {
     this.eventBus = new EventBus()
+    this.viewData = viewData
     this.id = viewData.id
     this.renderType = _.defaultValue(viewData.renderType, 'form')
     this.title = _.defaultValue(viewData.title, `视图-${this.id}`)
@@ -21,18 +34,20 @@ class View {
     this.prop = `V${TAG}${this.id}`
     // this.viewProp = _.defaultValue(viewData.viewProp, this.prop)
     this.viewProp = viewData.fatherViewProp ? `${viewData.fatherViewProp}${DEVIDE}${this.prop}` : this.prop
-    this.columnData = _.defaultValue(viewData.columnData, [])
+    // this.columnData = _.defaultValue(viewData.columnData, [])
     this.formModel = _.defaultValue(viewData.formModel, {})
     // this.initFormModel(viewData.formModel)
-    this.viewRuleData = _.defaultValue(viewData.viewRuleData, [])
-    this.subViewData = _.defaultValue(viewData.subViewData, [])
+    // this.viewRuleData = _.defaultValue(viewData.viewRuleData, [])
+    // this.subViewData = _.defaultValue(viewData.subViewData, [])
     this.initColumns(this.columnData, this)
     this.initColumnMap(this.columns)
     this.initSubView(this.subViewData, this)
     this.initSubViewMap(this.subView)
     this.registerEvent('update', 'clearFormModel', this.clearFormModel())
     this.registerEvent('update', 'disabledView', this.disabledView())
+    this.registerEvent('update', 'changeRender', this.changeRender())
     this.initViewRules(this.viewRuleData, this)
+    console.log('view', this)
   }
 
   //生成columns
@@ -139,7 +154,14 @@ class View {
       }
     }
   }
-
+  changeRender() {
+    return (type) => {
+      console.log('-----------changr', type)
+      this.columns.forEach(column => {
+        column.renderType = type
+      })
+    }
+  }
   disabledView() {
     return (status) => {
       this.columns.forEach(column => {
@@ -148,7 +170,7 @@ class View {
     }
   }
   
-  registerEvent(type, eventName, callback) {
+  registerEvent(type, eventName, callback, ...args) {
     if (type !== 'created' && type !== 'update') {
       console.warn(`view---(${type})类型的事件中心不存在，事件注册失败`)
       return
@@ -158,11 +180,12 @@ class View {
     if (!_.includes(eventName, viewPrefix)) {
       name = viewPrefix + eventName
     }
-    this.eventBus.register(name, callback)
-    //created注册后立即执行
-    if(type === 'created') {
-      this.triggerEvent('created', name)
-    }
+    let isTrigger = type === 'created' ? true : false
+    this.eventBus.register(isTrigger, name, callback, ...args)
+    // //created注册后立即执行
+    // if(type === 'created') {
+    //   this.triggerEvent('created', name)
+    // }
   }
 
   triggerEvent(type, eventName, ...args) {

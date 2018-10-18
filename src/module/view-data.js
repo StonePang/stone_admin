@@ -12,9 +12,9 @@ export default {
     columnDataMap.datetime,
   ],
   viewRuleData: [
-    // viewRuleDataMap['1'],
+    viewRuleDataMap['1'],
     // viewRuleDataMap['2'],
-    viewRuleDataMap['3'],
+    // viewRuleDataMap['3'],
     // viewRuleDataMap['5'],
     // viewRuleDataMap['6'],
     // viewRuleDataMap['8'],
