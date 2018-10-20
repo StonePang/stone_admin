@@ -1,5 +1,6 @@
 import Column from './column'
-import ViewRule from './view-rule'
+// import ViewRule from './view-rule'
+import ViewRule from './view-rule-new'
 import EventBus from './event-bus'
 import _ from '~utils/utils'
 

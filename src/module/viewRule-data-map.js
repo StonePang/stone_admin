@@ -4,9 +4,10 @@
       affectItems: [2],
       targetViewId: '1',
       affectType: 'subView',
-      type: 'clear',
+      type: 'changeRender',
+      conditionType: 'OR',
       changeValue: [1517414400000],
-      changeRender: 'form',
+      changeRender: 'table',
       isClear: true,
       desc: 'datetime隐藏<--input && select',
       conditions: [{
