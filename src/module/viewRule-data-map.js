@@ -6,7 +6,7 @@
       affectType: 'subView',
       type: 'changeRender',
       conditionType: 'OR',
-      changeValue: [1517414400000],
+      changeValue: ['value_3'],
       changeRender: 'table',
       isClear: true,
       desc: 'datetime隐藏<--input && select',
@@ -14,7 +14,7 @@
         bindColumn: 1,
         targetViewId: '1',
         conditionType: 3,
-        conditionValue: 'r'
+        conditionValue: '123'
       }, {
         bindColumn: 2,
         targetViewId: '1',

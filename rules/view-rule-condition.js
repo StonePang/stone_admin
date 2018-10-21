@@ -29,7 +29,9 @@ class ViewRuleCondition {
     return result
   }
 
-
+  //返回一个Promise
+  //promise.reject()  视图条件异常
+  //promise.resolve(result) 试图条件完成计算，result为结果
   handlerResult() {
     let bindColumnValue = this.findColumnValue(this.bindColumn.columnProp)
     let conditionValue = this.conditionValue
@@ -47,13 +49,10 @@ class ViewRuleCondition {
     let result = conditionMap[conditionType]
     console.log('单个视图条件结果', result, this.bindColumn.columnProp)
     if(_.invalid(result)) {
-      console.warn(`视图条件的条件类型(${conditionType})不存在，视图条件失败`)
-      return Promise.reject()
+      let errMsg = (`视图条件的单条条件类型(${conditionType})不存在，视图条件失败`)
+      return Promise.reject(errMsg)
     }
-    if(result) {
-      return Promise.resolve()
-    }
-    return Promise.reject()
+    return Promise.resolve(result)
   }
 }
 

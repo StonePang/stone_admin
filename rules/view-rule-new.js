@@ -2,6 +2,7 @@ import _ from '~utils/utils'
 import ViewRuleCondition from './view-rule-condition'
 import ViewRuleHandlerColumn from './view-rule-handler-column'
 import ViewRuleHandlerSubView from './view-rule-handler-view'
+import { runInThisContext } from 'vm';
 
 class ViewRule {
   constructor(viewRuleData, view) {
@@ -20,12 +21,12 @@ class ViewRule {
     this.registerEvent('update')
   }
 
-  get promiseMethodName() {
+  get methodName() {
     return {
-      and: 'all',
-      AND: 'all',
-      or: 'race',
-      OR: 'race',
+      and: 'every',
+      AND: 'every',
+      or: 'some',
+      OR: 'some',
     }
   }
 
@@ -47,29 +48,34 @@ class ViewRule {
   }
 
   getResult() {
-    let methodName = this.promiseMethodName[this.conditionType]
-    if (!methodName) {
-      console.warn(`视图条件-->${this.id}的条件类型(${this.conditionType})不存在，设置条件结果为失败`)
-      return Promise.reject()
+    let method = this.methodName[this.conditionType]
+    if (!method) {
+      let errMsg = `视图条件-->${this.id}的多条条件类型(${this.conditionType})不存在，设置条件结果为失败`
+      return Promise.reject(errMsg)
     }
     let promises = this.conditions.map(condition => {
       let res = condition.handlerResult()
-      // console.log('promise', res["PromiseStatus"])
-      return condition.handlerResult()
+      return res
     })
-    return Promise[methodName](promises)
+    return Promise.all(promises).then(resultAll => {
+      let r =  resultAll[method](result => {
+        return result === true
+      })
+      return Promise.resolve(r)
+    }).catch((errMsg) => {
+      return Promise.reject(errMsg)
+    })
   }
 
   handler() {
     // let result = this.getResult()
     return () => {
-      let result = this.getResult()
-      return result.then(() => {
-        console.log('视图条件触发')
-        this.viewRuleHandler.handler(true)
-      }).catch(() => {
-        console.log('视图条件失败', this)
-        this.viewRuleHandler.handler(false)
+      // let result = this.getResult()
+      return this.getResult().then((result) => {
+        console.log(this, `视图条件结果--->>>${result}`)
+        this.viewRuleHandler.handler(result)
+      }).catch((errMsg) => {
+        console.warn('视图条件异常', errMsg, this)
       })
     }
   }

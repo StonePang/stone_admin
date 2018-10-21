@@ -62,6 +62,15 @@ class Column {
     this.valueRule = new ValueRule(this)
   }
 
+  changeColumnValue(newValue) {
+    let oldValue = this.view.formModel[this.columnProp]
+    if (oldValue === newValue) {
+      return
+    }
+    this.view.formModel[this.columnProp] = newValue
+    this.triggerEvent('update', newValue)
+  }
+
   //将指定函数注册到view的事件中心，定义字段的创建/更新事件
   registerEvent(type, callback) {
     let eventName = `column:${this.id}`

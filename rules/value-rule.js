@@ -4,8 +4,6 @@ import date from '~utils/date'
 class ValueRule {
   constructor(column) {
     this.column = column
-    // // this.column.type = column.type
-    // this.value = this.column.view.formModel[this.column.columnProp]
     this.registerEvent('created')
     this.registerEvent('update')
   }
@@ -39,7 +37,7 @@ class ValueRule {
 
   handler() {
     return () => {
-      // console.log('this.value', this.value, this.type)
+      console.log('value-rule handler', this.value, this.type)
       let value = this.value
       let type = this.type
       let showValue = ''

@@ -9,7 +9,6 @@
         <el-col v-for='(item, index) in columns' v-if='item.isShow' :key='index' :span='item.isFull?24:12' :push='0'>
           <el-form-item  :label="item.label + ' : '" :prop='item.columnProp' :rules='item.rules' class='form-item'>
             <input-adapt v-if='item.renderType==="form"' v-model='formModel[item.columnProp]' :column='item' class='form-input'></input-adapt>
-            <!-- <span v-else >{{item.showValue}}</span> -->
             <detail-form-item v-else :model='formModel[item.columnProp]' :column='item' />
           </el-form-item>
         </el-col>

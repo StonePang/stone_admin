@@ -126,7 +126,9 @@ class View {
       path.push(r)
     }
     console.log('path', path)
-    _.setObjectValue(this.formModel, path, value)
+    // _.setObjectValue(this.formModel, path, value)
+    let column = this.columnMap[columnProp]
+    column.changeColumnValue(value)
   }
 
   initSubViewMap(subView) {
@@ -148,16 +150,20 @@ class View {
   clearFormModel() {
     return () => {
       // console.log('clear formModel', this.id, this.formModel)
-      for (const key in this.formModel) {
-        if (this.formModel.hasOwnProperty(key) && _.includes(key, 'C')) {
-          this.formModel[key] = null;
-        }
-      }
+      // for (const key in this.formModel) {
+      //   if (this.formModel.hasOwnProperty(key) && _.includes(key, 'C')) {
+      //     this.formModel[key] = null;
+      //   }
+      // }
+      this.columns.forEach(column => {
+        column.changeColumnValue(null)
+      })
+      console.log('清空后的formmodel', this.formModel, this)
     }
   }
   changeRender() {
     return (type) => {
-      console.log('-----------changr', type)
+      this.renderType = type
       this.columns.forEach(column => {
         column.renderType = type
       })
@@ -183,10 +189,6 @@ class View {
     }
     let isTrigger = type === 'created' ? true : false
     this.eventBus.register(isTrigger, name, callback, ...args)
-    // //created注册后立即执行
-    // if(type === 'created') {
-    //   this.triggerEvent('created', name)
-    // }
   }
 
   triggerEvent(type, eventName, ...args) {
@@ -199,7 +201,6 @@ class View {
     if (!_.includes(eventName, viewPrefix)) {
       name = viewPrefix + eventName
     }
-    console.log('view-triggerEvent', type, eventName)
     this.eventBus.trigger(name, ...args)
   }
 

@@ -21,6 +21,8 @@ export default {
     model(val) {
       this.column.triggerEvent('update', val)
     }
+  },
+  created() {
   }
 }
 </script>

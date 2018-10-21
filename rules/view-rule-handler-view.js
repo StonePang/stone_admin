@@ -27,27 +27,25 @@ class ViewRuleHandlerSubView extends ViewRuleHandler {
   }
 
   handler(result) {
-    // return result => {
-      console.log('suvView-->>handler', result)
-      let handlerFn = this.handlerMap[this.type]
-      if (!handlerFn) {
-        console.warn(`视图条件类型(${this.id}--->${this.type})不存在,无相关处理方法`)
-        return
-      }
-      handlerFn(result)
-    // }
+    console.log('suvView-->>handler', result)
+    let handlerFn = this.handlerMap[this.type]
+    if (!handlerFn) {
+      console.warn(`视图条件类型(${this.id}--->${this.type})不存在,无相关处理方法`)
+      return
+    }
+    handlerFn(result)
   }
 
   handlerDisplay(result) {
     let status = this.type === 'hidden' ? true : false
     this.handlerEachAffectItem(view => {
       if (result) {
-        view.hidden = status
+        view.isShow = !status
         if (this.isClear) {
           view.triggerEvent('update', 'clearFormModel')
         }
       } else {
-        view.hidden = !status
+        view.isShow = status
       }
     })
   }

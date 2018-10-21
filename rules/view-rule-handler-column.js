@@ -41,12 +41,13 @@ class ViewRuleHandlerColumn extends ViewRuleHandler {
     let status = this.type === 'hidden' ? true : false
     this.handlerEachAffectItem(column => {
       if(result) {
-        column.hidden = status
+        column.isShow = !status
         if (this.isClear) {
-          this.setColumnValue(column.columnProp, null)
+          // this.setColumnValue(column.columnProp, null)
+          column.changeColumnValue(null)
         }
       } else {
-        column.hidden = !status
+        column.isShow = status
       }
     })
   }
@@ -56,10 +57,11 @@ class ViewRuleHandlerColumn extends ViewRuleHandler {
       if (result) {
         column.disabled = true
         if (this.isClear) {
-          this.setColumnValue(column.columnProp, null)
+          // this.setColumnValue(column.columnProp, null)
+          column.changeColumnValue(null)
         }
       } else {
-        column.hidden = false
+        column.disabled = false
       }
     })
   }
@@ -67,7 +69,8 @@ class ViewRuleHandlerColumn extends ViewRuleHandler {
   handlerClear(result) {
     this.handlerEachAffectItem(column => {
       if(result) {
-        this.setColumnValue(column.columnProp, null)
+        // this.setColumnValue(column.columnProp, null)
+        column.changeColumnValue(null)
       }
     })
   }
@@ -77,7 +80,8 @@ class ViewRuleHandlerColumn extends ViewRuleHandler {
     let newValue = _.cloneDeep(this.changeValue)
     this.handlerEachAffectItem(column => {
       if (result) {
-        this.setColumnValue(column.columnProp, newValue)
+        // this.setColumnValue(column.columnProp, newValue)
+        column.changeColumnValue(newValue)
       }
     })
   }
@@ -87,7 +91,8 @@ class ViewRuleHandlerColumn extends ViewRuleHandler {
       if(result) {
         column.renderType = this.changeRender === 'form' ? 'form' : 'table'
         if(this.isClear) {
-          this.setColumnValue(column.columnProp, null)
+          // this.setColumnValue(column.columnProp, null)
+          column.changeColumnValue(null)
         }
       } else {
         column.renderType = this.changeRender === 'form' ? 'table' : 'form'
