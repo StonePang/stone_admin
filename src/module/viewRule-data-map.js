@@ -1,11 +1,11 @@
     export default {
     1:{
       id: 21,
-      affectItems: [1],
+      affectItems: [3],
       targetViewId: '1',
-      affectType: 'operation',
+      affectType: 'column',
       type: 'disabled',
-      conditionType: 'OR',
+      conditionType: 'or',
       changeValue: ['value_3'],
       changeRender: 'table',
       isClear: true,
@@ -15,23 +15,25 @@
       //     view.triggerEvent('update', 'clearFormModel')
       //   }
       // },
-      conditions: [{
-        bindColumn: 1,
-        targetViewId: '1',
-        conditionType: 3,
-        conditionValue: '123',
-        customCondition: view => {
-          // console.log(view)
-          let value = view.formModel[view.columns[0].columnProp]
-          let result = value === '21'
-          return Promise.resolve(result)
-        }
-      },
+      conditions: [
+      //   {
+      //   bindItem: 1,
+      //   targetViewId: '1',
+      //   conditionType: 3,
+      //   conditionValue: '123',
+      //   // customCondition: view => {
+      //   //   let value = view.formModel[view.columns[0].columnProp]
+      //   //   let result = value === '21'
+      //   //   return Promise.resolve(result)
+      //   // }
+      // },
       {
-        bindColumn: 2,
+        bindItem: 1,
+        bindItemType: 'operation',
         targetViewId: '1',
         conditionType: 3,
-        conditionValue: 'value_2'
+        conditionValue: 'value_2',
+        isClickResultNow: true,
       }
     ]
     }, 
@@ -46,12 +48,12 @@
       desc: 'checkbox禁用<--input && select',
       conditions: [{
         targetViewId: '1',
-        bindColumn: 1,
+        bindItem: 1,
         conditionType: 3,
         conditionValue: '123'
       }, {
         targetViewId: '1',
-        bindColumn: 2,
+        bindItem: 2,
         conditionType: 3,
         conditionValue: 'value_1'
       }, ],
@@ -67,12 +69,12 @@
       desc: 'subView<--input && select',
       conditions: [{
         targetViewId: '1',
-        bindColumn: 1,
+        bindItem: 1,
         conditionType: 3,
         conditionValue: 'r'
       }, {
         targetViewId: '1',
-        bindColumn: 2,
+        bindItem: 2,
         conditionType: 3,
         conditionValue: 'value_3'
       }]
@@ -87,7 +89,7 @@
       desc: '子表date隐藏<--textarea',
       conditions: [{
         targetViewId: '1-2',
-        bindColumn: 11,
+        bindItem: 11,
         conditionType: 3,
         conditionValue: 'r'
       }]
@@ -103,7 +105,7 @@
       isClear: true,
       conditions: [{
         targetViewId: '1',
-        bindColumn: 1,
+        bindItem: 1,
         conditionType: 3,
         conditionValue: '321'
       }]
@@ -119,7 +121,7 @@
       isClear: true,
       conditions: [{
         targetViewId: '1-2',
-        bindColumn: 11,
+        bindItem: 11,
         conditionType: 3,
         conditionValue: '6'
       }]
@@ -135,7 +137,7 @@
       isClear: true,
       conditions: [{
         targetViewId: '1-2',
-        bindColumn: 11,
+        bindItem: 11,
         conditionType: 3,
         conditionValue: '7'
       }]
@@ -150,7 +152,7 @@
       isClear: false,
       desc: 'datetime隐藏<--input && select',
       conditions: [{
-        bindColumn: 2,
+        bindItem: 2,
         targetViewId: '1',
         conditionType: 3,
         conditionValue: 'value_3'

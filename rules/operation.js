@@ -18,15 +18,17 @@ class Operation {
     this.operationProp = `${this.view.viewProp}${DEVIDE}${this.prop}`
     this.customHandler = _.defaultValue(operationData.customHandler, false)
     this.api = _.defaultValue(operationData.api, null)
+    this.vm = null
     this.registerEvent('update', this.clickHandler())
   }
 
   triggerClick(vm) {
-    // console.log('gua')
+    this.vm = vm
     this.triggerEvent('update', vm)
   } 
 
-  handlerValidate(vm) {
+  handlerValidate() {
+    let vm = this.vm
     if (!this.isValidate) {
       return Promise.resolve()
     }
@@ -39,11 +41,11 @@ class Operation {
   }
 
   apiHandler() {
-    let n = 2
+    let n = 1
     return new Promise((res, rej) => {
       setTimeout(() => {
         if (n === 1) {
-          res(view, vm)
+          res(this.view, this.vm)
         } else {
           rej('aip错误')
         }
@@ -52,7 +54,8 @@ class Operation {
   }
 
   clickHandler() {
-    return vm => {
+    let vm = this.vm
+    return () => {
       this.loading = true
       return this.handlerValidate(vm).then(() => {
         console.log('点击按钮， 通过表单校验')

@@ -97,16 +97,16 @@ export default {
       })
     },
     clickButton(operation) {
-      // operation.triggerClick(this)
-      operation.clickHandler()(this).then(() => {
-        console.log('外部调用成功')
-        return Promise.resolve(true)
-      }).catch(err => {
-        console.log('外部调用失败', err)
-        return Promise.resolve(false)
-      }).then(status => {
-        console.log('操作结果：', status)
-      })
+      operation.triggerClick(this)
+      // operation.clickHandler()(this).then(() => {
+      //   console.log('外部调用成功')
+      //   return Promise.resolve(true)
+      // }).catch(err => {
+      //   console.log('外部调用失败', err)
+      //   return Promise.resolve(false)
+      // }).then(status => {
+      //   console.log('操作结果：', status)
+      // })
     }
   },
   mounted() {

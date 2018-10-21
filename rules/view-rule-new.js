@@ -16,7 +16,7 @@ class ViewRule {
     this.initViewRuleCondition(viewRuleData, view)
     this.initViewRuleHandler(viewRuleData, view)
     this.bindItems = this.conditions.map(condition => {
-      return condition.bindColumn
+      return condition.bindItem
     })
     this.registerEvent('created')
     this.registerEvent('update')
@@ -95,6 +95,7 @@ class ViewRule {
   }
 
   registerEvent(type) {
+    // console.log(this.bindItems)
     this.bindItems.forEach(item => {
       item.registerEvent(type, this.handler())
     })
