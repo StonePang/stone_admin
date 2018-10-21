@@ -19,7 +19,7 @@ export default {
   },
   watch: {
     model(val) {
-      this.column.triggerEvent('update', val)
+      this.column.triggerChange(val)
     }
   },
   created() {

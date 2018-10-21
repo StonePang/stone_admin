@@ -68,7 +68,12 @@ class Column {
       return
     }
     this.view.formModel[this.columnProp] = newValue
-    this.triggerEvent('update', newValue)
+    // this.triggerEvent('update', newValue)
+    this.triggerChange(newValue)
+  }
+
+  triggerChange(val) {
+    this.triggerEvent('update', val)
   }
 
   //将指定函数注册到view的事件中心，定义字段的创建/更新事件

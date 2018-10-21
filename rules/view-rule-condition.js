@@ -18,6 +18,7 @@ class ViewRuleCondition {
     this.bindColumn = this.view.columnMap[this.bindColumnProp]
     this.conditionType = viewRuleConditionData.conditionType
     this.conditionValue = viewRuleConditionData.conditionValue
+    // this.
   }
 
   // findColumnValue(columnProp) {

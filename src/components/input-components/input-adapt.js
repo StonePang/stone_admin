@@ -61,9 +61,7 @@ export default {
         value: val,
       }
       this.$emit('input-change', emitData)
-      this.column.triggerEvent('update', val)
-      //TODO:changeColumnValue不会触发，原因不明
-      // this.column.changeColumnValue(val)
+      this.column.triggerChange(val)
     }
   },
   methods: {

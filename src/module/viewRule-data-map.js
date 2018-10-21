@@ -1,20 +1,20 @@
     export default {
     1:{
       id: 21,
-      affectItems: [2],
+      affectItems: [1],
       targetViewId: '1',
-      affectType: 'subView',
-      type: 'clear',
+      affectType: 'operation',
+      type: 'disabled',
       conditionType: 'OR',
       changeValue: ['value_3'],
       changeRender: 'table',
       isClear: true,
       desc: 'datetime隐藏<--input && select',
-      customHandler: (view, result) => {
-        if(result) {
-          view.triggerEvent('update', 'clearFormModel')
-        }
-      },
+      // customHandler: (view, result) => {
+      //   if(result) {
+      //     view.triggerEvent('update', 'clearFormModel')
+      //   }
+      // },
       conditions: [{
         bindColumn: 1,
         targetViewId: '1',

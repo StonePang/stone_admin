@@ -1,4 +1,5 @@
 import Column from './column'
+import Operation from './operation'
 // import ViewRule from './view-rule'
 import ViewRule from './view-rule-new'
 import EventBus from './event-bus'
@@ -23,6 +24,10 @@ class View {
   get subViewData() {
     return _.defaultValue(this.viewData.subViewData, [])
   }
+
+  get operationData() {
+    return _.defaultValue(this.viewData.operationData, [])
+  }
   
   handlerCreated(viewData) {
     this.eventBus = new EventBus()
@@ -44,6 +49,8 @@ class View {
     this.initColumnMap(this.columns)
     this.initSubView(this.subViewData, this)
     this.initSubViewMap(this.subView)
+    this.initOperations(this.operationData, this)
+    this.initOperationMap(this.operations)
     this.registerEvent('update', 'clearFormModel', this.clearFormModel())
     this.registerEvent('update', 'disabledView', this.disabledView())
     this.registerEvent('update', 'changeRender', this.changeRender())
@@ -145,6 +152,29 @@ class View {
     // return map
     this.subViewMap = map
   }
+
+    initOperations(operationData, view) {
+      let operations = operationData.map(data => {
+        return new Operation(data, view);
+      });
+      this.operations = operations
+    }
+
+  initOperationMap(operations) {
+    let map = {}
+    operations.forEach(operation => {
+      let key = operation.operationProp
+      let e = map[key]
+      if (_.invalid(e)) {
+        map[key] = operation
+      } else {
+        console.log(`操作(${key})已经存在于OperationMap,不覆盖`)
+      }
+    })
+    // return map
+    this.operationMap = map
+  }
+
 
   //清空formModel，只清空字段的值，不处理子视图
   clearFormModel() {

@@ -3,6 +3,9 @@
     <el-button class='opration-top' @click='validateTest'>validate</el-button>
     <el-button class='opration-top' @click='resetForm'>resetForm</el-button>
     <el-button class='opration-top' @click='changeRenderType'>rendertype</el-button>
+    <template v-for='operation in operations'>
+      <my-button v-if='operation.isShow' :operation='operation' :key='operation.id' @click='clickButton'/>
+    </template>
     <p class='form-title'>{{view.title}}</p>
     <el-form :model="formModel" v-if='view.isShow' ref='form' class='form-content' show-message label-width="100px" validate-on-rule-change style='width: 1200px'>
       <el-row :gutter='gutter'>
@@ -23,6 +26,7 @@
 
 <script>
 import inputAdapt from '~input/input-adapt'
+import MyButton from '~common/button'
 import detailFormItem from '~input/detail-form-item'
 import Column from '~rules/column'
 export default {
@@ -30,6 +34,7 @@ export default {
   components: {
     inputAdapt,
     detailFormItem,
+    MyButton,
   },
   props: {
     view: {
@@ -45,6 +50,7 @@ export default {
     return {
       columns: this.view.columns,
       formModel: this.view.formModel,
+      operations: this.view.operations,
       gutter: 30,
     }
   },
@@ -88,6 +94,18 @@ export default {
     changeRenderType() {
       this.view.columns.forEach(column => {
         column.renderType = column.renderType === 'form' ? 'table' : 'form'
+      })
+    },
+    clickButton(operation) {
+      // operation.triggerClick(this)
+      operation.clickHandler()(this).then(() => {
+        console.log('外部调用成功')
+        return Promise.resolve(true)
+      }).catch(err => {
+        console.log('外部调用失败', err)
+        return Promise.resolve(false)
+      }).then(status => {
+        console.log('操作结果：', status)
       })
     }
   },
