@@ -13,27 +13,32 @@ class ViewRuleCondition {
     this.targetViewProp = viewRuleConditionData.targetViewId.split(DEVIDE).map(e => {
       return `V${TAG}${e}`
     }).join(DEVIDE)
+    this.customCondition = viewRuleConditionData.customCondition || null
     this.bindColumnProp = `${this.targetViewProp}${DEVIDE}C${TAG}${viewRuleConditionData.bindColumn}`
     this.bindColumn = this.view.columnMap[this.bindColumnProp]
     this.conditionType = viewRuleConditionData.conditionType
     this.conditionValue = viewRuleConditionData.conditionValue
   }
 
-  findColumnValue(columnProp) {
-    let result
-    if (_.hasKey(this.formModel, columnProp)) {
-      result = this.formModel[columnProp]
-    } else {
-      result = this.view.findColumnValue(columnProp)
-    }
-    return result
-  }
+  // findColumnValue(columnProp) {
+  //   let result
+  //   if (_.hasKey(this.formModel, columnProp)) {
+  //     result = this.formModel[columnProp]
+  //   } else {
+  //     result = this.view.findColumnValue(columnProp)
+  //   }
+  //   return result
+  // }
 
   //返回一个Promise
   //promise.reject()  视图条件异常
   //promise.resolve(result) 试图条件完成计算，result为结果
   handlerResult() {
-    let bindColumnValue = this.findColumnValue(this.bindColumn.columnProp)
+    if (this.customCondition) {
+      return this.customCondition(this.view)
+    }
+    // let bindColumnValue = this.findColumnValue(this.bindColumn.columnProp)
+    let bindColumnValue = this.view.formModel[this.bindColumn.columnProp]
     let conditionValue = this.conditionValue
     let conditionType = this.conditionType
     let conditionMap = {

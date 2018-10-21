@@ -4,23 +4,36 @@
       affectItems: [2],
       targetViewId: '1',
       affectType: 'subView',
-      type: 'changeRender',
+      type: 'clear',
       conditionType: 'OR',
       changeValue: ['value_3'],
       changeRender: 'table',
       isClear: true,
       desc: 'datetime隐藏<--input && select',
+      customHandler: (view, result) => {
+        if(result) {
+          view.triggerEvent('update', 'clearFormModel')
+        }
+      },
       conditions: [{
         bindColumn: 1,
         targetViewId: '1',
         conditionType: 3,
-        conditionValue: '123'
-      }, {
+        conditionValue: '123',
+        customCondition: view => {
+          // console.log(view)
+          let value = view.formModel[view.columns[0].columnProp]
+          let result = value === '21'
+          return Promise.resolve(result)
+        }
+      },
+      {
         bindColumn: 2,
         targetViewId: '1',
         conditionType: 3,
         conditionValue: 'value_2'
-      }]
+      }
+    ]
     }, 
     2:{
       id: 22,

@@ -26,16 +26,16 @@ class ViewRuleHandler {
   //对当前的视图规则进行计算，得出规则结果
   //在初始化和chang时均要触发
   //利用闭包实现对this的保留,跨作用域保存到事件中心
-  handler() {
-    return (result) => {
-      console.log(this, 'view-rule--->>>视图条件事件触发，运行结果', result)
-      if (this.affectType === 'column') {
-        this.handlerColumnType(result)
-      } else if (this.affectType === 'subView') {
-        this.handlerSubViewType(result)
-      }
-    }
-  }
+  // handler() {
+  //   return (result) => {
+  //     console.log(this, 'view-rule--->>>视图条件事件触发，运行结果', result)
+  //     if (this.affectType === 'column') {
+  //       this.handlerColumnType(result)
+  //     } else if (this.affectType === 'subView') {
+  //       this.handlerSubViewType(result)
+  //     }
+  //   }
+  // }
 
   handlerEachAffectItem(callback) {
     this.affectItems.forEach(item => {

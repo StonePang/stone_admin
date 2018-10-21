@@ -2,7 +2,6 @@ import _ from '~utils/utils'
 import ViewRuleCondition from './view-rule-condition'
 import ViewRuleHandlerColumn from './view-rule-handler-column'
 import ViewRuleHandlerSubView from './view-rule-handler-view'
-import { runInThisContext } from 'vm';
 
 class ViewRule {
   constructor(viewRuleData, view) {
@@ -12,6 +11,7 @@ class ViewRule {
     this.type = viewRuleData.type
     this.affectType = viewRuleData.affectType
     this.conditionType = viewRuleData.conditionType || 'AND'
+    this.customHandler = viewRuleData.customHandler || null
     this.initViewRuleCondition(viewRuleData, view)
     this.initViewRuleHandler(viewRuleData, view)
     this.bindItems = this.conditions.map(condition => {
@@ -47,6 +47,10 @@ class ViewRule {
     }
   }
 
+  //处理所有的条件，整理为最终结果
+  //返回promise
+  //reject(): 视图条件异常
+  //resolve(result)： result是最终视图条件结果
   getResult() {
     let method = this.methodName[this.conditionType]
     if (!method) {
@@ -68,12 +72,14 @@ class ViewRule {
   }
 
   handler() {
-    // let result = this.getResult()
     return () => {
-      // let result = this.getResult()
       return this.getResult().then((result) => {
         console.log(this, `视图条件结果--->>>${result}`)
-        this.viewRuleHandler.handler(result)
+        if (this.customHandler) {
+          this.customHandler(this.view, result)
+        }else {
+          this.viewRuleHandler.handler(result)
+        }
       }).catch((errMsg) => {
         console.warn('视图条件异常', errMsg, this)
       })
