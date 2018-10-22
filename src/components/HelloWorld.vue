@@ -90,6 +90,7 @@
 <script>
 import moment from "~utils/date";
 import Validator from "~utils/async-validator";
+import AsyncQueue from '~utils/async-queue'
 // import AsyncValidator from "async-validator";
 export default {
   name: "HelloWorld",
@@ -152,6 +153,52 @@ export default {
           res(n)
         }
       })
+    },
+    gua1(n) {
+      return new Promise((res, rej) => {
+        setTimeout(() => {
+          console.log('in ', 1)
+          if(n > 10) {
+            rej(n+1)
+          } else {
+            res(n -1)
+          }
+        }, 2000)
+      })
+    },
+    gua2(n) {
+      return new Promise((res, rej) => {
+        setTimeout(() => {
+          console.log('in ', 2)
+          if(n > 10) {
+            rej(n+1)
+          } else {
+            res(n -1)
+          }
+        }, 1000)
+      })
+    },
+    gua3(n) {
+      return new Promise((res, rej) => {
+        setTimeout(() => {
+          console.log('in ', 3)
+          if(n > 10) {
+            rej(n+1)
+          } else {
+            res(n -1)
+          }
+        }, 500)
+      })
+    },
+    queue(arr, ...arg) {
+      var sequence = Promise.resolve(...arg)
+      arr.reduce((pre, fn) => {
+        console.log(pre)
+        return pre.then(data => {
+          return fn(data)
+        })
+      }, sequence)
+      return sequence
     }
   },
   computed: {
@@ -167,56 +214,58 @@ export default {
     }
   },
   created() {
-    // this.validator = new Validator(this.model, this.rule);
-    // this.validator.validate().then(err => {
-    //   console.log(err);
-    // });
-    // Validator(this.model, this.rule)
-    //   .then(data => {
-    //     console.log("then", data);
-    //   })
-    //   .catch(err => {
-    //     console.log("catch", err);
-    //   });
-    this.test(1).then(data => {
-      console.log('then_1', data)
-      return this.test(data + 5)
-        // .then(data => {
-        //   console.log('in then', data)
-        //   return Promise.reject(data + 5)
-        // })
-      .catch(data => {
-        console.log('in catch', data)
-        // return Promise.reject(data + 5)
-        return data + 5
-      })
-    }).then(data => {
-      console.log('then_2', data)
-      return data + 5
-    }).then(data => {
-      console.log('then_3', data)
-      return data + 5
-    }).catch(data => {
-      console.log('catch', data)
-      return data + 5
-    }).then(data => {
-      console.log('then_4', data)
-      return data + 5
-    }).catch(data => {
-      console.log('catch_2', data)
-      return data + 5
+    let arr = [this.gua1, this.gua2, this.gua3]
+    let queue = new AsyncQueue(arr)
+    let result = queue.handler(11)
+    result.then(data => {
+      console.log(data)
+    }).catch(err => {
+      console.log('err', err)
     })
-    // this.test(7).then(data => {
+    // this.gua(1).then(() => {
+    //   return this.gua(2, 1000)
+    // }).then(() => {
+    //   return this.gua(3, 2000)
+    // })
+    // this.test(1).then(data => {
     //   console.log('then_1', data)
     //   return this.test(data + 5)
+    //     // .then(data => {
+    //     //   console.log('in then', data)
+    //     //   return Promise.reject(data + 5)
+    //     // })
+    //   .catch(data => {
+    //     console.log('in catch', data)
+    //     // return Promise.reject(data + 5)
+    //     return data + 5
+    //   })
     // }).then(data => {
     //   console.log('then_2', data)
-    //   return data
+    //   return data + 5
     // }).then(data => {
     //   console.log('then_3', data)
+    //   return data + 5
     // }).catch(data => {
     //   console.log('catch', data)
+    //   return data + 5
+    // }).then(data => {
+    //   console.log('then_4', data)
+    //   return data + 5
+    // }).catch(data => {
+    //   console.log('catch_2', data)
+    //   return data + 5
     // })
+    // // this.test(7).then(data => {
+    // //   console.log('then_1', data)
+    // //   return this.test(data + 5)
+    // // }).then(data => {
+    // //   console.log('then_2', data)
+    // //   return data
+    // // }).then(data => {
+    // //   console.log('then_3', data)
+    // // }).catch(data => {
+    // //   console.log('catch', data)
+    // // })
   }
 };
 </script>
