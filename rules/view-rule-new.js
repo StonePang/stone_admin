@@ -3,7 +3,7 @@ import ViewRuleCondition from './view-rule-condition'
 import ViewRuleHandlerColumn from './view-rule-handler-column'
 import ViewRuleHandlerSubView from './view-rule-handler-view'
 import ViewRuleHandlerOperation from './view-rule-handler-operation'
-
+import EventHandler from './event-handler'
 class ViewRule {
   constructor(viewRuleData, view) {
     this.view = view
@@ -13,13 +13,18 @@ class ViewRule {
     this.affectType = viewRuleData.affectType
     this.conditionType = viewRuleData.conditionType || 'AND'
     this.customHandler = viewRuleData.customHandler || null
+    this.sort = viewRuleData.sort || 1
     this.initViewRuleCondition(viewRuleData, view)
     this.initViewRuleHandler(viewRuleData, view)
     this.bindItems = this.conditions.map(condition => {
       return condition.bindItem
     })
-    this.registerEvent('created')
-    this.registerEvent('update')
+    this.isTriggerNow = _.defaultValue(viewRuleData.isTriggerNow, true)
+    this.isTriggerOnce = _.defaultValue(viewRuleData.isTriggerOnce, false)
+    this.initEventHandler()
+    // this.registerEvent('created')
+    // this.registerEvent('update')
+    this.registerEvent()
   }
 
   get methodName() {
@@ -48,6 +53,22 @@ class ViewRule {
       console.warn(`视图条件-->${this.id}的影响对象类型(${this.affectType})不存在，清检查`)
       this.viewRuleHandler = null
     }
+  }
+
+  initEventHandler() {
+    // let name = `view-rule:${this.id}`
+    // let sort = Number(this.sort)
+    // let isSync = true
+    // let isTriggerNow = this.isTriggerNow
+    let data = {
+      name: `view-rule:${this.id}`,
+      sort: Number(this.sort),
+      isSync: true,
+      isTriggerNow: this.isTriggerNow,
+      isTriggerOnce: this.isTriggerOnce
+    }
+    this.eventHandler = new EventHandler(data)
+    this.eventHandler.addHandler(this.handler())
   }
 
   //处理所有的条件，整理为最终结果
@@ -94,10 +115,22 @@ class ViewRule {
     }
   }
 
-  registerEvent(type) {
+  // registerEvent(type) {
+  //   // console.log(this.bindItems)
+  //   this.bindItems.forEach(item => {
+  //     console.log(this.eventHandler)
+  //     // this.eventHandler.addHandler(this.handler())
+  //     // item.registerEvent(type, this.handler())
+  //     item.registerEvent(type, `view-rule`, this.eventHandler)
+  //   })
+  // }
+  registerEvent() {
     // console.log(this.bindItems)
     this.bindItems.forEach(item => {
-      item.registerEvent(type, this.handler())
+      // console.log(this.eventHandler)
+      // this.eventHandler.addHandler(this.handler())
+      // item.registerEvent(type, this.handler())
+      item.registerEvent(`view-rule`, this.eventHandler)
     })
   }
 

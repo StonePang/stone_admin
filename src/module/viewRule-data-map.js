@@ -28,8 +28,8 @@
       //   // }
       // },
       {
-        bindItem: 1,
-        bindItemType: 'operation',
+        bindItem: 2,
+        bindItemType: 'column',
         targetViewId: '1',
         conditionType: 3,
         conditionValue: 'value_2',

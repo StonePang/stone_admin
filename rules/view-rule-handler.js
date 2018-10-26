@@ -6,6 +6,7 @@ const TAG = '#'
 class ViewRuleHandler {
   constructor(viewRuleData, view) {
     this.init(viewRuleData, view)
+    // this.
   }
 
   //初始化实例

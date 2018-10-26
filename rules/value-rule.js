@@ -1,11 +1,14 @@
 import _ from '~utils/utils'
 import date from '~utils/date'
+import EventHandler from './event-handler'
 
 class ValueRule {
   constructor(column) {
     this.column = column
-    this.registerEvent('created')
-    this.registerEvent('update')
+    this.initEventHandler()
+    // this.registerEvent('created')
+    // this.registerEvent('update')
+    this.registerEvent()
   }
 
   get type() {
@@ -33,6 +36,25 @@ class ValueRule {
       time: this.handlerDate.bind(this),
       timerange: this.handlerDates.bind(this),
     }
+  }
+
+  get busType() {
+    return {
+      created: true,
+      update: false,
+    }
+  }
+
+  initEventHandler() {
+    let data = {
+      name: `value-rule:${this.column.id}`,
+      sort: 1,
+      isSync: true,
+      isTriggerNow: true,
+      isTriggerOnce: false
+    }
+    this.eventHandler = new EventHandler(data)
+    this.eventHandler.addHandler(this.handler())
   }
 
   handler() {
@@ -122,8 +144,10 @@ class ValueRule {
     return result
   }
 
-  registerEvent(type) {
-    this.column.registerEvent(type, this.handler())
+  registerEvent() {
+    // this.eventHandler.addHandler(this.handler)
+    // console.log('this.eventHandler', this.eventHandler)
+    this.column.registerEvent(`value-rule`, this.eventHandler)
   }
 }
 

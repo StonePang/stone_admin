@@ -55,6 +55,7 @@ class View {
     this.registerEvent('update', 'disabledView', this.disabledView())
     this.registerEvent('update', 'changeRender', this.changeRender())
     this.initViewRules(this.viewRuleData, this)
+    // this.i
     console.log('view', this)
   }
 
@@ -207,26 +208,41 @@ class View {
     }
   }
   
-  registerEvent(type, eventName, callback, ...args) {
-    if (type !== 'created' && type !== 'update') {
-      console.warn(`view---(${type})类型的事件中心不存在，事件注册失败`)
-      return
-    }
-    let viewPrefix = `${type}_view:${this.id}_`
+  registerEvent(eventName, eventHandler, ...args) {
+    // if (type !== 'created' && type !== 'update') {
+    //   console.warn(`view---(${type})类型的事件中心不存在，事件注册失败`)
+    //   return
+    // }
+    // for (const type in busType) {
+    //   if (busType.hasOwnProperty(type) && busType[type]) {
+    //     let viewPrefix = `${type}_view:${this.id}_`
+    //     let name = eventName
+    //     if (!_.includes(eventName, viewPrefix)) {
+    //       name = viewPrefix + eventName
+    //     }
+    //     // let isTrigger = type === 'created' ? true : false
+    //     let isTrigger = busType.created
+    //     console.log(name, eventHandler)
+    //     this.eventBus.register(isTrigger, name, eventHandler, ...args)
+    //   }
+    // }
+    let viewPrefix = `view:${this.id}-`
     let name = eventName
     if (!_.includes(eventName, viewPrefix)) {
       name = viewPrefix + eventName
     }
-    let isTrigger = type === 'created' ? true : false
-    this.eventBus.register(isTrigger, name, callback, ...args)
+    // let isTrigger = type === 'created' ? true : false
+    // let isTrigger = busType.created
+    // console.log(name, eventHandler)
+    this.eventBus.register(name, eventHandler, ...args)
   }
 
-  triggerEvent(type, eventName, ...args) {
-    if (type !== 'created' && type !== 'update') {
-      console.warn(`view---(${type})类型的事件中心不存在，事件触发失败`)
-      return
-    }
-    let viewPrefix = `${type}_view:${this.id}_`
+  triggerEvent(eventName, ...args) {
+    // if (type !== 'created' && type !== 'update') {
+    //   console.warn(`view---(${type})类型的事件中心不存在，事件触发失败`)
+    //   return
+    // }
+    let viewPrefix = `view:${this.id}-`
     let name = eventName
     if (!_.includes(eventName, viewPrefix)) {
       name = viewPrefix + eventName

@@ -3,19 +3,22 @@ class EventBus {
     this.eventBus = {}
   }
 
-  register(isTrigger = false, eventName, callback, ...args) {
+  register(eventName, eventHandler, ...args) {
     let hasEvent = this.eventBus.hasOwnProperty(eventName)
-    if(!hasEvent) {
-      this.eventBus[eventName] = [callback]
-    } else {
-      // console.log(`(${eventName})存在于事件bus中，此事件注册执行push`)
-      this.eventBus[eventName].push(callback)
+    if(hasEvent) {
+      console.warn(`(${eventName})存在于事件bus中，此事件注册不覆盖`)
+      return
     }
+    this.eventBus[eventName] = eventHandler
     //isTrigger 立即执行一次绑定函数，用于created类型事件
-    if (isTrigger === true) {
-      // console.log(`eventBus注册事件后立即执行-->>(${eventName})`)
-      callback(...args)
-    }
+    // if (isTrigger === true) {
+    //   // console.log(`eventBus注册事件后立即执行-->>(${eventName})`)
+    //   if (typeof eventHandler === 'function') {
+    //     eventHandler(...args)
+    //   } else if (typeof eventHandler === 'object') {
+    //     eventHandler.trigger(...args)
+    //   }
+    // }
   }
 
   trigger(eventName, ...args) {
@@ -24,9 +27,14 @@ class EventBus {
       // console.log(`(${eventName})不在事件bus中，无法trigger`, this)
       return
     }
-    let callbacks = this.eventBus[eventName]
-    callbacks.forEach(callback => {
-      callback(...args)
+    let eventHandlers = this.eventBus[eventName]
+    eventHandlers.forEach(eventHandler => {
+      console.log(eventHandler)
+      if (typeof eventHandler === 'function') {
+        eventHandler(...args)
+      } else if (typeof eventHandler === 'object') {
+        eventHandler.trigger(...args)
+      }
     })
   }
 

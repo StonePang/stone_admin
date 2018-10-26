@@ -1,4 +1,5 @@
 import _ from '~utils/utils'
+import EventHandler from './event-handler'
 
 const DEVIDE = '-'
 const TAG = '#'
@@ -19,7 +20,9 @@ class Operation {
     this.customHandler = _.defaultValue(operationData.customHandler, false)
     this.api = _.defaultValue(operationData.api, null)
     this.vm = null
-    this.registerEvent('update', this.clickHandler())
+    this.initEventHandler()
+    this.registerEvent('update', 'validate', this.handlerValidate())
+    this.registerEvent('update', 'api', this.handlerapi())
   }
 
   triggerClick(vm) {
@@ -28,29 +31,32 @@ class Operation {
   } 
 
   handlerValidate() {
-    let vm = this.vm
-    if (!this.isValidate) {
-      return Promise.resolve()
+    return () => {
+      if (!this.isValidate) {
+        return Promise.resolve()
+      }
+      return this.vm.validate().then(() => {
+        return Promise.resolve()
+      }).catch(() => {
+        let errMsg = '表单校验未通过'
+        return Promise.reject(errMsg)
+      })
     }
-    return vm.validate().then(() => {
-      return Promise.resolve()
-    }).catch(() => {
-      let errMsg = '表单校验未通过'
-      return Promise.reject(errMsg)
-    })
   }
 
-  apiHandler() {
-    let n = 1
-    return new Promise((res, rej) => {
-      setTimeout(() => {
-        if (n === 1) {
-          res(this.view, this.vm)
-        } else {
-          rej('aip错误')
-        }
-      }, 1000)
-    })
+  handlerapi() {
+    return () => {
+      let n = 1
+      return new Promise((res, rej) => {
+        setTimeout(() => {
+          if (n === 1) {
+            res(this.view, this.vm)
+          } else {
+            rej('aip错误')
+          }
+        }, 1000)
+      })
+    }
   }
 
   clickHandler() {
@@ -81,15 +87,27 @@ class Operation {
     }
   }
 
+  initEventHandler() {
+    let prefix = `operation:${this.id}-`
+    this.validateHandler = new EventHandler(`${prefix}validate`, 1, false)
+    this.apiHandler = new EventHandler(`${prefix}api`, 2, false)
+    this.operationRuleHandler = new EventHandler(`${prefix}operation-rule`, 3, false)
+  }
 
   //将指定函数注册到view的事件中心，定义字段的创建/更新事件
-  registerEvent(type, callback) {
+  registerEvent(type, spaceName, eventHandler) {
     let eventName = `operation:${this.id}`
     if (type !== 'created' && type !== 'update') {
       console.log(`operation---(${type})类型的事件总线不存在，事件注册失败`)
       return
     }
-    this.view.registerEvent(type, eventName, callback)
+    let map = {
+      'validate': 'validateHandler',
+      'api': 'apiHandler',
+      'operation-rule': 'operationRuleHandler',
+    }
+    let operationEventhandler = this[map[spaceName]].addHandler(eventHandler)
+    this.view.registerEvent(type, eventName, operationEventhandler)
   }
 
 
