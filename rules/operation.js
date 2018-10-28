@@ -21,13 +21,14 @@ class Operation {
     this.api = _.defaultValue(operationData.api, null)
     this.vm = null
     this.initEventHandler()
-    this.registerEvent('update', 'validate', this.handlerValidate())
-    this.registerEvent('update', 'api', this.handlerapi())
+    this.view.registerEvent(`operation:${this.id}`, this.eventBus)
+    // this.registerEvent('update', 'validate', this.handlerValidate())
+    // this.registerEvent('update', 'api', this.handlerapi())
   }
 
   triggerClick(vm) {
     this.vm = vm
-    this.triggerEvent('update', vm)
+    this.triggerEvent(vm)
   } 
 
   handlerValidate() {
@@ -89,9 +90,31 @@ class Operation {
 
   initEventHandler() {
     let prefix = `operation:${this.id}-`
-    this.validateHandler = new EventHandler(`${prefix}validate`, 1, false)
-    this.apiHandler = new EventHandler(`${prefix}api`, 2, false)
-    this.operationRuleHandler = new EventHandler(`${prefix}operation-rule`, 3, false)
+    let validateData = {
+      name: `${prefix}validate`,
+      sort: 1,
+      isSync: false,
+      isTriggerNow: false,
+      isTriggerOnce: false,
+    }
+    let apiData = {
+      name: `${prefix}api`,
+      sort: 2,
+      isSync: false,
+      isTriggerNow: false,
+      isTriggerOnce: false,
+    }
+    let validateHandler = new EventHandler(validateData)
+    validateHandler.addHandler(this.handlerValidate())
+    let apiHandler = new EventHandler(apiData)
+    apiHandler.addHandler(this.handlerapi())
+    console.log('---', validateHandler)
+    // this.operationRuleHandler = new EventHandler(`${prefix}operation-rule`, 3, false)
+    this.eventBus = [
+      validateHandler,
+      apiHandler,
+    ]
+
   }
 
   //将指定函数注册到view的事件中心，定义字段的创建/更新事件
@@ -111,13 +134,13 @@ class Operation {
   }
 
 
-  triggerEvent(type, ...arg) {
-    if (type !== 'created' && type !== 'update') {
-      console.log(`operation---triggerEvent---(${type})类型的字段事件不存在`)
-      return
-    }
+  triggerEvent(...arg) {
+    // if (type !== 'created' && type !== 'update') {
+    //   console.log(`operation---triggerEvent---(${type})类型的字段事件不存在`)
+    //   return
+    // }
     let eventName = `operation:${this.id}`
-    this.view.triggerEvent(type, eventName, ...arg)
+    this.view.triggerEvent(eventName, ...arg)
   }
 
   addEventListener(type, callback) {

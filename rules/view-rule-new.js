@@ -19,7 +19,9 @@ class ViewRule {
     this.bindItems = this.conditions.map(condition => {
       return condition.bindItem
     })
+    //是否在事件中心注册后立即执行一次，用于created的控制
     this.isTriggerNow = _.defaultValue(viewRuleData.isTriggerNow, true)
+    //是否只执行一次
     this.isTriggerOnce = _.defaultValue(viewRuleData.isTriggerOnce, false)
     this.initEventHandler()
     // this.registerEvent('created')

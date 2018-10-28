@@ -14,7 +14,7 @@ export default {
   ],
   viewRuleData: [
     viewRuleDataMap['1'],
-    // viewRuleDataMap['2'],
+    viewRuleDataMap['2'],
     // viewRuleDataMap['3'],
     // viewRuleDataMap['5'],
     // viewRuleDataMap['6'],
@@ -25,8 +25,8 @@ export default {
   ],
   formModel: {
     // 'V:1': {
-      'V#1-C#1': 'r',
-      'V#1-C#2': 'gua',
+      'V#1-C#1': '123',
+      'V#1-C#2': 'value_2',
       'V#1-C#3': ['value_1', 'gua_2'],
       'V#1-C#4': null,
     // }

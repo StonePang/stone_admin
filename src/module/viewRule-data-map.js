@@ -5,6 +5,9 @@
       targetViewId: '1',
       affectType: 'column',
       type: 'disabled',
+      sort: 1,
+      isTriggerNow: false,
+      isTriggerOnce: true,
       conditionType: 'or',
       changeValue: ['value_3'],
       changeRender: 'table',
@@ -39,10 +42,13 @@
     }, 
     2:{
       id: 22,
-      affectItems: [3],
+      affectItems: [4],
       affectType: 'column',
       targetViewId: '1',
       isClear: true,
+      sort: 2,
+      isTriggerNow: true,
+      isTriggerOnce: false,
       type: 'disabled',
       isClear: true,
       desc: 'checkbox禁用<--input && select',
@@ -55,7 +61,7 @@
         targetViewId: '1',
         bindItem: 2,
         conditionType: 3,
-        conditionValue: 'value_1'
+        conditionValue: 'value_2'
       }, ],
     }, 
     3:{

@@ -7,7 +7,7 @@ export default {
     loading: false,
     displayType: 'primary',
     size: 'small',
-    isValidate: false,
+    isValidate: true,
     api: true,
     // customHandler: (view, vm) => {
     //   let n = 2

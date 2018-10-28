@@ -34,7 +34,7 @@ class EventHandler {
       }
       this.handler.push(handler)
       this.handler.sort((a, b) => {
-        return a.sort < b.sort
+        return a.sort > b.sort
       })
       // if(this.isTriggerNow) {
       //   handler.trigger(...args)
@@ -57,7 +57,6 @@ class EventHandler {
   }
 
   triggerSync(...args) {
-    console.log(this.handler)
     this.handler.forEach(item => {
       // debugger
       // let handler = item
@@ -78,14 +77,15 @@ class EventHandler {
   }
 
   triggerAsync(...args) {
-    let handlerQueue = this.handler.map(item => {
-      let handler = item.handler
+    let handlerQueue = this.handler.map(handler => {
+      // let handler = item.handler
       if (typeof handler === 'function') {
         return handler
       } else if (typeof handler === 'object') {
         return handler.triggger(...args)
       }
     })
+    console.log(this.handler, handlerQueue)
     let queue = new AsyncQueue(handlerQueue)
     return queue.handler(...args)
   }
