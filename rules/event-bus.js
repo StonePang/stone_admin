@@ -1,3 +1,5 @@
+import _ from '~utils/utils'
+
 class EventBus {
   constructor() {
     this.eventBus = {}
@@ -27,15 +29,19 @@ class EventBus {
       // console.log(`(${eventName})不在事件bus中，无法trigger`, this)
       return
     }
-    let eventHandlers = this.eventBus[eventName]
-    eventHandlers.forEach(eventHandler => {
-      console.log(eventHandler)
-      if (typeof eventHandler === 'function') {
-        eventHandler(...args)
-      } else if (typeof eventHandler === 'object') {
-        eventHandler.trigger(...args)
-      }
-    })
+    this.eventBus[eventName].trigger(...args)
+    // let eventHandlers = this.eventBus[eventName].handler
+    // if (_.invalid(eventHandlers)) {
+    //   console.warn(`(${eventName})事件对象的handler不存在，无法触发事件`)
+    // }
+    // eventHandlers.forEach(eventHandler => {
+    //   // console.log(eventHandler)
+    //   if (typeof eventHandler === 'function') {
+    //     eventHandler(...args)
+    //   } else if (typeof eventHandler === 'object') {
+    //     eventHandler.trigger(...args)
+    //   }
+    // })
   }
 
   destroy() {

@@ -50,7 +50,7 @@
       isTriggerNow: true,
       isTriggerOnce: false,
       type: 'disabled',
-      isClear: true,
+      isClear: false,
       desc: 'checkbox禁用<--input && select',
       conditions: [{
         targetViewId: '1',

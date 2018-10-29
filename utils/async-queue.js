@@ -10,7 +10,9 @@ class AsyncQueue {
   //args是第一个Promise的参数
   handler(...args) {
     return this.queue.reduce((pre, fn) => {
+      // console.log('fn', fn)
       return pre.then(data => {
+        console.log('fn', fn, pre)
         return fn(data)
       })
     }, Promise.resolve(...args))

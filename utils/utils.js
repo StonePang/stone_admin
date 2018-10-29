@@ -42,4 +42,7 @@ export default {
   cloneDeep(object) {
     return _.cloneDeep(object)
   },
+  flattenDeep(array) {
+    return _.flattenDeep(array)
+  }
 }

@@ -1,5 +1,6 @@
 import _ from '~utils/utils'
 import EventHandler from './event-handler'
+import AsyncQueue from '~utils/async-queue'
 
 const DEVIDE = '-'
 const TAG = '#'
@@ -27,6 +28,7 @@ class Operation {
   }
 
   triggerClick(vm) {
+    console.log('trigger click')
     this.vm = vm
     this.triggerEvent(vm)
   } 
@@ -37,6 +39,7 @@ class Operation {
         return Promise.resolve()
       }
       return this.vm.validate().then(() => {
+        console.log('validate res')
         return Promise.resolve()
       }).catch(() => {
         let errMsg = '表单校验未通过'
@@ -51,8 +54,10 @@ class Operation {
       return new Promise((res, rej) => {
         setTimeout(() => {
           if (n === 1) {
+            console.log('api res')
             res(this.view, this.vm)
           } else {
+            console.log('api rej')
             rej('aip错误')
           }
         }, 1000)
@@ -89,6 +94,14 @@ class Operation {
   }
 
   initEventHandler() {
+    let eventBusData = {
+      name: `operation:${this.id}`,
+      isSync: false,
+      isTriggerNow: false,
+      isTriggerOnce: false,
+    }
+    let eventBusEventHandler = new EventHandler(eventBusData)
+
     let prefix = `operation:${this.id}-`
     let validateData = {
       name: `${prefix}validate`,
@@ -108,13 +121,10 @@ class Operation {
     validateHandler.addHandler(this.handlerValidate())
     let apiHandler = new EventHandler(apiData)
     apiHandler.addHandler(this.handlerapi())
-    console.log('---', validateHandler)
     // this.operationRuleHandler = new EventHandler(`${prefix}operation-rule`, 3, false)
-    this.eventBus = [
-      validateHandler,
-      apiHandler,
-    ]
-
+    eventBusEventHandler.addHandler(validateHandler)
+    eventBusEventHandler.addHandler(apiHandler)
+    this.eventBus = eventBusEventHandler
   }
 
   //将指定函数注册到view的事件中心，定义字段的创建/更新事件
@@ -134,13 +144,14 @@ class Operation {
   }
 
 
-  triggerEvent(...arg) {
-    // if (type !== 'created' && type !== 'update') {
-    //   console.log(`operation---triggerEvent---(${type})类型的字段事件不存在`)
-    //   return
-    // }
+  triggerEvent(...args) {
     let eventName = `operation:${this.id}`
-    this.view.triggerEvent(eventName, ...arg)
+    this.view.triggerEvent(eventName, ...args)
+
+    // let handlerQueue = [this.handlerValidate(), this.handlerapi()]
+    // let queue = new AsyncQueue(handlerQueue)
+    // console.log(handlerQueue)
+    // return queue.handler(...args)
   }
 
   addEventListener(type, callback) {

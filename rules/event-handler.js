@@ -3,7 +3,7 @@ import AsyncQueue from '~utils/async-queue'
 class EventHandler {
   constructor(data) {
     this.name = data.name
-    this.sort = data.sort
+    this.sort = data.sort || 1
     this.isSync = data.isSync
     this.isTriggerNow = _.defaultValue(data.isTriggerNow, false)
     this.isTriggerOnce = _.defaultValue(data.isTriggerOnce, false)
@@ -76,16 +76,50 @@ class EventHandler {
     return Promise.resolve(true)
   }
 
+  // triggerAsync(...args) {
+  //   console.log(this.handler)
+  //   let handlerQueue = this.handler.map(item => {
+  //     // let handler = item.handler
+  //     let handler = item
+  //     if (typeof handler === 'function') {
+  //       console.log('function', handler)
+  //       return handler
+  //     } else if (typeof handler === 'object') {
+  //       console.log('object', item)
+  //       // return handler.triggger(...args)
+  //       return item.trigger(...args)
+  //     }
+  //   })
+  //   console.log('handlerQueue', handlerQueue)
+  //   let queue = new AsyncQueue(handlerQueue)
+  //   console.log('queue', queue, queue.handler(...args))
+  //   return queue.handler(...args)
+  // }
+
+  // 异步执行方法1
+  // 先递归，拍平得到所有异步函数的数组，然后放入数组一次性异步计算
   triggerAsync(...args) {
-    let handlerQueue = this.handler.map(handler => {
-      // let handler = item.handler
-      if (typeof handler === 'function') {
-        return handler
-      } else if (typeof handler === 'object') {
-        return handler.triggger(...args)
-      }
-    })
-    console.log(this.handler, handlerQueue)
+    let promises = handlers => {
+      let result = []
+      let handlerQueue = handlers.map(handler => {
+        if (typeof handler === 'function') {
+          console.log('function', handler)
+          return handler
+        } else if (typeof handler === 'object') {
+          console.log('object', handler)
+          // return handler.triggger(...args)
+          return promises(handler.handler)
+        }
+      })
+      // result.push(...handlerQueue)
+      console.log('before', result, handlerQueue)
+      result = [...result, ...handlerQueue]
+      console.log('handlerQueue', handlerQueue, result)
+      return result
+    }
+    //拍平得到所有异步函数数组
+    let handlerQueue = _.flattenDeep(promises(this.handler))
+    console.log(handlerQueue)
     let queue = new AsyncQueue(handlerQueue)
     return queue.handler(...args)
   }

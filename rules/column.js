@@ -92,6 +92,14 @@ class Column {
 
   //注册字段内的事件handler，一种类型注册一个，注册的时候定义name,sort,isSync
   initEventHandler() {
+    let eventBusData = {
+      name: `column:${this.id}`,
+      isSync: true,
+      isTriggerNow: false,
+      isTriggerOnce: false,
+    }
+    let eventBusEventHandler = new EventHandler(eventBusData)
+
     let valueRuleData = {
       name: `column:${this.id}-value-rule`,
       sort: 1,
@@ -99,6 +107,7 @@ class Column {
       isTriggerNow: false,
       isTriggerOnce: false,
     }
+    let valueRuleEventHandler = new EventHandler(valueRuleData)
     let viewRuleData = {
       name: `column:${this.id}-view-rule`,
       sort: 2,
@@ -106,10 +115,14 @@ class Column {
       isTriggerNow: false,
       isTriggerOnce: false,
     }
-    this.eventBus = [
-      new EventHandler(valueRuleData),
-      new EventHandler(viewRuleData),
-    ]
+    let viewRuleEventHandler = new EventHandler(viewRuleData)
+    eventBusEventHandler.addHandler(valueRuleEventHandler)
+    eventBusEventHandler.addHandler(viewRuleEventHandler)
+    this.eventBus = eventBusEventHandler
+    // this.eventBus = [
+    //   new EventHandler(valueRuleData),
+    //   new EventHandler(viewRuleData),
+    // ]
   }
 
   //将子handler挂载到本事件内的
@@ -151,7 +164,7 @@ class Column {
     // }
     // let eventHandlerInColumn = this.eventbus
     console.log(this.eventBus, name)
-    let result = this.eventBus.find(item => {
+    let result = this.eventBus.handler.find(item => {
       return item.name === name
     })
     if(!result) {

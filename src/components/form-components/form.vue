@@ -59,13 +59,22 @@ export default {
   methods: {
     validate() {
       let formValidate = new Promise((resolve, reject) => {
-        this.$refs.form.validate((valid) => {
-          if (valid && this.formModel) {
-            resolve();
-          } else {
-            reject(false);
-          }
-        });
+        setTimeout(() => {
+          this.$refs.form.validate((valid) => {
+            if (valid && this.formModel) {
+              resolve();
+            } else {
+              reject(false);
+            }
+          });
+        }, 2500)
+        // this.$refs.form.validate((valid) => {
+        //   if (valid && this.formModel) {
+        //     resolve();
+        //   } else {
+        //     reject(false);
+        //   }
+        // });
       });
       if(!this.$refs.subforms) {
         return formValidate
