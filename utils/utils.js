@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import async from 'async'
 export default {
   isArray(arg) {
     return _.isArray(arg)
@@ -44,5 +45,6 @@ export default {
   },
   flattenDeep(array) {
     return _.flattenDeep(array)
-  }
+  },
+
 }

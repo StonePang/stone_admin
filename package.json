@@ -10,6 +10,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "async": "^2.6.1",
     "async-validate": "^1.0.1",
     "element-ui": "^2.4.6",
     "lodash": "^4.17.11",

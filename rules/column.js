@@ -154,15 +154,6 @@ class Column {
   //将指定函数注册到view的事件中心，定义字段的创建/更新事件
   registerEvent(spaceName, eventHandler) {
     let name = `column:${this.id}-${spaceName}`
-    // if (type !== 'created' && type !== 'update') {
-    //   console.log(`column---(${type})类型的事件总线不存在，事件注册失败`)
-    //   return
-    // }
-    // let map = {
-    //   'view-rule': 'ViewRuleEventHandler',
-    //   'value-rule': 'ValueRuleEventHandler'
-    // }
-    // let eventHandlerInColumn = this.eventbus
     console.log(this.eventBus, name)
     let result = this.eventBus.handler.find(item => {
       return item.name === name
@@ -171,16 +162,6 @@ class Column {
       console.warn(`(${name})不能绑定在对应字段的事件中心内-->>(${spaceName})不存在`)
     }
     result.addHandler(eventHandler)
-    // let name = eventName + '-' + spaceName
-    // let result = this.EventHandler.find(item => {
-    //   return item.name === name
-    // })
-    // result.addHandler(eventHandler)
-    // console.log('in column eventhandler', type, eventHandler, result)
-    // let gua = this[map[spaceName]]
-    // gua.addHandler(eventHandler)
-    // console.log(event)
-    // this.view.registerEvent(busType, eventName, gua)
   }
   
 

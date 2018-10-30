@@ -91,6 +91,7 @@
 import moment from "~utils/date";
 import Validator from "~utils/async-validator";
 import AsyncQueue from '~utils/async-queue'
+import _ from '~utils/utils'
 // import AsyncValidator from "async-validator";
 export default {
   name: "HelloWorld",
@@ -157,7 +158,7 @@ export default {
     gua1(n) {
       return new Promise((res, rej) => {
         setTimeout(() => {
-          console.log('in ', 1)
+          console.log('in ', 1, n)
           if(n > 10) {
             rej(n+1)
           } else {
@@ -215,6 +216,7 @@ export default {
   },
   created() {
     let arr = [this.gua1, this.gua2, this.gua3]
+    // let arr = [this.gua1(1), this.gua2(2), this.gua3(3)]
     let queue = new AsyncQueue(arr)
     let result = queue.handler(11)
     result.then(data => {
@@ -222,6 +224,7 @@ export default {
     }).catch(err => {
       console.log('err', err)
     })
+
     // this.gua(1).then(() => {
     //   return this.gua(2, 1000)
     // }).then(() => {

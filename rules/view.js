@@ -2,8 +2,10 @@ import Column from './column'
 import Operation from './operation'
 // import ViewRule from './view-rule'
 import ViewRule from './view-rule-new'
+import OperationRule from './operation-rule'
 import EventBus from './event-bus'
 import _ from '~utils/utils'
+import EventHandler from './event-handler'
 
 
 const DEVIDE = '-'
@@ -28,6 +30,10 @@ class View {
   get operationData() {
     return _.defaultValue(this.viewData.operationData, [])
   }
+
+  get operationRuleData() {
+    return _.defaultValue(this.viewData.operationRuleData, [])
+  }
   
   handlerCreated(viewData) {
     this.eventBus = new EventBus()
@@ -51,10 +57,12 @@ class View {
     this.initSubViewMap(this.subView)
     this.initOperations(this.operationData, this)
     this.initOperationMap(this.operations)
-    this.registerEvent('update', 'clearFormModel', this.clearFormModel())
-    this.registerEvent('update', 'disabledView', this.disabledView())
-    this.registerEvent('update', 'changeRender', this.changeRender())
+    // this.registerEvent('clearFormModel', this.clearFormModel())
+    this.initViewEventHandler()
+    // this.registerEvent('disabledView', this.disabledView())
+    // this.registerEvent('changeRender', this.changeRender())
     this.initViewRules(this.viewRuleData, this)
+    this.initOperationRules(this.operationRuleData, this)
     // this.i
     console.log('view', this)
   }
@@ -85,10 +93,17 @@ class View {
 
   //生成视图条件
   initViewRules(viewRuleData, view) {
-    let viewRules =  viewRuleData.map(data => {
+    let viewRules = viewRuleData.map(data => {
       return new ViewRule(data, view)
     })
     this.viewRules = viewRules
+  }
+
+  initOperationRules(operationRuleData, view) {
+    let operationRules = operationRuleData.map(data => {
+      return new OperationRule(data, view)
+    })
+    this.operationRules = operationRules
   }
 
   initFormModel(formModelData) {
@@ -176,6 +191,38 @@ class View {
     this.operationMap = map
   }
 
+  initViewEventHandler() {
+    let clearFormModelData = {
+      name: `clear`,
+      sort: 1,
+      isSync: true,
+      isTriggerNow: false,
+      isTriggerOnce: false,
+    }
+    let clearHandler = new EventHandler(clearFormModelData)
+    clearHandler.addHandler(this.clearFormModel())
+    let disabledData = {
+      name: `disabled`,
+      sort: 1,
+      isSync: true,
+      isTriggerNow: false,
+      isTriggerOnce: false,
+    }
+    let disabledHandler = new EventHandler(disabledData)
+    disabledHandler.addHandler(this.disabledView())
+    let changeRenderData = {
+      name: `changeRender`,
+      sort: 1,
+      isSync: true,
+      isTriggerNow: false,
+      isTriggerOnce: false,
+    }
+    let changeRenderHandler = new EventHandler(changeRenderData)
+    changeRenderHandler.addHandler(this.changeRender())
+    this.registerEvent('clearFormModel', clearHandler)
+    this.registerEvent('disabledView', disabledHandler)
+    this.registerEvent('changeRender', changeRenderHandler)
+  }
 
   //清空formModel，只清空字段的值，不处理子视图
   clearFormModel() {
@@ -202,6 +249,7 @@ class View {
   }
   disabledView() {
     return (status) => {
+      console.log('disabled view', status)
       this.columns.forEach(column => {
         column.disabled = status
       })
@@ -247,7 +295,7 @@ class View {
     if (!_.includes(eventName, viewPrefix)) {
       name = viewPrefix + eventName
     }
-    this.eventBus.trigger(name, ...args)
+    return this.eventBus.trigger(name, ...args)
   }
 
   destroy() {

@@ -12,11 +12,23 @@ class AsyncQueue {
     return this.queue.reduce((pre, fn) => {
       // console.log('fn', fn)
       return pre.then(data => {
-        console.log('fn', fn, pre)
         return fn(data)
       })
     }, Promise.resolve(...args))
   }
+
+  // handler() {
+  //   return this.queue.reduce((pre, fn) => {
+  //     return pre.then(() => {
+  //       return fn
+  //     })
+  //   }, Promise.resolve())
+  // }
+
+
+  // gua() {
+  //   promises.reduce((p1, p2) => p1.then(() => p2)).then((r) => r)
+  // }
 }
 
 export default AsyncQueue

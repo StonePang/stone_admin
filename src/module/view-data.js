@@ -1,6 +1,7 @@
 import columnDataMap from './column-data-map'
 import viewRuleDataMap from './viewRule-data-map'
 import operationdataMap from './operation-data-map'
+import operationRuleDataMap from './operation-rule-data-map'
 export default {
   id: 1,
   isShow: true,
@@ -22,6 +23,9 @@ export default {
   ],
   operationData: [
     operationdataMap['1'],
+  ],
+  operationRuleData: [
+    operationRuleDataMap['1']
   ],
   formModel: {
     // 'V:1': {

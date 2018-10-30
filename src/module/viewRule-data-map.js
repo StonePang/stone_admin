@@ -6,12 +6,12 @@
       affectType: 'column',
       type: 'disabled',
       sort: 1,
-      isTriggerNow: false,
-      isTriggerOnce: true,
+      isTriggerNow: true,
+      isTriggerOnce: false,
       conditionType: 'or',
       changeValue: ['value_3'],
       changeRender: 'table',
-      isClear: true,
+      isClear: false,
       desc: 'datetime隐藏<--input && select',
       // customHandler: (view, result) => {
       //   if(result) {

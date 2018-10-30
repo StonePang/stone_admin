@@ -42,7 +42,7 @@ class ViewRuleHandlerSubView extends ViewRuleHandler {
       if (result) {
         view.isShow = !status
         if (this.isClear) {
-          view.triggerEvent('update', 'clearFormModel')
+          view.triggerEvent('clearFormModel')
         }
       } else {
         view.isShow = status
@@ -52,9 +52,9 @@ class ViewRuleHandlerSubView extends ViewRuleHandler {
 
   handlerDisabled(result) {
     this.handlerEachAffectItem(view => {
-      view.triggerEvent('update', 'disabledView', result)
+      view.triggerEvent('disabledView', result)
       if (result && this.isClear) {
-        view.triggerEvent('update', 'clearFormModel')
+        view.triggerEvent('clearFormModel')
       }
     })
   }
@@ -62,7 +62,7 @@ class ViewRuleHandlerSubView extends ViewRuleHandler {
   handlerClear(result) {
     this.handlerEachAffectItem(view => {
       if (result) {
-        view.triggerEvent('update', 'clearFormModel')
+        view.triggerEvent('clearFormModel')
       }
     })
   }
@@ -73,12 +73,12 @@ class ViewRuleHandlerSubView extends ViewRuleHandler {
       if (result) {
         renderType = this.changeRender === 'form' ? 'form' : 'table'
         if(this.isClear) {
-          view.triggerEvent('update', 'clearFormModel')
+          view.triggerEvent('clearFormModel')
         }
       }else {
         renderType = this.changeRender === 'form' ? 'table' : 'form'
       }
-      view.triggerEvent('update', 'changeRender', renderType)
+      view.triggerEvent('changeRender', renderType)
     })
   }
 }

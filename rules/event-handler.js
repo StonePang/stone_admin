@@ -76,6 +76,16 @@ class EventHandler {
     return Promise.resolve(true)
   }
 
+  getPromise() {
+    let arr = this.handler.map(item => {
+      if(typeof item === 'function') {
+        return item
+      }
+    })
+    let queue = new AsyncQueue(arr)
+    return queue.handler()
+  }
+
   // triggerAsync(...args) {
   //   console.log(this.handler)
   //   let handlerQueue = this.handler.map(item => {
@@ -92,8 +102,10 @@ class EventHandler {
   //   })
   //   console.log('handlerQueue', handlerQueue)
   //   let queue = new AsyncQueue(handlerQueue)
-  //   console.log('queue', queue, queue.handler(...args))
-  //   return queue.handler(...args)
+  //   console.log('queue', queue)
+  //   let result = queue.handler(...args)
+  //   console.log('result', result)
+  //   return result
   // }
 
   // 异步执行方法1
@@ -103,23 +115,22 @@ class EventHandler {
       let result = []
       let handlerQueue = handlers.map(handler => {
         if (typeof handler === 'function') {
-          console.log('function', handler)
+          // console.log('function', handler)
           return handler
         } else if (typeof handler === 'object') {
-          console.log('object', handler)
-          // return handler.triggger(...args)
+          // console.log('object', handler)
           return promises(handler.handler)
         }
       })
       // result.push(...handlerQueue)
-      console.log('before', result, handlerQueue)
+      // console.log('before', result, handlerQueue)
       result = [...result, ...handlerQueue]
-      console.log('handlerQueue', handlerQueue, result)
+      // console.log('handlerQueue', handlerQueue, result)
       return result
     }
     //拍平得到所有异步函数数组
     let handlerQueue = _.flattenDeep(promises(this.handler))
-    console.log(handlerQueue)
+    // console.log(handlerQueue)
     let queue = new AsyncQueue(handlerQueue)
     return queue.handler(...args)
   }

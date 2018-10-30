@@ -117,36 +117,63 @@ class Operation {
       isTriggerNow: false,
       isTriggerOnce: false,
     }
+    let operationRuleData = {
+      name: `operation:${this.id}-operation-rule`,
+      sort: 3,
+      isSync: false,
+      isTriggerNow: false,
+      isTriggerOnce: false,
+    }
+    // let operationRuleEventHandler = new EventHandler(operationRuleData)
+
     let validateHandler = new EventHandler(validateData)
     validateHandler.addHandler(this.handlerValidate())
     let apiHandler = new EventHandler(apiData)
     apiHandler.addHandler(this.handlerapi())
-    // this.operationRuleHandler = new EventHandler(`${prefix}operation-rule`, 3, false)
+    let operationRuleEventHandler = new EventHandler(operationRuleData)
+
     eventBusEventHandler.addHandler(validateHandler)
     eventBusEventHandler.addHandler(apiHandler)
+    eventBusEventHandler.addHandler(operationRuleEventHandler)
     this.eventBus = eventBusEventHandler
   }
 
   //将指定函数注册到view的事件中心，定义字段的创建/更新事件
-  registerEvent(type, spaceName, eventHandler) {
-    let eventName = `operation:${this.id}`
-    if (type !== 'created' && type !== 'update') {
-      console.log(`operation---(${type})类型的事件总线不存在，事件注册失败`)
-      return
+  // registerEvent(type, spaceName, eventHandler) {
+  //   let eventName = `operation:${this.id}`
+  //   if (type !== 'created' && type !== 'update') {
+  //     console.log(`operation---(${type})类型的事件总线不存在，事件注册失败`)
+  //     return
+  //   }
+  //   let map = {
+  //     'validate': 'validateHandler',
+  //     'api': 'apiHandler',
+  //     'operation-rule': 'operationRuleHandler',
+  //   }
+  //   let operationEventhandler = this[map[spaceName]].addHandler(eventHandler)
+  //   this.view.registerEvent(type, eventName, operationEventhandler)
+  // }
+
+  registerEvent(spaceName, eventHandler) {
+    let name = `operation:${this.id}-${spaceName}`
+    console.log(this.eventBus, name)
+    let result = this.eventBus.handler.find(item => {
+      return item.name === name
+    })
+    if (!result) {
+      console.warn(`(${name})不能绑定在对应字段的事件中心内-->>(${spaceName})不存在`)
     }
-    let map = {
-      'validate': 'validateHandler',
-      'api': 'apiHandler',
-      'operation-rule': 'operationRuleHandler',
-    }
-    let operationEventhandler = this[map[spaceName]].addHandler(eventHandler)
-    this.view.registerEvent(type, eventName, operationEventhandler)
+    result.addHandler(eventHandler)
   }
 
 
   triggerEvent(...args) {
     let eventName = `operation:${this.id}`
-    this.view.triggerEvent(eventName, ...args)
+    this.view.triggerEvent(eventName, ...args).then(()=>{
+      console.log('operation then')
+    }).catch((err) => {
+      console.log('operation catch', err)
+    })
 
     // let handlerQueue = [this.handlerValidate(), this.handlerapi()]
     // let queue = new AsyncQueue(handlerQueue)

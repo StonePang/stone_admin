@@ -29,7 +29,8 @@ class EventBus {
       // console.log(`(${eventName})不在事件bus中，无法trigger`, this)
       return
     }
-    this.eventBus[eventName].trigger(...args)
+    console.log(this.eventBus[eventName])
+    return this.eventBus[eventName].trigger(...args)
     // let eventHandlers = this.eventBus[eventName].handler
     // if (_.invalid(eventHandlers)) {
     //   console.warn(`(${eventName})事件对象的handler不存在，无法触发事件`)
