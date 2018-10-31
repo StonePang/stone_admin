@@ -8,6 +8,8 @@ export default {
     displayType: 'primary',
     size: 'small',
     isValidate: true,
+    isValidateAll: true,
+    isApi: true,
     api: true,
     // customHandler: (view, vm) => {
     //   let n = 2
@@ -22,5 +24,17 @@ export default {
     //     }, 1000)
     //   })
     // }
+  },
+  2: {
+    id: 2,
+    isShow: true,
+    label: '测试子表按钮',
+    disabled: false,
+    loading: false,
+    displayType: 'primary',
+    size: 'small',
+    isValidate: false,
+    isApi: false,
+    api: true,
   }
 }

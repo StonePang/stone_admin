@@ -3,7 +3,7 @@ export default {
     id: 1,
     desc: 'input',
     type: "input",
-    prop: "input",
+    // prop: "input",
     label: "input",
     placeholder: "input",
     disabled: false,

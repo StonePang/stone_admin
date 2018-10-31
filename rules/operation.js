@@ -16,6 +16,8 @@ class Operation {
     this.displayType = operationData.type || 'primary'
     this.size = operationData.size
     this.isValidate = _.defaultValue(operationData.isValidate, false)
+    this.isValidateAll = _.defaultValue(operationData.isValidateAll, false)
+    this.isApi = _.defaultValue(operationData.isApi, false)
     this.prop = `O${TAG}${this.id}`
     this.operationProp = `${this.view.viewProp}${DEVIDE}${this.prop}`
     this.customHandler = _.defaultValue(operationData.customHandler, false)
@@ -38,7 +40,8 @@ class Operation {
       if (!this.isValidate) {
         return Promise.resolve()
       }
-      return this.vm.validate().then(() => {
+      let validateMethod = this.isValidateAll ? 'validateAll' : 'validateThisForm'
+      return this.vm[validateMethod]().then(() => {
         console.log('validate res')
         return Promise.resolve()
       }).catch(() => {
@@ -50,48 +53,67 @@ class Operation {
 
   handlerapi() {
     return () => {
-      let n = 1
-      return new Promise((res, rej) => {
-        setTimeout(() => {
-          if (n === 1) {
-            console.log('api res')
-            res(this.view, this.vm)
-          } else {
-            console.log('api rej')
-            rej('aip错误')
-          }
-        }, 1000)
-      })
+      if(!this.isApi) {
+        return Promise.resolve()
+      }
+      // let n = 1
+      // return new Promise((res, rej) => {
+      //   setTimeout(() => {
+      //     if (n === 1) {
+      //       console.log('api res', )
+      //       res(this.view, this.vm)
+      //     } else {
+      //       console.log('api rej')
+      //       rej('aip错误')
+      //     }
+      //   }, 1000)
+      // })
+      return this.gua(this.view)
     }
   }
 
-  clickHandler() {
-    let vm = this.vm
-    return () => {
-      this.loading = true
-      return this.handlerValidate(vm).then(() => {
-        console.log('点击按钮， 通过表单校验')
-        if(this.customHandler) {
-          console.log('customHandler')
-          return this.customHandler(this.view, vm)
+  gua(arg) {
+    let n = 1
+    return new Promise((res, rej) => {
+      setTimeout(() => {
+        if (n === 1) {
+          console.log('api res', arg)
+          res(this.view, this.vm)
+        } else {
+          console.log('api rej')
+          rej('aip错误')
         }
-        if(this.api) {
-          //TODO:接口提交等操作
-          return this.apiHandler()
-        }
-        //没有异步操作时直接返回resolve
-        return Promise.resolve()
-      }).then(() => {
-        console.log('then')
-        this.loading = false
-        return Promise.resolve()
-      }).catch((err) => {
-        console.log(err)
-        this.loading = false
-        return Promise.reject(err)
-      })
-    }
+      }, 1000)
+    })
   }
+
+  // clickHandler() {
+  //   let vm = this.vm
+  //   return () => {
+  //     this.loading = true
+  //     return this.handlerValidate(vm).then(() => {
+  //       console.log('点击按钮， 通过表单校验')
+  //       if(this.customHandler) {
+  //         console.log('customHandler')
+  //         return this.customHandler(this.view, vm)
+  //       }
+  //       if(this.api) {
+  //         //TODO:接口提交等操作
+  //         return this.apiHandler()
+  //       }
+  //       //没有异步操作时直接返回resolve
+  //       return Promise.resolve()
+  //     }).then(() => {
+  //       console.log('then')
+  //       this.loading = false
+  //       return Promise.resolve()
+  //     }).catch((err) => {
+  //       console.log(err)
+  //       this.loading = false
+  //       return Promise.reject(err)
+  //     })
+  //   }
+  // }
 
   initEventHandler() {
     let eventBusData = {

@@ -57,7 +57,7 @@ export default {
   computed: {
   },
   methods: {
-    validate() {
+    validateAll() {
       let formValidate = new Promise((resolve, reject) => {
         setTimeout(() => {
           this.$refs.form.validate((valid) => {
@@ -68,22 +68,29 @@ export default {
             }
           });
         }, 2500)
-        // this.$refs.form.validate((valid) => {
-        //   if (valid && this.formModel) {
-        //     resolve();
-        //   } else {
-        //     reject(false);
-        //   }
-        // });
       });
       if(!this.$refs.subforms) {
         return formValidate
       }
       let promises = this.$refs.subforms.map(item => {
-        return item.validate()
+        return item.validateAll()
       })
       promises.push(formValidate)
       return Promise.all(promises)
+    },
+    validateThisForm() {
+      let formValidate = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          this.$refs.form.validate((valid) => {
+            if (valid && this.formModel) {
+              resolve();
+            } else {
+              reject(false);
+            }
+          });
+        }, 2500)
+      });
+      return formValidate
     },
     resetForm() {
       this.$refs.form.resetFields();

@@ -48,6 +48,12 @@ export default {
       // viewRuleDataMap['4'],
       // viewRuleDataMap['7'],
     ],
+    operationData: [
+        operationdataMap['2'],
+      ],
+      operationRuleData: [
+        operationRuleDataMap['2']
+      ],
     formModel: {
       'V#1-V#2-C#11': 'gua',
       'V#1-V#2-C#42': null,
