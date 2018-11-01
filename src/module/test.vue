@@ -49,7 +49,7 @@ export default {
       this.loading = false
       // this.view.addEventListener('created', view => {
       //   console.log('hahaha created', view)
-      //   view.triggerEvent('disabledView', true)
+      //   // view.triggerEvent('disabledView', true)
       // })
       // this.view.addEventListener('update', view => {
       //   console.log('hahaha update', view)
@@ -57,6 +57,9 @@ export default {
       // this.view.columns.forEach(column => {
       //   column.addEventListener('update', column => {
       //     console.log('column update', column)
+      //   })
+      //   column.addEventListener('created', column => {
+      //     console.log('column created', column)
       //   })
       // })
     }, 1000);

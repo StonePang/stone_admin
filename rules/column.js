@@ -10,27 +10,6 @@ class Column {
     this.handlerCreated(columnData, view)
   }
 
-  // get eventBus() {
-  //   let valueRuleData = {
-  //     name: `column:${this.id}-value-rule`,
-  //     sort: 1,
-  //     isSync: true,
-  //     isTriggerNow: false,
-  //     isTriggerOnce: false,
-  //   }
-  //   let viewRuleData = {
-  //     name: `column:${this.id}-view-rule`,
-  //     sort: 2,
-  //     isSync: true,
-  //     isTriggerNow: false,
-  //     isTriggerOnce: false,
-  //   }
-  //   return [
-  //     new EventHandler(valueRuleData),
-  //     new EventHandler(viewRuleData),
-  //   ]
-  // }
-
   handlerCreated(columnData, view) {
     this.view = view
     this.columnData = columnData
@@ -116,13 +95,20 @@ class Column {
       isTriggerOnce: false,
     }
     let viewRuleEventHandler = new EventHandler(viewRuleData)
+
+    let customData = {
+      name: `column:${this.id}-custom`,
+      sort: 3,
+      isSync: false,
+      isTriggerNow: false,
+      isTriggerOnce: false,
+    }
+    this.customHandler = new EventHandler(customData)
+
     eventBusEventHandler.addHandler(valueRuleEventHandler)
     eventBusEventHandler.addHandler(viewRuleEventHandler)
+    eventBusEventHandler.addHandler(this.customHandler)
     this.eventBus = eventBusEventHandler
-    // this.eventBus = [
-    //   new EventHandler(valueRuleData),
-    //   new EventHandler(viewRuleData),
-    // ]
   }
 
   //将子handler挂载到本事件内的
@@ -166,18 +152,28 @@ class Column {
   
 
   triggerEvent(...arg) {
-    // if (type !== 'created' && type !== 'update') {
-    //   console.log(`column---triggerEvent---(${type})类型的字段事件不存在`)
-    //   return
-    // }
     let eventName = `column:${this.id}`
     this.view.triggerEvent(eventName, ...arg)
   }
 
   addEventListener(type, callback) {
-    this.registerEvent(type, () => {
+    let typeMap = {
+      created: true,
+      update: false,
+    }
+    let customData = {
+      name: `column:${this.id}-custom-${type}`,
+      sort: 1,
+      isSync: false,
+      isTriggerNow: typeMap[type] || false,
+      isTriggerOnce: typeMap[type] || false,
+    }
+    let customHandler = new EventHandler(customData)
+    //将函数添加到eventHandler对象中
+    customHandler.addHandler(() => {
       callback(this)
     })
+    this.customHandler.addHandler(customHandler)
   }
 
   //处理显示值的方法，用与详情table的显示

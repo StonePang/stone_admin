@@ -236,7 +236,7 @@ class View {
       isTriggerOnce: false,
     }
     this.customHandler = new EventHandler(customData)
-    // changeRenderHandler.addHandler(this.changeRender())
+
     this.registerEvent('clearFormModel', clearHandler)
     this.registerEvent('disabledView', disabledHandler)
     this.registerEvent('changeRender', changeRenderHandler)
@@ -302,15 +302,13 @@ class View {
       sort: 1,
       isSync: false,
       isTriggerNow: typeMap[type] || false,
-      isTriggerOnce: false,
+      isTriggerOnce: typeMap[type] || false,
     }
     let customHandler = new EventHandler(customData)
-    let customHandlerFn = () => {
-      return () => {
-        callback(this)
-      }
-    }
-    customHandler.addHandler(customHandlerFn())
+    //将函数添加到eventHandler对象中
+    customHandler.addHandler(() => {
+      callback(this)
+    })
     this.customHandler.addHandler(customHandler)
   }
 }
