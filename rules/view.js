@@ -47,8 +47,8 @@ class View {
     // this.viewProp = _.defaultValue(viewData.viewProp, this.prop)
     this.viewProp = viewData.fatherViewProp ? `${viewData.fatherViewProp}${DEVIDE}${this.prop}` : this.prop
     // this.columnData = _.defaultValue(viewData.columnData, [])
-    this.formModel = _.defaultValue(viewData.formModel, {})
-    // this.initFormModel(viewData.formModel)
+    // this.formModel = _.defaultValue(viewData.formModel, {})
+    this.initFormModel(viewData.formModel)
     // this.viewRuleData = _.defaultValue(viewData.viewRuleData, [])
     // this.subViewData = _.defaultValue(viewData.subViewData, [])
     this.initColumns(this.columnData, this)
@@ -65,6 +65,15 @@ class View {
     this.initOperationRules(this.operationRuleData, this)
     // this.i
     console.log('view', this)
+  }
+
+  initFormModel(formModelData) {
+    let formModel = _.mapKeys(formModelData, (value, key) => {
+      let newKey = `${this.viewProp}${DEVIDE}C${TAG}${key}`
+      return newKey
+    })
+    this.formModel = formModel
+    console.log('new formModel', this.formModel)
   }
 
   //生成columns
@@ -106,9 +115,9 @@ class View {
     this.operationRules = operationRules
   }
 
-  initFormModel(formModelData) {
-    this.formModel = _.defaultValue(formModelData, {})
-  }
+  // initFormModel(formModelData) {
+  //   this.formModel = _.defaultValue(formModelData, {})
+  // }
 
   initSubView(subViewData, view) {
     view.subView = []
@@ -148,7 +157,7 @@ class View {
       let r = arr.slice(0, i).join(DEVIDE)
       path.push(r)
     }
-    console.log('path', path)
+    // console.log('path', path)
     // _.setObjectValue(this.formModel, path, value)
     let column = this.columnMap[columnProp]
     column.changeColumnValue(value)
@@ -162,7 +171,7 @@ class View {
       if (_.invalid(e)) {
         map[key] = view
       } else {
-        console.log(`子视图(${key})已经存在于subViewMap,不覆盖`)
+        console.warn(`子视图(${key})已经存在于subViewMap,不覆盖`)
       }
     })
     // return map
@@ -184,7 +193,7 @@ class View {
       if (_.invalid(e)) {
         map[key] = operation
       } else {
-        console.log(`操作(${key})已经存在于OperationMap,不覆盖`)
+        console.warn(`操作(${key})已经存在于OperationMap,不覆盖`)
       }
     })
     // return map
@@ -219,24 +228,27 @@ class View {
     }
     let changeRenderHandler = new EventHandler(changeRenderData)
     changeRenderHandler.addHandler(this.changeRender())
+    let customData = {
+      name: `custom`,
+      sort: 1,
+      isSync: true,
+      isTriggerNow: false,
+      isTriggerOnce: false,
+    }
+    this.customHandler = new EventHandler(customData)
+    // changeRenderHandler.addHandler(this.changeRender())
     this.registerEvent('clearFormModel', clearHandler)
     this.registerEvent('disabledView', disabledHandler)
     this.registerEvent('changeRender', changeRenderHandler)
+    this.registerEvent('custom', this.customHandler)
   }
 
   //清空formModel，只清空字段的值，不处理子视图
   clearFormModel() {
     return () => {
-      // console.log('clear formModel', this.id, this.formModel)
-      // for (const key in this.formModel) {
-      //   if (this.formModel.hasOwnProperty(key) && _.includes(key, 'C')) {
-      //     this.formModel[key] = null;
-      //   }
-      // }
       this.columns.forEach(column => {
         column.changeColumnValue(null)
       })
-      console.log('清空后的formmodel', this.formModel, this)
     }
   }
   changeRender() {
@@ -257,39 +269,15 @@ class View {
   }
   
   registerEvent(eventName, eventHandler, ...args) {
-    // if (type !== 'created' && type !== 'update') {
-    //   console.warn(`view---(${type})类型的事件中心不存在，事件注册失败`)
-    //   return
-    // }
-    // for (const type in busType) {
-    //   if (busType.hasOwnProperty(type) && busType[type]) {
-    //     let viewPrefix = `${type}_view:${this.id}_`
-    //     let name = eventName
-    //     if (!_.includes(eventName, viewPrefix)) {
-    //       name = viewPrefix + eventName
-    //     }
-    //     // let isTrigger = type === 'created' ? true : false
-    //     let isTrigger = busType.created
-    //     console.log(name, eventHandler)
-    //     this.eventBus.register(isTrigger, name, eventHandler, ...args)
-    //   }
-    // }
     let viewPrefix = `view:${this.id}-`
     let name = eventName
     if (!_.includes(eventName, viewPrefix)) {
       name = viewPrefix + eventName
     }
-    // let isTrigger = type === 'created' ? true : false
-    // let isTrigger = busType.created
-    // console.log(name, eventHandler)
     this.eventBus.register(name, eventHandler, ...args)
   }
 
   triggerEvent(eventName, ...args) {
-    // if (type !== 'created' && type !== 'update') {
-    //   console.warn(`view---(${type})类型的事件中心不存在，事件触发失败`)
-    //   return
-    // }
     let viewPrefix = `view:${this.id}-`
     let name = eventName
     if (!_.includes(eventName, viewPrefix)) {
@@ -305,10 +293,25 @@ class View {
 
   //暴露给外部的执行自定义时间注册的方法，回调参数是view实例
   addEventListener(type, callback) {
-    let eventname = 'customEvent'
-    this.registerEvent(type, eventname, () => {
-      callback(this)
-    })
+    let typeMap = {
+      created: true,
+      update: false,
+    }
+    let customData = {
+      name: `custom-${type}`,
+      sort: 1,
+      isSync: false,
+      isTriggerNow: typeMap[type] || false,
+      isTriggerOnce: false,
+    }
+    let customHandler = new EventHandler(customData)
+    let customHandlerFn = () => {
+      return () => {
+        callback(this)
+      }
+    }
+    customHandler.addHandler(customHandlerFn())
+    this.customHandler.addHandler(customHandler)
   }
 }
 

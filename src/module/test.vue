@@ -48,15 +48,11 @@ export default {
       this.view = view
       this.loading = false
       // this.view.addEventListener('created', view => {
-      //   console.log('guagaugua', view.columns)
-      //   view.columns.forEach(column => {
-      //     column.addEventListener('created', column => {
-      //       console.log('column created', column)
-      //     })
-      //     // column.addEventListener('update', column => {
-      //     //   console.log('column update', column)
-      //     // })
-      //   })        
+      //   console.log('hahaha created', view)
+      //   view.triggerEvent('disabledView', true)
+      // })
+      // this.view.addEventListener('update', view => {
+      //   console.log('hahaha update', view)
       // })
       // this.view.columns.forEach(column => {
       //   column.addEventListener('update', column => {

@@ -28,12 +28,14 @@ export default {
     operationRuleDataMap['1']
   ],
   formModel: {
-    // 'V:1': {
-      'V#1-C#1': '123',
-      'V#1-C#2': 'value_2',
-      'V#1-C#3': ['value_1', 'gua_2'],
-      'V#1-C#4': null,
-    // }
+    // 'V#1-C#1': '123',
+    // 'V#1-C#2': 'value_2',
+    // 'V#1-C#3': ['value_1', 'gua_2'],
+    // 'V#1-C#4': null,
+    1: '123',
+    2: 'value_2',
+    3: ['value_1', 'gua_2'],
+    4: null,
   },
   subViewData: [{
     id: 2,
@@ -55,10 +57,10 @@ export default {
         operationRuleDataMap['2']
       ],
     formModel: {
-      'V#1-V#2-C#11': 'gua',
-      'V#1-V#2-C#42': null,
-      // 'V#2-C#11': 'gua',
-      // 'V#2-C#42': null,
+      // 'V#1-V#2-C#11': 'gua',
+      // 'V#1-V#2-C#42': null,
+      '11': 'gua',
+      '42': null,
     }
   }]
 }

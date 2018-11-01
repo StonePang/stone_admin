@@ -76,15 +76,15 @@ class EventHandler {
     return Promise.resolve(true)
   }
 
-  getPromise() {
-    let arr = this.handler.map(item => {
-      if(typeof item === 'function') {
-        return item
-      }
-    })
-    let queue = new AsyncQueue(arr)
-    return queue.handler()
-  }
+  // getPromise() {
+  //   let arr = this.handler.map(item => {
+  //     if(typeof item === 'function') {
+  //       return item
+  //     }
+  //   })
+  //   let queue = new AsyncQueue(arr)
+  //   return queue.handler()
+  // }
 
   // triggerAsync(...args) {
   //   console.log(this.handler)

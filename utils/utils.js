@@ -46,5 +46,7 @@ export default {
   flattenDeep(array) {
     return _.flattenDeep(array)
   },
-
+  mapKeys(...args) {
+    return _.mapKeys(...args)
+  },
 }
