@@ -41,6 +41,7 @@ export default {
     id: 2,
     title: '子表',
     isShow: true,
+    isDialog: true,
     code: 'subForm',
     columnData: [
       columnDataMap.textarea,

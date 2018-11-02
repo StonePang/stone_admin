@@ -73,7 +73,7 @@ class Operation {
   }
 
   gua(arg) {
-    let n = 1
+    let n = 2
     return new Promise((res, rej) => {
       setTimeout(() => {
         if (n === 1) {

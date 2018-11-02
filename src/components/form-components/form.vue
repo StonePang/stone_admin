@@ -17,11 +17,22 @@
         </el-col>
       </el-row>
     </el-form>
-    <template v-if='view.subView'>
+    <!-- <template v-if='view.subView'>
       <my-form v-for='subView in view.subView' :key='subView.id' :view='subView' ref='subforms'/>
-    </template>
+    </template> -->
+    <div v-if='view.subView'>
+      <div v-for='subView in view.subView' :key='subView.id'>
+        <el-dialog :title='subView.title' :visible.sync="subView.isShow" width='80%' v-if='subView.isDialog'>
+          <my-form :view='subView' ref='subforms'/>
+          <span slot="footer">
+            <el-button @click="subView.isShow = false">取 消</el-button>
+          </span>
+        </el-dialog>
+        <my-form :view='subView' ref='subforms' v-else/>
+      </div>
+      <!-- <my-form v-for='subView in view.subView' :key='subView.id' :view='subView' ref='subforms'/> -->
+    </div>
   </div>
-
 </template>
 
 <script>
@@ -60,6 +71,9 @@ export default {
     validateAll() {
       let formValidate = new Promise((resolve, reject) => {
         setTimeout(() => {
+          if(!this.$refs.form) {
+            return resolve()
+          }
           this.$refs.form.validate((valid) => {
             if (valid && this.formModel) {
               resolve();
@@ -137,7 +151,7 @@ export default {
 </script>
 <style lang="scss" scoped>
   .form-wrap{
-    width: 1200px;
+    // width: 1200px;
     margin-top: 50px;
     background-color: #a39c9c10;
     .opration-top {

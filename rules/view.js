@@ -43,7 +43,7 @@ class View {
     this.renderType = _.defaultValue(viewData.renderType, 'form')
     this.title = _.defaultValue(viewData.title, `视图-${this.code}`)
     this.isShow = _.defaultValue(viewData.isShow, true)
-    // this.prop = _.defaultValue(viewData.prop, 'defaultProp')
+    this.isDialog = _.defaultValue(viewData.isDialog, false)
     this.prop = `V${TAG}${this.code}`
     // this.viewProp = _.defaultValue(viewData.viewProp, this.prop)
     this.viewProp = viewData.fatherViewProp ? `${viewData.fatherViewProp}${DEVIDE}${this.prop}` : this.prop
