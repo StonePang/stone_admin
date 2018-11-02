@@ -6,7 +6,7 @@ export default {
   id: 1,
   isShow: true,
   title: '主表',
-  prop: 'form',
+  code: 'mainForm',
   columnData: [
     columnDataMap.input,
     columnDataMap.select,
@@ -32,16 +32,16 @@ export default {
     // 'V#1-C#2': 'value_2',
     // 'V#1-C#3': ['value_1', 'gua_2'],
     // 'V#1-C#4': null,
-    1: '123',
-    2: 'value_2',
-    3: ['value_1', 'gua_2'],
-    4: null,
+    input: '123',
+    select: null,
+    checkbox: ['value_1', 'gua_2'],
+    datetime: null,
   },
   subViewData: [{
     id: 2,
     title: '子表',
     isShow: true,
-    prop: 'subForm',
+    code: 'subForm',
     columnData: [
       columnDataMap.textarea,
       columnDataMap.date,
@@ -59,8 +59,8 @@ export default {
     formModel: {
       // 'V#1-V#2-C#11': 'gua',
       // 'V#1-V#2-C#42': null,
-      '11': 'gua',
-      '42': null,
+      textarea: 'gua',
+      date: null,
     }
   }]
 }

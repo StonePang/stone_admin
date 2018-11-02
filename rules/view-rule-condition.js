@@ -10,11 +10,11 @@ class ViewRuleCondition {
 
   init(viewRuleConditionData, view) {
     this.view = view
-    this.targetViewProp = viewRuleConditionData.targetViewId.split(DEVIDE).map(e => {
+    this.targetViewProp = viewRuleConditionData.targetViewCode.split(DEVIDE).map(e => {
       return `V${TAG}${e}`
     }).join(DEVIDE)
     this.customCondition = viewRuleConditionData.customCondition || null
-    this.bindItemType = viewRuleConditionData.bindItemType || 'column'
+    // this.bindItemType = viewRuleConditionData.bindItemType || 'column'
     // this.bindItemProp = `${this.targetViewProp}${DEVIDE}C${TAG}${viewRuleConditionData.bindItem}`
     // this.bindItem = this.view.columnMap[this.bindItemProp]
     this.initBindItem(viewRuleConditionData)
@@ -24,13 +24,17 @@ class ViewRuleCondition {
   }
 
   initBindItem(viewRuleConditionData) {
-    if (this.bindItemType === 'column') {
-      this.bindItemProp = `${this.targetViewProp}${DEVIDE}C${TAG}${viewRuleConditionData.bindItem}`
-      this.bindItem = this.view.columnMap[this.bindItemProp]
-    } else if (viewRuleConditionData.bindItemType === 'operation') {
-      this.bindItemProp = `${this.targetViewProp}${DEVIDE}O${TAG}${viewRuleConditionData.bindItem}`
-      this.bindItem = this.view.operationMap[this.bindItemProp]
-    }
+    // if (this.bindItemType === 'column') {
+    //   this.bindItemProp = `${this.targetViewProp}${DEVIDE}C${TAG}${viewRuleConditionData.bindItem}`
+    //   this.bindItem = this.view.columnMap[this.bindItemProp]
+    // } else if (viewRuleConditionData.bindItemType === 'operation') {
+    //   this.bindItemProp = `${this.targetViewProp}${DEVIDE}O${TAG}${viewRuleConditionData.bindItem}`
+    //   this.bindItem = this.view.operationMap[this.bindItemProp]
+    // }
+    // let bindColumnId = viewRuleConditionData.bindItem
+    this.bindItemProp = `${this.targetViewProp}${DEVIDE}C${TAG}${viewRuleConditionData.bindColumnCode}`
+    this.bindItem = this.view.columnMap[this.bindItemProp]
+    console.log(this.view.columnMap, this.bindItemProp)
   }
 
   // findColumnValue(columnProp) {
@@ -50,22 +54,23 @@ class ViewRuleCondition {
     if (this.customCondition) {
       return this.customCondition(this.view)
     }
-    if(this.bindItemType === 'operation') {
-      let isClick = this.bindItem.loading
-      console.log('按钮是否被点击', isClick) 
-      if (!isClick) {
-        return Promise.resolve(false)
-      }else if (this.isClickResultNow) {
-        return Promise.resolve(true)
-      }else {
-        return this.bindItem.clickHandler()().then(() => {
-          console.log('gua')
-          return Promise.resolve(true)
-        }).catch(() => {
-          return Promise.resolve(false)
-        })
-      }
-    }
+    // if(this.bindItemType === 'operation') {
+    //   let isClick = this.bindItem.loading
+    //   console.log('按钮是否被点击', isClick) 
+    //   if (!isClick) {
+    //     return Promise.resolve(false)
+    //   }else if (this.isClickResultNow) {
+    //     return Promise.resolve(true)
+    //   }else {
+    //     return this.bindItem.clickHandler()().then(() => {
+    //       console.log('gua')
+    //       return Promise.resolve(true)
+    //     }).catch(() => {
+    //       return Promise.resolve(false)
+    //     })
+    //   }
+    // }
+    console.log(this.view.formModel)
     // let bindColumnValue = this.findColumnValue(this.bindItem.columnProp)
     let bindColumnValue = this.view.formModel[this.bindItem.columnProp]
     let conditionValue = this.conditionValue

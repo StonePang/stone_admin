@@ -9,8 +9,8 @@ class ViewRuleHandlerOperation extends ViewRuleHandler {
     super(viewRuleData, view)
     this.affectType = viewRuleData.affectType
     this.itemMap = this.view.operationMap
-    this.affectItems = viewRuleData.affectItems.map(id => {
-      let key = `${this.targetViewProp}${DEVIDE}O${TAG}${id}`
+    this.affectItems = viewRuleData.affectItems.map(operationCode => {
+      let key = `${this.targetViewProp}${DEVIDE}O${TAG}${operationCode}`
       return this.itemMap[key]
     })
   }

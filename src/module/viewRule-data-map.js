@@ -1,11 +1,12 @@
     export default {
     1:{
       id: 21,
-      affectItems: [3],
-      targetViewId: '1',
+      affectItems: ['checkbox'],
+      targetViewCode: 'mainForm',
       affectType: 'column',
       type: 'disabled',
       sort: 1,
+      disabled: false,
       isTriggerNow: true,
       isTriggerOnce: false,
       conditionType: 'or',
@@ -20,8 +21,8 @@
       // },
       conditions: [
       //   {
-      //   bindItem: 1,
-      //   targetViewId: '1',
+      //   bindColumnCode: 1,
+      //   targetViewCode: '1',
       //   conditionType: 3,
       //   conditionValue: '123',
       //   // customCondition: view => {
@@ -31,9 +32,9 @@
       //   // }
       // },
       {
-        bindItem: 2,
+        bindColumnCode: 'select',
         bindItemType: 'column',
-        targetViewId: '1',
+        targetViewCode: 'mainForm',
         conditionType: 3,
         conditionValue: 'value_2',
         isClickResultNow: true,
@@ -42,9 +43,9 @@
     }, 
     2:{
       id: 22,
-      affectItems: [4],
+      affectItems: ['datetime'],
       affectType: 'column',
-      targetViewId: '1',
+      targetViewCode: 'mainForm',
       isClear: true,
       sort: 2,
       isTriggerNow: true,
@@ -53,113 +54,113 @@
       isClear: false,
       desc: 'checkbox禁用<--input && select',
       conditions: [{
-        targetViewId: '1',
-        bindItem: 1,
+        targetViewCode: 'mainForm',
+        bindColumnCode: 'input',
         conditionType: 3,
         conditionValue: '123'
       }, {
-        targetViewId: '1',
-        bindItem: 2,
+        targetViewCode: 'mainForm',
+        bindColumnCode: 'select',
         conditionType: 3,
         conditionValue: 'value_2'
       }, ],
     }, 
     3:{
       id: 25,
-      affectItems: [2],
+      affectItems: ['subForm'],
       affectType: 'subView',
-      targetViewId: '1',
+      targetViewCode: 'mainForm',
       conditionType: 'OR',
       type: 'clear',
       isClear: false,
       desc: 'subView<--input && select',
       conditions: [{
-        targetViewId: '1',
-        bindItem: 1,
+        targetViewCode: 'mainForm',
+        bindColumnCode: 'input',
         conditionType: 3,
         conditionValue: 'r'
       }, {
-        targetViewId: '1',
-        bindItem: 2,
+        targetViewCode: 'mainForm',
+        bindColumnCode: 'select',
         conditionType: 3,
         conditionValue: 'value_3'
       }]
     },
     4: {
       id: 222,
-      affectItems: [42],
+      affectItems: ['date'],
       affectType: 'column',
       isClear: true,
-      targetViewId: '1-2',
+      targetViewCode: 'subForm',
       type: 'hidden',
       desc: '子表date隐藏<--textarea',
       conditions: [{
-        targetViewId: '1-2',
-        bindItem: 11,
+        targetViewCode: 'subForm',
+        bindColumnCode: 'textarea',
         conditionType: 3,
         conditionValue: 'r'
       }]
     },
     5: {
       id: 123,
-      affectItems: [42, 11],
+      affectItems: ['date', 'textarea'],
       affectType: 'column',
-      targetViewId: '1-2',
+      targetViewCode: 'subForm',
       isClear: true,
       type: 'hidden',
       desc: '子表date隐藏<--input',
       isClear: true,
       conditions: [{
-        targetViewId: '1',
-        bindItem: 1,
+        targetViewCode: 'mainForm',
+        bindColumnCode: 'input',
         conditionType: 3,
         conditionValue: '321'
       }]
     },
     6: {
       id: 124,
-      affectItems: [42],
+      affectItems: ['textarea'],
       affectType: 'column',
-      targetViewId: '1-2',
+      targetViewCode: 'subForm',
       isClear: true,
       type: 'disabled',
       desc: '6->子表date隐藏<--input,主表中做子表视图条件',
       isClear: true,
       conditions: [{
-        targetViewId: '1-2',
-        bindItem: 11,
+        targetViewCode: 'subForm',
+        bindColumnCode: 'textarea',
         conditionType: 3,
         conditionValue: '6'
       }]
     },
     7: {
       id: 125,
-      affectItems: [1],
+      affectItems: ['input'],
       affectType: 'column',
-      targetViewId: '1',
+      targetViewCode: 'mainForm',
       isClear: true,
       type: 'disabled',
       desc: '7->date-->input,子表的视图条件，影响主表.不能执行',
       isClear: true,
       conditions: [{
-        targetViewId: '1-2',
-        bindItem: 11,
+        targetViewCode: 'subForm',
+        bindColumnCode: 'textarea',
         conditionType: 3,
         conditionValue: '7'
       }]
     },
     8: {
       id: 29,
-      affectItems: [1],
-      targetViewId: '1',
+      affectItems: ['input'],
+      targetViewCode: 'mainForm',
       affectType: 'column',
       type: 'changeValue',
       changeValue: 'test',
       isClear: false,
       desc: 'datetime隐藏<--input && select',
       conditions: [{
-        bindItem: 2,
-        targetViewId: '1',
+        bindColumnCode: 'select',
+        targetViewCode: 'mainForm',
         conditionType: 3,
         conditionValue: 'value_3'
       }]

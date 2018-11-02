@@ -9,8 +9,9 @@ class ViewRuleHandlerSubView extends ViewRuleHandler {
     super(viewRuleData, view)
     this.affectType = viewRuleData.affectType
     this.itemMap = this.view.subViewMap
-    this.affectItems = viewRuleData.affectItems.map(id => {
-      let key = `${this.targetViewProp}${DEVIDE}V${TAG}${id}`
+    this.affectItems = viewRuleData.affectItems.map(viewCode => {
+      let key = `${this.targetViewProp}${DEVIDE}V${TAG}${viewCode}`
+      console.log(key)
       return this.itemMap[key]
     })
   }

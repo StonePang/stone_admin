@@ -1,8 +1,8 @@
 export default {
   1: {
     id: 12,
-    affectItems: [2],
-    targetViewId: '1',
+    affectItems: ['subForm'],
+    targetViewCode: 'mainForm',
     operationId: 1,
     affectType: 'subView',
     type: 'disabled',
@@ -21,9 +21,9 @@ export default {
     // },
     conditions: [
       {
-        bindItem: 2,
+        bindColumnCode: 'select',
         bindItemType: 'column',
-        targetViewId: '1',
+        targetViewCode: 'mainForm',
         conditionType: 3,
         conditionValue: 'value_1',
         isClickResultNow: true,
@@ -32,8 +32,8 @@ export default {
   },
   2: {
     id: 12,
-    affectItems: [42],
-    targetViewId: '1-2',
+    affectItems: ['date'],
+    targetViewCode: 'mainForm-subForm',
     operationId: 2,
     affectType: 'column',
     type: 'hidden',
@@ -51,9 +51,9 @@ export default {
     //   }
     // },
     conditions: [{
-      bindItem: 11,
+      bindColumnCode: 'textarea',
       bindItemType: 'column',
-      targetViewId: '1-2',
+      targetViewCode: 'subForm',
       conditionType: 3,
       conditionValue: 'gua',
       isClickResultNow: true,

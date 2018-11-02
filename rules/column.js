@@ -15,9 +15,11 @@ class Column {
     this.columnData = columnData
     this.id = columnData.id
     this.desc = _.defaultValue(columnData.desc, '')
+    this.code = _.defaultValue(columnData.code, this.id)
     this.renderType = _.defaultValue(columnData.renderType, 'form') //form  table
     this.placeholder = _.defaultValue(columnData.placeholder, null)
     this.disabled = _.defaultValue(columnData.disabled, false)
+    this.defaultValue = _.defaultValue(columnData.defaultValue, null)
     // this.prop = _.defaultValue(columnData.prop, null)
     this.label = _.defaultValue(columnData.label, null)
     this.required = _.defaultValue(columnData.required, true)
@@ -35,6 +37,7 @@ class Column {
     this.showChooseAll = _.defaultValue(columnData.showChooseAll, false)
     this.componentRender = columnData.componentRender || null
     this.initProp()
+    this.initDefaultValue()
     this.initEventHandler()
     this.initValidateRule({
       label: this.label,
@@ -55,14 +58,23 @@ class Column {
 
   initProp() {
     // console.log(this.view)
-    this.prop = `C${TAG}${this.id}`
+    this.prop = `C${TAG}${this.code}`
     let columnProp = `${this.view.viewProp}${DEVIDE}${this.prop}`
-    this.columnProp = _.defaultValue(columnProp, null)
+    this.columnProp = columnProp
   }
   //初始化validate-rules
   initValidateRule({label, required, rules}) {
     let validateRule =  new ValidateRule({label, required, rules})
     this.rules = validateRule.rules
+  }
+
+  initDefaultValue() {
+    let value = this.view.formModel[this.columnProp]
+    console.log('设置字段默认值', value, this.defaultValue)
+    if(_.valid(this.defaultValue) && _.invalid(value)) {
+      // console.log('设置字段默认值')
+      this.changeColumnValue(this.defaultValue)
+    }
   }
 
   initValueRule() {

@@ -15,7 +15,7 @@ class ViewRuleHandler {
     this.id = viewRuleData.id
     this.changeValue = viewRuleData.changeValue
     this.changeRender = viewRuleData.changeRender
-    this.targetViewProp = String(viewRuleData.targetViewId).split(DEVIDE).map(e => {
+    this.targetViewProp = String(viewRuleData.targetViewCode).split(DEVIDE).map(e => {
       return `V${TAG}${e}`
     }).join(DEVIDE)
     this.isClear = _.defaultValue(viewRuleData.isClear, false)

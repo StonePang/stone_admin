@@ -9,8 +9,8 @@ class ViewRuleHandlerColumn extends ViewRuleHandler {
     super(viewRuleData, view)
     this.affectType = viewRuleData.affectType
     this.itemMap = this.view.columnMap
-    this.affectItems = viewRuleData.affectItems.map(id => {
-      let key = `${this.targetViewProp}${DEVIDE}C${TAG}${id}`
+    this.affectItems = viewRuleData.affectItems.map(itemCode => {
+      let key = `${this.targetViewProp}${DEVIDE}C${TAG}${itemCode}`
       return this.itemMap[key]
     })
   }

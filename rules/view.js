@@ -39,11 +39,12 @@ class View {
     this.eventBus = new EventBus()
     this.viewData = viewData
     this.id = viewData.id
+    this.code = _.defaultValue(viewData.code, this.id)
     this.renderType = _.defaultValue(viewData.renderType, 'form')
-    this.title = _.defaultValue(viewData.title, `视图-${this.id}`)
+    this.title = _.defaultValue(viewData.title, `视图-${this.code}`)
     this.isShow = _.defaultValue(viewData.isShow, true)
     // this.prop = _.defaultValue(viewData.prop, 'defaultProp')
-    this.prop = `V${TAG}${this.id}`
+    this.prop = `V${TAG}${this.code}`
     // this.viewProp = _.defaultValue(viewData.viewProp, this.prop)
     this.viewProp = viewData.fatherViewProp ? `${viewData.fatherViewProp}${DEVIDE}${this.prop}` : this.prop
     // this.columnData = _.defaultValue(viewData.columnData, [])

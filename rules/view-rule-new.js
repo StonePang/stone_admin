@@ -9,6 +9,7 @@ class ViewRule {
     this.view = view
     this.id = viewRuleData.id
     this.desc = viewRuleData.desc
+    this.disabled = _.defaultValue(viewRuleData.disabled, false)
     this.type = viewRuleData.type
     this.affectType = viewRuleData.affectType
     this.conditionType = viewRuleData.conditionType || 'AND'
@@ -78,6 +79,9 @@ class ViewRule {
   //reject(): 视图条件异常
   //resolve(result)： result是最终视图条件结果
   getResult() {
+    if(this.disabled) {
+      return Promise.resolve(false)
+    }
     //every, some
     let method = this.methodName[this.conditionType]
     if (!method) {
