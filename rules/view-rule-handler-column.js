@@ -5,8 +5,8 @@ const DEVIDE = '-'
 const TAG = '#'
 
 class ViewRuleHandlerColumn extends ViewRuleHandler {
-  constructor(viewRuleData, view) {
-    super(viewRuleData, view)
+  constructor(viewRuleData, view, ruleType) {
+    super(viewRuleData, view, ruleType)
     this.affectType = viewRuleData.affectType
     this.itemMap = this.view.columnMap
     this.affectItems = viewRuleData.affectItems.map(itemCode => {
@@ -41,7 +41,11 @@ class ViewRuleHandlerColumn extends ViewRuleHandler {
     let status = this.type === 'hidden' ? true : false
     this.handlerEachAffectItem(column => {
       if(result) {
-        column.isShow = !status
+        if (this.ruleType === 'operation' && this.isToogle) {
+          column.isShow = !column.isShow
+        }else {
+          column.isShow = !status
+        }
         if (this.isClear) {
           // this.setColumnValue(column.columnProp, null)
           column.changeColumnValue(null)
@@ -55,7 +59,11 @@ class ViewRuleHandlerColumn extends ViewRuleHandler {
   handlerDisabled(result) {
     this.handlerEachAffectItem(column => {
       if (result) {
-        column.disabled = true
+        if (this.ruleType === 'operation' && this.isToogle) {
+          column.disabled = !column.disabled
+        }else {
+          column.disabled = true
+        }
         if (this.isClear) {
           // this.setColumnValue(column.columnProp, null)
           column.changeColumnValue(null)
@@ -89,7 +97,12 @@ class ViewRuleHandlerColumn extends ViewRuleHandler {
   handlerChangeRender(result) {
     this.handlerEachAffectItem(column => {
       if(result) {
-        column.renderType = this.changeRender === 'form' ? 'form' : 'table'
+        if (this.ruleType === 'operation' && this.isToogle) {
+          column.renderType = _.toogleValue(column.renderType, 'form', 'table')
+        } else {
+          column.renderType = this.changeRender === 'form' ? 'form' : 'table'
+        }
+        // column.renderType = this.changeRender === 'form' ? 'form' : 'table'
         if(this.isClear) {
           // this.setColumnValue(column.columnProp, null)
           column.changeColumnValue(null)

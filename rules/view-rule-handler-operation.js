@@ -5,8 +5,8 @@ const DEVIDE = '-'
 const TAG = '#'
 
 class ViewRuleHandlerOperation extends ViewRuleHandler {
-  constructor(viewRuleData, view) {
-    super(viewRuleData, view)
+  constructor(viewRuleData, view, ruleType) {
+    super(viewRuleData, view, ruleType)
     this.affectType = viewRuleData.affectType
     this.itemMap = this.view.operationMap
     this.affectItems = viewRuleData.affectItems.map(operationCode => {
@@ -39,7 +39,11 @@ class ViewRuleHandlerOperation extends ViewRuleHandler {
     let status = this.type === 'hidden' ? true : false
     this.handlerEachAffectItem(operation => {
       if (result) {
-        operation.isShow = !status
+        if (this.ruleType === 'operation' && this.isToogle) {
+          operation.isShow = !operation.isShow
+        } else {
+          operation.isShow = !status
+        }
       } else {
         operation.isShow = status
       }
@@ -49,7 +53,11 @@ class ViewRuleHandlerOperation extends ViewRuleHandler {
   handlerDisabled(result) {
     this.handlerEachAffectItem(operation => {
       if (result) {
-        operation.disabled = true
+        if (this.ruleType === 'operation' && this.isToogle) {
+          operation.disabled = !operation.disabled
+        } else {
+          operation.disabled = true
+        }
       } else {
         operation.disabled = false
       }

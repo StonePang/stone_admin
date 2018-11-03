@@ -47,11 +47,11 @@ class ViewRule {
 
   initViewRuleHandler(viewRuleData, view) {
     if(this.affectType === 'column') {
-      this.viewRuleHandler = new ViewRuleHandlerColumn(viewRuleData, view)
+      this.viewRuleHandler = new ViewRuleHandlerColumn(viewRuleData, view, 'column')
     } else if (this.affectType === 'subView') {
-      this.viewRuleHandler = new ViewRuleHandlerSubView(viewRuleData, view)
+      this.viewRuleHandler = new ViewRuleHandlerSubView(viewRuleData, view, 'column')
     } else if (this.affectType === 'operation') {
-      this.viewRuleHandler = new ViewRuleHandlerOperation(viewRuleData, view)
+      this.viewRuleHandler = new ViewRuleHandlerOperation(viewRuleData, view, 'column')
     }else{
       console.warn(`视图条件-->${this.id}的影响对象类型(${this.affectType})不存在，清检查`)
       this.viewRuleHandler = null

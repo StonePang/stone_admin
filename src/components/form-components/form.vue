@@ -115,7 +115,8 @@ export default {
       }
     },
     validateTest() {
-      this.validate().then(() => {
+      console.log(this)
+      this.validateAll().then(() => {
         console.log(`form-->(${this.view.title})校验成功`)
       }).catch(() => {
         console.log(`form-->(${this.view.title})校验失败`)

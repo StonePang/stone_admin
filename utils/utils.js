@@ -49,4 +49,10 @@ export default {
   mapKeys(...args) {
     return _.mapKeys(...args)
   },
+  toogleValue(target, v1, v2) {
+    if(target === v1) {
+      return v2
+    }
+    return v1
+  },
 }

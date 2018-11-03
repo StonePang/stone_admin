@@ -43,6 +43,7 @@ class View {
     this.renderType = _.defaultValue(viewData.renderType, 'form')
     this.title = _.defaultValue(viewData.title, `视图-${this.code}`)
     this.isShow = _.defaultValue(viewData.isShow, true)
+    this.disabled = _.defaultValue(viewData.disabled, false)
     this.isDialog = _.defaultValue(viewData.isDialog, false)
     this.prop = `V${TAG}${this.code}`
     // this.viewProp = _.defaultValue(viewData.viewProp, this.prop)
@@ -54,13 +55,13 @@ class View {
     // this.subViewData = _.defaultValue(viewData.subViewData, [])
     this.initColumns(this.columnData, this)
     this.initColumnMap(this.columns)
-    this.initSubView(this.subViewData, this)
-    this.initSubViewMap(this.subView)
     this.initOperations(this.operationData, this)
     this.initOperationMap(this.operations)
+    this.initSubView(this.subViewData, this)
+    this.initViewMap(this.subView)
     // this.registerEvent('clearFormModel', this.clearFormModel())
     this.initViewEventHandler()
-    // this.registerEvent('disabledView', this.disabledView())
+    // this.registerEvent('disabledChange', this.disabledChange())
     // this.registerEvent('changeRender', this.changeRender())
     this.initViewRules(this.viewRuleData, this)
     this.initOperationRules(this.operationRuleData, this)
@@ -135,6 +136,7 @@ class View {
         console.log(`subView--->(${subView.id})的prop与上级view的formModel中prop重合，subFormModel挂载失败`)
       }
       view.columnMap = Object.assign(view.columnMap, subView.columnMap)
+      view.operationMap = Object.assign(view.operationMap, subView.operationMap)
     })
   }
 
@@ -164,8 +166,9 @@ class View {
     column.changeColumnValue(value)
   }
 
-  initSubViewMap(subView) {
+  initViewMap(subView) {
     let map = {}
+    map[this.viewProp] = this
     subView.forEach(view => {
       let key = view.viewProp
       let e = map[key]
@@ -175,16 +178,15 @@ class View {
         console.warn(`子视图(${key})已经存在于subViewMap,不覆盖`)
       }
     })
-    // return map
-    this.subViewMap = map
+    this.viewMap = map
   }
 
-    initOperations(operationData, view) {
-      let operations = operationData.map(data => {
-        return new Operation(data, view);
-      });
-      this.operations = operations
-    }
+  initOperations(operationData, view) {
+    let operations = operationData.map(data => {
+      return new Operation(data, view);
+    });
+    this.operations = operations
+  }
 
   initOperationMap(operations) {
     let map = {}
@@ -197,7 +199,6 @@ class View {
         console.warn(`操作(${key})已经存在于OperationMap,不覆盖`)
       }
     })
-    // return map
     this.operationMap = map
   }
 
@@ -215,11 +216,11 @@ class View {
       name: `disabled`,
       sort: 1,
       isSync: true,
-      isTriggerNow: false,
+      isTriggerNow: true,
       isTriggerOnce: false,
     }
     let disabledHandler = new EventHandler(disabledData)
-    disabledHandler.addHandler(this.disabledView())
+    disabledHandler.addHandler(this.disabledChange())
     let changeRenderData = {
       name: `changeRender`,
       sort: 1,
@@ -239,7 +240,7 @@ class View {
     this.customHandler = new EventHandler(customData)
 
     this.registerEvent('clearFormModel', clearHandler)
-    this.registerEvent('disabledView', disabledHandler)
+    this.registerEvent('disabledChange', disabledHandler)
     this.registerEvent('changeRender', changeRenderHandler)
     this.registerEvent('custom', this.customHandler)
   }
@@ -260,9 +261,9 @@ class View {
       })
     }
   }
-  disabledView() {
-    return (status) => {
-      console.log('disabled view', status)
+  disabledChange() {
+    return () => {
+      let status = this.disabled
       this.columns.forEach(column => {
         column.disabled = status
       })

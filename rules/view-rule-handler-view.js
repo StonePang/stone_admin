@@ -5,13 +5,12 @@ const DEVIDE = '-'
 const TAG = '#'
 
 class ViewRuleHandlerSubView extends ViewRuleHandler {
-  constructor(viewRuleData, view) {
-    super(viewRuleData, view)
+  constructor(viewRuleData, view, ruleType) {
+    super(viewRuleData, view, ruleType)
     this.affectType = viewRuleData.affectType
-    this.itemMap = this.view.subViewMap
+    this.itemMap = this.view.viewMap
     this.affectItems = viewRuleData.affectItems.map(viewCode => {
       let key = `${this.targetViewProp}${DEVIDE}V${TAG}${viewCode}`
-      console.log(key)
       return this.itemMap[key]
     })
   }
@@ -41,7 +40,11 @@ class ViewRuleHandlerSubView extends ViewRuleHandler {
     let status = this.type === 'hidden' ? true : false
     this.handlerEachAffectItem(view => {
       if (result) {
-        view.isShow = !status
+        if (this.ruleType === 'operation' && this.isToogle) {
+          view.isShow = !view.isShow
+        } else {
+          view.isShow = !status
+        }
         if (this.isClear) {
           view.triggerEvent('clearFormModel')
         }
@@ -53,10 +56,25 @@ class ViewRuleHandlerSubView extends ViewRuleHandler {
 
   handlerDisabled(result) {
     this.handlerEachAffectItem(view => {
-      view.triggerEvent('disabledView', result)
-      if (result && this.isClear) {
-        view.triggerEvent('clearFormModel')
+      if(result) {
+        console.log('disabled', view, view.disabled)
+        if (this.ruleType === 'operation' && this.isToogle) {
+          view.disabled = !view.disabled
+          view.triggerEvent('disabledChange')
+        } else {
+          view.disabled = true
+          view.triggerEvent('disabledChange')
+        }
+        if(this.isClear) {
+          view.triggerEvent('clearFormModel')
+        }
+      }else {
+        view.disabled = false
+        view.triggerEvent('disabledChange')
       }
+    //   if (result && this.isClear) {
+    //     view.triggerEvent('clearFormModel')
+    //   }
     })
   }
 
@@ -70,16 +88,24 @@ class ViewRuleHandlerSubView extends ViewRuleHandler {
 
   handlerChangeRender(result) {
     this.handlerEachAffectItem(view => {
-      let renderType
-      if (result) {
-        renderType = this.changeRender === 'form' ? 'form' : 'table'
-        if(this.isClear) {
-          view.triggerEvent('clearFormModel')
-        }
-      }else {
+      console.log(this)
+      let renderTypeNow = view.renderType
+      let renderType = undefined
+      if(!result) {
         renderType = this.changeRender === 'form' ? 'table' : 'form'
+      }else if (this.ruleType === 'operation' && this.isToogle) {
+        renderType = _.toogleValue(renderTypeNow, 'form', 'table')
+      } else {
+        renderType = this.changeRender === 'form' ? 'form' : 'table'
       }
       view.triggerEvent('changeRender', renderType)
+      if(this.isClear) {
+        view.triggerEvent('clearFormModel')
+      }
+      // }else {
+        
+      // }
+      // view.triggerEvent('changeRender', renderType)
     })
   }
 }

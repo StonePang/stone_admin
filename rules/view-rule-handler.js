@@ -4,15 +4,17 @@ const DEVIDE = '-'
 const TAG = '#'
 
 class ViewRuleHandler {
-  constructor(viewRuleData, view) {
-    this.init(viewRuleData, view)
+  constructor(viewRuleData, view, ruleType) {
+    this.init(viewRuleData, view, ruleType)
     // this.
   }
 
   //初始化实例
-  init(viewRuleData, view) {
+  init(viewRuleData, view, ruleType) {
     this.view = view
     this.id = viewRuleData.id
+    this.ruleType = ruleType
+    this.isToogle = _.defaultValue(viewRuleData.isToogle, false)
     this.changeValue = viewRuleData.changeValue
     this.changeRender = viewRuleData.changeRender
     this.targetViewProp = String(viewRuleData.targetViewCode).split(DEVIDE).map(e => {
