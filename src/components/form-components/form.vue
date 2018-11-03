@@ -22,7 +22,7 @@
     </template> -->
     <div v-if='view.subView'>
       <div v-for='subView in view.subView' :key='subView.id'>
-        <el-dialog :title='subView.title' :visible.sync="subView.isShow" width='80%' v-if='subView.isDialog'>
+        <el-dialog :title='subView.title' :visible.sync="subView.isShow" width='80%' v-if='subView.isDialog' append-to-body>
           <my-form :view='subView' ref='subforms'/>
           <span slot="footer">
             <el-button @click="subView.isShow = false">取 消</el-button>
