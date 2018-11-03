@@ -10,6 +10,7 @@ class Operation {
     this.view = view
     this.id = operationData.id
     this.isShow = _.defaultValue(operationData.isShow, true)
+    this.code = _.defaultValue(operationData.code, this.id)
     this.label = operationData.label
     this.disabled = operationData.disabled
     this.loading = _.defaultValue(operationData.loading, false)
@@ -18,13 +19,13 @@ class Operation {
     this.isValidate = _.defaultValue(operationData.isValidate, false)
     this.isValidateAll = _.defaultValue(operationData.isValidateAll, false)
     this.isApi = _.defaultValue(operationData.isApi, false)
-    this.prop = `O${TAG}${this.id}`
+    this.prop = `O${TAG}${this.code}`
     this.operationProp = `${this.view.viewProp}${DEVIDE}${this.prop}`
     this.customHandler = _.defaultValue(operationData.customHandler, false)
     this.api = _.defaultValue(operationData.api, null)
     this.vm = null
     this.initEventHandler()
-    this.view.registerEvent(`operation:${this.id}`, this.eventBus)
+    this.view.registerEvent(`operation:${this.code}`, this.eventBus)
     // this.registerEvent('update', 'validate', this.handlerValidate())
     // this.registerEvent('update', 'api', this.handlerapi())
   }
@@ -190,7 +191,7 @@ class Operation {
 
 
   triggerEvent(...args) {
-    let eventName = `operation:${this.id}`
+    let eventName = `operation:${this.code}`
     this.view.triggerEvent(eventName, ...args).then(()=>{
       console.log('operation then')
     }).catch((err) => {

@@ -53,6 +53,7 @@ export default {
     ],
     operationData: [
         operationdataMap['2'],
+        operationdataMap['3'],
       ],
       operationRuleData: [
         operationRuleDataMap['2']

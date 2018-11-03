@@ -3,7 +3,7 @@ export default {
     id: 1,
     isShow: true,
     label: '测试按钮',
-    code: 'submit',
+    code: 'test-1',
     disabled: false,
     loading: false,
     displayType: 'primary',
@@ -30,7 +30,20 @@ export default {
     id: 2,
     isShow: true,
     label: '测试子表按钮',
-    code: 'submitSubForm',
+    code: 'test-2',
+    disabled: false,
+    loading: false,
+    displayType: 'primary',
+    size: 'small',
+    isValidate: false,
+    isApi: false,
+    api: true,
+  }, 
+  3: {
+    id: 3,
+    isShow: true,
+    label: '子表按钮-2',
+    code: 'test-3',
     disabled: false,
     loading: false,
     displayType: 'primary',
@@ -39,4 +52,5 @@ export default {
     isApi: false,
     api: true,
   }
+
 }
