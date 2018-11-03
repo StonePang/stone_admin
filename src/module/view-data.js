@@ -41,7 +41,7 @@ export default {
     id: 2,
     title: '子表',
     isShow: true,
-    isDialog: true,
+    isDialog: false,
     code: 'subForm',
     columnData: [
       columnDataMap.textarea,
@@ -63,6 +63,34 @@ export default {
       // 'V#1-V#2-C#42': null,
       textarea: 'gua',
       date: null,
-    }
+    },
+    // subViewData: [{
+    //   id: 2,
+    //   title: '子表-2',
+    //   isShow: true,
+    //   isDialog: false,
+    //   code: 'subForm',
+    //   columnData: [
+    //     columnDataMap.textarea,
+    //     columnDataMap.date,
+    //   ],
+    //   viewRuleData: [
+    //     // viewRuleDataMap['4'],
+    //     // viewRuleDataMap['7'],
+    //   ],
+    //   operationData: [
+    //     operationdataMap['2'],
+    //     operationdataMap['3'],
+    //   ],
+    //   operationRuleData: [
+    //     operationRuleDataMap['2']
+    //   ],
+    //   formModel: {
+    //     // 'V#1-V#2-C#11': 'gua',
+    //     // 'V#1-V#2-C#42': null,
+    //     textarea: 'gua',
+    //     date: null,
+    //   },
+    // }]
   }]
 }

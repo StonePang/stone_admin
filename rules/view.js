@@ -51,6 +51,7 @@ class View {
     // this.columnData = _.defaultValue(viewData.columnData, [])
     // this.formModel = _.defaultValue(viewData.formModel, {})
     this.initFormModel(viewData.formModel)
+    this.initViewMap()
     // this.viewRuleData = _.defaultValue(viewData.viewRuleData, [])
     // this.subViewData = _.defaultValue(viewData.subViewData, [])
     this.initColumns(this.columnData, this)
@@ -58,7 +59,6 @@ class View {
     this.initOperations(this.operationData, this)
     this.initOperationMap(this.operations)
     this.initSubView(this.subViewData, this)
-    this.initViewMap(this.subView)
     // this.registerEvent('clearFormModel', this.clearFormModel())
     this.initViewEventHandler()
     // this.registerEvent('disabledChange', this.disabledChange())
@@ -137,6 +137,7 @@ class View {
       }
       view.columnMap = Object.assign(view.columnMap, subView.columnMap)
       view.operationMap = Object.assign(view.operationMap, subView.operationMap)
+      view.viewMap = Object.assign(view.viewMap, subView.viewMap)
     })
   }
 
@@ -166,18 +167,20 @@ class View {
     column.changeColumnValue(value)
   }
 
-  initViewMap(subView) {
+  initViewMap() {
     let map = {}
+    // map[this.viewProp] = this
+    // subView.forEach(view => {
+    //   let key = view.viewProp
+    //   let e = map[key]
+    //   if (_.invalid(e)) {
+    //     map[key] = view
+    //   } else {
+    //     console.warn(`子视图(${key})已经存在于subViewMap,不覆盖`)
+    //   }
+    // })
+    // this.viewMap = map
     map[this.viewProp] = this
-    subView.forEach(view => {
-      let key = view.viewProp
-      let e = map[key]
-      if (_.invalid(e)) {
-        map[key] = view
-      } else {
-        console.warn(`子视图(${key})已经存在于subViewMap,不覆盖`)
-      }
-    })
     this.viewMap = map
   }
 
