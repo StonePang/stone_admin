@@ -1,6 +1,7 @@
 <template>
   <div>
     <my-form v-if='!loading' :view='view' />
+    <!-- <batch-form /> -->
   </div>
 </template>
 
@@ -14,8 +15,11 @@ import MyRadio from "~input/radio";
 // import DateAdapt from "~input/date-adapt";
 // import InputAdapt from "~input/input-adapt";
 import MyForm from "~form/form";
+import BatchForm from "~form/batch-form";
 import View from "~rules/view";
+import BatchView from "~rules/batch-view";
 import viewData from './view-data'
+import columnDataMap from './column-data-map'
 import formModelData from './form-model-data'
 
 export default {
@@ -26,7 +30,8 @@ export default {
     // MyWeekPicker,
     // DateAdapt,
     // InputAdapt,
-    MyForm
+    MyForm,
+    BatchForm,
   },
   data() {
     return {
@@ -47,9 +52,11 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-      let view = new View(this.viewData, this.formModelData)
-      this.view = view
-      this.loading = false
+      // let view = new View(this.viewData, this.formModelData)
+      // this.view = view
+      // this.loading = false
+
+
       // this.view.addEventListener('created', view => {
       //   console.log('hahaha created', view)
       //   // view.triggerEvent('disabledView', true)
@@ -65,6 +72,33 @@ export default {
       //     console.log('column created', column)
       //   })
       // })
+
+    let viewData = {
+      id: 11,
+      isShow: true,
+      title: '批量表',
+      code: 'batchForm',
+      columnData: [
+        columnDataMap.input,
+        columnDataMap.select,
+        columnDataMap.checkbox,
+        columnDataMap.datetime,
+      ],
+    }
+    let formModelDatas = [{
+      input: null,
+      select: null,
+      checkbox: null,
+      datetime: null
+    },{
+      input: null,
+      select: null,
+      checkbox: null,
+      datetime: null
+    }]
+    let gua = new BatchView(viewData, formModelDatas)
+    console.log('/////////////////', gua)
+
     }, 1000);
   }
 };

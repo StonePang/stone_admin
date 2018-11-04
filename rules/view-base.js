@@ -11,11 +11,11 @@ import EventHandler from './event-handler'
 const DEVIDE = '-'
 const TAG = '#'
 class View {
-  constructor(viewData, formModelData=undefined) {
+  constructor(viewData, formModelData = undefined) {
     this.viewData = viewData
     if (!viewData.formModel && _.invalid(formModelData)) {
       console.warn(`没有获取到formModel的数据,初始view失败---(${viewData.code})`, viewData)
-      return 
+      return
     }
     if (!viewData.formModel) {
       this.initFormModelData(viewData, formModelData)
@@ -42,7 +42,7 @@ class View {
   get operationRuleData() {
     return _.defaultValue(this.viewData.operationRuleData, [])
   }
-  
+
   handlerCreated(viewData) {
     this.eventBus = new EventBus()
     // this.viewData = viewData
@@ -98,13 +98,13 @@ class View {
           console.warn(`初始化formModelData出错---(${code})既是column也是subView的prop`)
         } else if (isColumnProp) {
           viewData.formModel[code] = value
-        }else {
+        } else {
           subViewData_.formModel = value
         }
       }
       // console.log('gua', viewData.subViewData)
     }
-      console.log('gua', viewData.subViewData)
+    console.log('gua', viewData.subViewData)
   }
 
 
@@ -131,7 +131,7 @@ class View {
     columns.forEach(column => {
       let key = column.columnProp
       let e = map[key]
-      if(_.invalid(e)) {
+      if (_.invalid(e)) {
         map[key] = column
       } else {
         console.log(`字段(${key})已经存在于columnMap,不覆盖`)
@@ -313,7 +313,7 @@ class View {
       })
     }
   }
-  
+
   registerEvent(eventName, eventHandler, ...args) {
     let viewPrefix = `view:${this.id}-`
     let name = eventName

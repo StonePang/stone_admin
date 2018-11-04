@@ -1,9 +1,9 @@
 <template>
     <!-- 表格 ？？？？校验-->
-    <el-form  label-position="left" label-width="0" class='form-content' :model="{formModel}" ref='form' :show-message='false' validate-on-rule-change	>
+    <el-form  label-position="left" label-width="0" class='form-content' :model="view.formModel" ref='form' :show-message='false' validate-on-rule-change	>
     <!-- <el-form-item :label="formData.title"> -->
       <!-- 表格主体 -->
-      <el-table :data="formModel" style="width: 100%" stripe border empty-text="暂无数据" @row-click='actionRowClick'>
+      <el-table :data="view.formModel" style="width: 100%" stripe border empty-text="暂无数据" @row-click='actionRowClick'>
         <!-- 索引序号 -->
         <el-table-column type="index" :index="indexMethod" label="序号" width="55" fixed="left" align='center'>
         </el-table-column>
@@ -31,10 +31,12 @@
 
 <script>
 import inputAdapt from '~input/input-adapt'
-import mixin from '../mixin/mixin'
+import columnDataMap from '../../module/column-data-map'
+import BatchView from '~rules/batch-view'
+
 export default {
   name:'stepForm',
-  mixins: [mixin],
+  // mixins: [mixin],
   components: {
     inputAdapt,
     FormColumn: {
@@ -169,40 +171,70 @@ export default {
     }
   },
   props: {
-    formData: {
-      type: Object,
-      required: true, 
-    },
-    rowDelete: {
-      type: Function,
-      default: (index) => {
-        // console.log('delete row default',index)
-      }
-    },
-    value: Array,
-    required: {
-      type: Boolean,
-      default: false,
-    }
+    // formData: {
+    //   type: Object,
+    //   required: true, 
+    // },
+    // rowDelete: {
+    //   type: Function,
+    //   default: (index) => {
+    //     // console.log('delete row default',index)
+    //   }
+    // },
+    // value: Array,
+    // required: {
+    //   type: Boolean,
+    //   default: false,
+    // }
   },
   data() {
     return {
-      dialogVisiable: false,
-
+      // dialogVisiable: false,
+      view: {},
+      // formModel: this.view.formModel,
     }
   },
+  mounted() {
+    // let viewData = {
+    //   id: 11,
+    //   isShow: true,
+    //   title: '批量表',
+    //   code: 'batchForm',
+    //   columnData: [
+    //     columnDataMap.input,
+    //     columnDataMap.select,
+    //     columnDataMap.checkbox,
+    //     columnDataMap.datetime,
+    //   ],
+    // }
+    // let formModelDatas = [{
+    //   input: null,
+    //   select: null,
+    //   checkbox: null,
+    //   datetime: null
+    // },{
+    //   input: null,
+    //   select: null,
+    //   checkbox: null,
+    //   datetime: null
+    // }]
+    // let view = new BatchView(viewData, formModelDatas)
+    // console.log(view)
+  },
   computed: {
-    formModel: {
-      get() {
-        return this.value
-      },
-      set(newValue) {
-        this.$emit('input', newValue)
-      }
-    },
-    minLen() {
-      return this.formData.minLen || 0
-    },
+    // formModel() {
+    //   return  this.view.formModel
+    // }
+    //   get() {
+    //     return this.value
+    //   },
+    //   set(newValue) {
+    //     this.$emit('input', newValue)
+    //   }
+    // },
+    // minLen() {
+    //   return this.formData.minLen || 0
+    // },
   },
   methods: {
     indexMethod(index) {
