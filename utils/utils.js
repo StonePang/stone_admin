@@ -49,6 +49,9 @@ export default {
   mapKeys(...args) {
     return _.mapKeys(...args)
   },
+  haskey(object, keyPath) {
+    return _.has(object, keyPath)
+  },
   toogleValue(target, v1, v2) {
     if(target === v1) {
       return v2

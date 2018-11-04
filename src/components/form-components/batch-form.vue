@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import inputAdapt from './inputAdapt'
+import inputAdapt from '~input/input-adapt'
 import mixin from '../mixin/mixin'
 export default {
   name:'stepForm',

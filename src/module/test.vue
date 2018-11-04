@@ -16,6 +16,8 @@ import MyRadio from "~input/radio";
 import MyForm from "~form/form";
 import View from "~rules/view";
 import viewData from './view-data'
+import formModelData from './form-model-data'
+
 export default {
   components: {
     // MySelect,
@@ -31,6 +33,7 @@ export default {
       view: null,
       loading: true,
       viewData: viewData,
+      formModelData: formModelData,
     };
   },
   computed: {
@@ -44,7 +47,7 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-      let view = new View(this.viewData)
+      let view = new View(this.viewData, this.formModelData)
       this.view = view
       this.loading = false
       // this.view.addEventListener('created', view => {

@@ -39,7 +39,7 @@
 import inputAdapt from '~input/input-adapt'
 import MyButton from '~common/button'
 import detailFormItem from '~input/detail-form-item'
-import Column from '~rules/column'
+// import Column from '~rules/column'
 export default {
   name: 'MyForm',
   components: {

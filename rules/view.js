@@ -11,7 +11,14 @@ import EventHandler from './event-handler'
 const DEVIDE = '-'
 const TAG = '#'
 class View {
-  constructor(viewData) {
+  constructor(viewData, formModelData=undefined) {
+    if (!viewData.formModel && _.invalid(formModelData)) {
+      console.warn(`没有获取到formModel的数据,初始view失败---(${viewData.code})`, viewData)
+      return 
+    }
+    if (!viewData.formModel) {
+      this.initFormModelData(viewData, formModelData)
+    }
     this.handlerCreated(viewData)
   }
 
@@ -69,6 +76,33 @@ class View {
     console.log('view', this)
   }
 
+  initFormModelData(viewData, formModelData) {
+    viewData.formModel = {}
+    for (const code in formModelData) {
+      if (formModelData.hasOwnProperty(code)) {
+        const value = formModelData[code];
+        let isColumnProp = viewData.columnData.some(columnData => {
+          return columnData.code === code
+        })
+        let subViewData_ = viewData.subViewData.find(subViewData => {
+          return subViewData.code === code
+        })
+        if (!isColumnProp && _.invalid(subViewData_)) {
+          console.warn(`初始化formModelData出错---(${code})不是column和subView的prop`)
+        } else if (isColumnProp && _.valid(subViewData_)) {
+          console.warn(`初始化formModelData出错---(${code})既是column也是subView的prop`)
+        } else if (isColumnProp) {
+          viewData.formModel[code] = value
+        }else {
+          subViewData_.formModel = value
+        }
+      }
+      // console.log('gua', viewData.subViewData)
+    }
+      console.log('gua', viewData.subViewData)
+  }
+
+
   initFormModel(formModelData) {
     let formModel = _.mapKeys(formModelData, (value, key) => {
       let newKey = `${this.viewProp}${DEVIDE}C${TAG}${key}`
@@ -123,9 +157,11 @@ class View {
 
   initSubView(subViewData, view) {
     view.subView = []
+    console.log('guagua', subViewData)
     subViewData.forEach(item => {
       item.fatherViewProp = view.viewProp
       let subView = new View(item)
+      console.log('guag', subView)
       view.subView.push(subView)
       let subFormModel = subView.formModel
       // let prop = subView.viewProp
