@@ -8,10 +8,13 @@
         <el-table-column type="index" :index="indexMethod" label="序号" width="55" fixed="left" align='center'>
         </el-table-column>
         <!-- 表格内容 -->
-        <template v-for='(item, index) in formData.head'>
-          <el-table-column :prop="item.prop" :label="item.label" :key='item.prop' header-align='center'>
+        <template v-for='(column, index) in view.columns'>
+          <el-table-column v-if='column.isShow' :prop="column.columnProp" :label="column.label" :key='column.columnProp + index' header-align='center'>
             <template slot-scope="scope">
-              <form-column :item='item' :form-data='formData' :row-index="scope.$index" :form-model='formModel' :head-index='index'></form-column>
+              <!-- <form-column :item='item' :form-data='formData' :row-index="scope.$index" :form-model='formModel' :head-index='index'></form-column> -->
+              <el-form-item :rules='column.rules' :prop='formItemProp(scope.$index, column.columnProp)'>
+                <input-adapt :column='columnInBatchRow(scope.$index)' v-model='batchRows[scope.$index].formModel.columnProp'></input-adapt>
+              </el-form-item>
             </template>
           </el-table-column>
         </template>
@@ -48,6 +51,9 @@ export default {
         inputAdapt,
       },
       computed: {
+        batchRows() {
+          return this.view.batchRows
+        },
         //关联校验规则
         rules() {
           // let rules = this.formData.rules[this.tableProp]
@@ -218,6 +224,12 @@ export default {
           </span>
         );
       }
+    },
+    formItemProp(index, prop) {
+      return `formModel.${index}.${prop}`;
+    },
+    columnInBatchRow(index, prop) {
+      return this.batchRows[index].columnMap[prop]
     },
     defaultFormData(defaultVal='') {
       let defaultObj = {}
