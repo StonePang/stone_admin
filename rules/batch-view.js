@@ -1,5 +1,6 @@
 import View from './view'
 import Column from './column'
+import TableColumn from './table-column'
 import _ from '~utils/utils'
 
 
@@ -8,6 +9,7 @@ const TAG = '#'
 class BatchView {
   constructor(viewData, formModelDatas) {
     // this.eventBus = new EventBus()
+    this.viewData = viewData
     this.viewData = viewData
     this.id = viewData.id
     this.formType = _.defaultValue(viewData.formType, 'form')
@@ -18,39 +20,39 @@ class BatchView {
     this.disabled = _.defaultValue(viewData.disabled, false)
     this.isDialog = _.defaultValue(viewData.isDialog, false)
     this.prop = `V${TAG}${this.code}`
-    this.subViewData = _.defaultValue(viewData.subViewData, [])
     this.viewProp = viewData.fatherViewProp ? `${viewData.fatherViewProp}${DEVIDE}${this.prop}` : this.prop
 
-    // this.initColumns(viewData.columnData, this)
+    this.initColumns(viewData.columnData, this)
     this.initBatchRows(viewData, formModelDatas)
+    this.initFormModel()
   }
 
-  // get columnData() {
-  //   return _.defaultValue(this.viewData.columnData, [])
-  // }
+  get columnData() {
+    return _.defaultValue(this.viewData.columnData, [])
+  }
 
-  // get viewRuleData() {
-  //   return _.defaultValue(this.viewData.viewRuleData, [])
-  // }
+  get viewRuleData() {
+    return _.defaultValue(this.viewData.viewRuleData, [])
+  }
 
-  // get subViewData() {
-  //   return _.defaultValue(this.viewData.subViewData, [])
-  // }
+  get subViewData() {
+    return _.defaultValue(this.viewData.subViewData, [])
+  }
 
-  // get operationData() {
-  //   return _.defaultValue(this.viewData.operationData, [])
-  // }
+  get operationData() {
+    return _.defaultValue(this.viewData.operationData, [])
+  }
 
-  // get operationRuleData() {
-  //   return _.defaultValue(this.viewData.operationRuleData, [])
-  // }
+  get operationRuleData() {
+    return _.defaultValue(this.viewData.operationRuleData, [])
+  }
 
 
   initColumns(columnsData, view) {
     let columns = columnsData.map(data => {
-      return new Column(data, view);
+      return new TableColumn(data, view);
     });
-    this.columns = columns
+    this.tableColumns = columns
   }
 
   initBatchRows(viewData, formModelDatas) {
@@ -58,6 +60,13 @@ class BatchView {
       return new View(viewData, formModelData)
     })
     this.batchRows = batchRows
+  }
+
+  initFormModel() {
+    let formModel = this.batchRows.map(batchRow => {
+      return batchRow.formModel
+    })
+    this.formModel = formModel
   }
 }
 

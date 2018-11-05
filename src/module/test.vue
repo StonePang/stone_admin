@@ -1,7 +1,7 @@
 <template>
   <div>
-    <my-form v-if='!loading' :view='view' />
-    <!-- <batch-form /> -->
+    <!-- <my-form v-if='!loading' :view='view' /> -->
+    <batch-form v-if='!loading' :view='view' />
   </div>
 </template>
 
@@ -76,6 +76,7 @@ export default {
     let viewData = {
       id: 11,
       isShow: true,
+      formType: 'form',
       title: '批量表',
       code: 'batchForm',
       columnData: [
@@ -96,8 +97,10 @@ export default {
       checkbox: null,
       datetime: null
     }]
-    let gua = new BatchView(viewData, formModelDatas)
-    console.log('/////////////////', gua)
+    let batchView = new BatchView(viewData, formModelDatas)
+    console.log('/////////////////', batchView)
+    this.view = batchView
+    this.loading = false
 
     }, 1000);
   }

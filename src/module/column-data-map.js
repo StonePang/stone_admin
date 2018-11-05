@@ -31,6 +31,7 @@ export default {
     defaultValue: 'value_2',
     required: true,
     placeholder: "select",
+    // renderType: 'table',
     disabled: false,
     isFull: false,
     isShow: true,

@@ -27,7 +27,7 @@ class ValidateRule {
         let rule = handler(item)
         this.rules.push(rule)
       } else {
-        console.log(`(${label})的校验规则类型(${ruleType})未在规则库中定义`)
+        console.warn(`(${label})的校验规则类型(${ruleType})未在规则库中定义`)
       }
     });
   }
