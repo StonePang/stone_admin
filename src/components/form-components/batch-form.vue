@@ -10,13 +10,14 @@
         <!-- 表格内容 -->
         <template v-for='(column, index) in view.tableColumns'>
           <!-- <el-table-column v-if='column.isShow' :prop="column.columnProp" :label="column.label" :key='column.columnProp + index' header-align='center'> -->
-          <el-table-column v-if='column.isShow' :prop="column.columnProp" :key='column.columnProp + index' header-align='center' :render-header="(h)=>renderLable(h, column)">
+          <el-table-column v-if='column.isShow' :prop="column.columnProp" :key='column.columnProp' header-align='center' :render-header="(h)=>renderLable(h, column)">
             <!-- <template slot='header' slot-scope="slot"><span>{{column.label}}</span></template> -->
             <template slot-scope="scope">
               <!-- <form-column :item='item' :form-data='formData' :row-index="scope.$index" :form-model='formModel' :head-index='index'></form-column> -->
               <!-- <el-form-item :rules='columnInBatchRow(scope.$index).rules' :prop='formItemProp(scope.$index, columnInBatchRow(scope.$index).columnProp)'> -->
-              <el-form-item :rules='columnInBatchRow(scope.$index, column.columnProp).rules' :prop='formItemProp(scope.$index, column.columnProp)'>
-                <input-adapt v-if='columnInBatchRow(scope.$index, column.columnProp).renderType==="form"' :column='columnInBatchRow(scope.$index, column.columnProp)' v-model='batchRows[scope.$index].formModel[column.columnProp]'></input-adapt>
+              <el-form-item :rules='columnInBatchRow(scope.$index, column.columnProp).rules' :prop='formItemProp(scope.$index, column.columnProp)' :key='formItemProp(scope.$index, column.columnProp)'>
+                <input-adapt v-if='columnInBatchRow(scope.$index, column.columnProp).renderType==="form"' :column='columnInBatchRow(scope.$index, column.columnProp)' 
+                  v-model='batchRows[scope.$index].formModel[column.columnProp]' :key='column.columnProp+scope.$index'></input-adapt>
                 <detail-form-item v-else :column='columnInBatchRow(scope.$index, column.columnProp)' :model='batchRows[scope.$index].formModel[column.columnProp]'/>
               </el-form-item>
             </template>
@@ -36,7 +37,7 @@
 <script>
 import inputAdapt from '~input/input-adapt'
 import detailFormItem from '~input/detail-form-item'
-
+import date from '~utils/date'
 import columnDataMap from '../../module/column-data-map'
 import BatchView from '~rules/batch-view'
 
@@ -254,6 +255,11 @@ export default {
     indexMethod(index) {
       return index + 1;
     },
+    tableColumnKey(prop) {
+      let key =  prop + date.now().unix
+      console.log('key', key)
+      return key
+    },
     renderHeader(h) {
       if(this.view.formType === 'table') {
         return (<span>操作</span>)
@@ -304,15 +310,14 @@ export default {
     insertData() {
       // let defaultData = this.defaultFormData()
       console.log(`添加一行`)
-      this.validate()
-      // this.formModel.push(defaultData)
+      this.view.insertBatchRow()
+      // this.view.clearFormModel()
+      // this.view.changeRender('table')
+      // this.view.disabledChange(true)
     },
     deleteData(index) {
       console.log('删除一行')
-      // this.deleteMessage(() => {
-      //   this.formModel.splice(index, 1)
-      //   this.rowDelete(index)
-      // })
+      this.view.deleteBatchRow(index)
     },
     actionRowClick(row, event, column, index) {
       // if(this.formData.showType !== 'TABLE' || column.label === 'operation') {

@@ -306,8 +306,8 @@ class View {
     }
   }
   disabledChange() {
-    return () => {
-      let status = this.disabled
+    return (status) => {
+      // let status = this.disabled
       this.columns.forEach(column => {
         column.disabled = status
       })

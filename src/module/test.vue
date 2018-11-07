@@ -21,6 +21,7 @@ import BatchView from "~rules/batch-view";
 import viewData from './view-data'
 import columnDataMap from './column-data-map'
 import formModelData from './form-model-data'
+import viewRuleData from './viewRule-data-map'
 
 export default {
   components: {
@@ -85,6 +86,9 @@ export default {
         columnDataMap.checkbox,
         columnDataMap.datetime,
       ],
+      viewRuleData: [
+        viewRuleData['1']
+      ]
     }
     let formModelDatas = [{
       input: null,

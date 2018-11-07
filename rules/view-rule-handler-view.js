@@ -59,18 +59,19 @@ class ViewRuleHandlerSubView extends ViewRuleHandler {
       if(result) {
         console.log('disabled', view, view.disabled)
         if (this.ruleType === 'operation' && this.isToogle) {
-          view.disabled = !view.disabled
-          view.triggerEvent('disabledChange')
+          // view.disabled = !view.disabled
+          let status = !view.disabled
+          view.triggerEvent('disabledChange', status)
         } else {
-          view.disabled = true
-          view.triggerEvent('disabledChange')
+          let status = true
+          view.triggerEvent('disabledChange', status)
         }
         if(this.isClear) {
           view.triggerEvent('clearFormModel')
         }
       }else {
-        view.disabled = false
-        view.triggerEvent('disabledChange')
+        let status = false
+        view.triggerEvent('disabledChange', status)
       }
     //   if (result && this.isClear) {
     //     view.triggerEvent('clearFormModel')

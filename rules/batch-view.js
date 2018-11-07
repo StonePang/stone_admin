@@ -68,6 +68,51 @@ class BatchView {
     })
     this.formModel = formModel
   }
+
+  insertBatchRow(formModel = undefined) {
+    if(_.invalid(formModel)) {
+      formModel = {}
+      this.tableColumns.forEach(column => {
+        let key = column.code
+        formModel[key] = null
+      })
+    }
+    let batchRow = new View(this.viewData, formModel)
+    this.batchRows.push(batchRow)
+    // this.initFormModel()
+    this.formModel.push(batchRow.formModel);
+  }
+
+  deleteBatchRow(index) {
+    this.formModel.splice(index, 1);
+    this.batchRows = this.batchRows.filter((batchRow, i) => {
+      return i !==index
+    })
+  }
+
+  clearFormModel() {
+    // return () => {
+      console.log(this)
+      this.batchRows.forEach(batchView => {
+        batchView.triggerEvent('clearFormModel')
+      })
+    // }
+  }
+  changeRender(type) {
+    // return (type) => {
+      this.batchRows.forEach(batchView => {
+        batchView.triggerEvent('changeRender', type)
+      })
+    // }
+  }
+  disabledChange(status) {
+    // return () => {
+      this.batchRows.forEach(batchView => {
+        batchView.triggerEvent('disabledChange', status)
+      })
+    // }
+  }
+
 }
 
 export default BatchView
