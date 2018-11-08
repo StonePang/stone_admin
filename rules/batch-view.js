@@ -2,15 +2,16 @@ import View from './view'
 import Column from './column'
 import TableColumn from './table-column'
 import _ from '~utils/utils'
+import Operation from './operation';
 
 
 const DEVIDE = '-'
 const TAG = '#'
 class BatchView {
-  constructor(viewData, formModelDatas) {
+  constructor(viewData, formModelDatas=undefined) {
     // this.eventBus = new EventBus()
     this.viewData = viewData
-    this.viewData = viewData
+    this.initFormModelData(formModelDatas)
     this.id = viewData.id
     this.formType = _.defaultValue(viewData.formType, 'form')
     this.code = _.defaultValue(viewData.code, this.id)
@@ -22,8 +23,12 @@ class BatchView {
     this.prop = `V${TAG}${this.code}`
     this.viewProp = viewData.fatherViewProp ? `${viewData.fatherViewProp}${DEVIDE}${this.prop}` : this.prop
 
-    this.initColumns(viewData.columnData, this)
-    this.initBatchRows(viewData, formModelDatas)
+    // this.initColumns(viewData.columnData, this)
+    // this.initOperations(viewData.operationData, this)
+    this.initColumns()
+    this.initOperations()
+    this.initBatchRowData(viewData)
+    this.initBatchRows()
     this.initFormModel()
   }
 
@@ -47,17 +52,42 @@ class BatchView {
     return _.defaultValue(this.viewData.operationRuleData, [])
   }
 
+  initFormModelData(formModelDatas) {
+    if (!formModelDatas) {
+      this.formModelData = []
+      return
+    }
+    if (!_.isArray(formModelDatas)) {
+      this.formModelData = [formModelDatas]
+      return 
+    }
+    this.formModelData = formModelDatas
+  }
 
-  initColumns(columnsData, view) {
-    let columns = columnsData.map(data => {
-      return new TableColumn(data, view);
+  initColumns() {
+    let columns = this.columnData.map(data => {
+      return new TableColumn(data, this);
     });
     this.tableColumns = columns
   }
 
-  initBatchRows(viewData, formModelDatas) {
-    let batchRows = formModelDatas.map(formModelData => {
-      return new View(viewData, formModelData)
+  initOperations() {
+    let operations = this.operationData.map(data => {
+      return new Operation(data, this)
+    })
+    this.operations = operations
+  }
+
+  //batchRow中没有操作，操作均在batchView中
+  initBatchRowData() {
+    let batchRowData = _.cloneDeep(this.viewData)
+    batchRowData.operationData = []
+    this.batchRowData = batchRowData
+  }
+
+  initBatchRows() {
+    let batchRows = this.formModelData.map(formModelData => {
+      return new View(this.batchRowData, formModelData)
     })
     this.batchRows = batchRows
   }
@@ -69,18 +99,25 @@ class BatchView {
     this.formModel = formModel
   }
 
-  insertBatchRow(formModel = undefined) {
-    if(_.invalid(formModel)) {
-      formModel = {}
+  insertBatchRow(formModelDatas = undefined) {
+    if (!formModelDatas) {
+      formModelDatas = {}
       this.tableColumns.forEach(column => {
         let key = column.code
-        formModel[key] = null
+        formModelDatas[key] = null
       })
     }
-    let batchRow = new View(this.viewData, formModel)
-    this.batchRows.push(batchRow)
-    // this.initFormModel()
-    this.formModel.push(batchRow.formModel);
+    if (!_.isArray(formModelDatas)) {
+      formModelDatas = [formModelDatas]
+    }
+    formModelDatas.forEach(formModelData => {
+      let batchRow = new View(this.batchRowData, formModelData)
+      this.batchRows.push(batchRow)
+      this.formModel.push(batchRow.formModel);
+    })
+    // let batchRow = new View(this.viewData, formModel)
+    // this.batchRows.push(batchRow)
+    // this.formModel.push(batchRow.formModel);
   }
 
   deleteBatchRow(index) {

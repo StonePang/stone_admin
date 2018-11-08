@@ -1,7 +1,10 @@
 <template>
-    <!-- 表格 ？？？？校验-->
+  <div>
+    <template v-for='operation in operations'>
+      <my-button v-if='operation.isShow' :operation='operation' :key='operation.id' @click='clickButton'/>
+    </template>
+    <p class='form-title'>{{view.title}}</p>
     <el-form  label-position="left" label-width="0" class='form-content' :model="{formModel:view.formModel}" ref='form' show-message validate-on-rule-change	>
-    <!-- <el-form-item :label="formData.title"> -->
       <!-- 表格主体 -->
       <el-table :data="view.formModel" style="width: 100%" stripe border empty-text="暂无数据" @row-click='actionRowClick'>
         <!-- 索引序号 -->
@@ -9,12 +12,8 @@
         </el-table-column>
         <!-- 表格内容 -->
         <template v-for='(column, index) in view.tableColumns'>
-          <!-- <el-table-column v-if='column.isShow' :prop="column.columnProp" :label="column.label" :key='column.columnProp + index' header-align='center'> -->
-          <el-table-column v-if='column.isShow' :prop="column.columnProp" :key='column.columnProp' header-align='center' :render-header="(h)=>renderLable(h, column)">
-            <!-- <template slot='header' slot-scope="slot"><span>{{column.label}}</span></template> -->
+          <el-table-column v-if='column.isShow' :prop="column.columnProp" :key='column.columnProp + index' header-align='center' :render-header="(h)=>renderLable(h, column)">
             <template slot-scope="scope">
-              <!-- <form-column :item='item' :form-data='formData' :row-index="scope.$index" :form-model='formModel' :head-index='index'></form-column> -->
-              <!-- <el-form-item :rules='columnInBatchRow(scope.$index).rules' :prop='formItemProp(scope.$index, columnInBatchRow(scope.$index).columnProp)'> -->
               <el-form-item :rules='columnInBatchRow(scope.$index, column.columnProp).rules' :prop='formItemProp(scope.$index, column.columnProp)' :key='formItemProp(scope.$index, column.columnProp)'>
                 <input-adapt v-if='columnInBatchRow(scope.$index, column.columnProp).renderType==="form"' :column='columnInBatchRow(scope.$index, column.columnProp)' 
                   v-model='batchRows[scope.$index].formModel[column.columnProp]' :key='column.columnProp+scope.$index'></input-adapt>
@@ -32,6 +31,7 @@
       </el-table>
       <!-- </el-form-item> -->
     </el-form>
+  </div>
 </template>
 
 <script>
@@ -42,213 +42,29 @@ import columnDataMap from '../../module/column-data-map'
 import BatchView from '~rules/batch-view'
 
 export default {
-  name:'stepForm',
+  name:'BatchForm',
   // mixins: [mixin],
   components: {
     inputAdapt,
     detailFormItem,
-    // FormColumn: {
-    //   name: 'formColumn',
-    //   // props: ['item', 'rowIndex', 'formData', 'formModel', 'headIndex'],
-    //   props: {
-    //     item: Object,
-    //     rowIndex: Number,
-    //     formData: Object,
-    //     formModel: Array,
-    //     headIndex: Number,
-    //   },
-    //   components: {
-    //     inputAdapt,
-    //   },
-    //   computed: {
-    //     batchRows() {
-    //       return this.view.batchRows
-    //     },
-    //     //关联校验规则
-    //     rules() {
-    //       // let rules = this.formData.rules[this.tableProp]
-    //       let rules = JSON.parse(JSON.stringify(this.formData.rules[this.tableProp]))
-    //       let prop = this.tableProp
-    //       let formModelRow = this.formModel[this.rowIndex]
-    //       let source = this.item.source
-    //       let result = rules
-    //       if(!source) {
-    //         // console.log(result)
-    //         return result
-    //       }
-    //       // 增加配置的规则，关联其他输入框的值
-    //       source.forEach(s => {
-    //         let sourceProp = s.sourceProp
-    //         let inputType = s.inputType
-    //         let sourceValue = s.sourceValue
-    //         if(s.rules && formModelRow[sourceProp] === sourceValue) {
-    //           result = [...result, ...s.rules]
-    //         }
-    //       })
-    //       // console.log(result)
-    //       return result
-    //     },
-    //     itemProp() {
-    //       return `formModel.${this.rowIndex}.${this.tableProp}`;
-    //     },
-    //     tableProp() {
-    //       return this.item.prop
-    //     },
-    //     itemLabel() {
-    //       return this.item.label
-    //     },
-    //     showTableValue() {
-    //       if(!this.item.formatter) {
-    //         return this.formModel[this.rowIndex][this.tableProp]
-    //       }
-    //       return this.item.formatter(this.formModel[this.rowIndex][this.tableProp])
-    //     },
-    //     //输入类型关联其他输入框的值
-    //     inputType() {
-    //       if(!this.item.source) {
-    //         return this.item.type
-    //       }
-    //       let formModelRow = this.formModel[this.rowIndex]
-    //       let source = this.item.source
-    //       let result = this.item.type
-    //       source.forEach(s => {
-    //         let sourceProp = s.sourceProp
-    //         let inputType = s.inputType
-    //         let sourceValue = s.sourceValue
-    //         if(inputType && formModelRow[sourceProp] === sourceValue) {
-    //           result = inputType
-    //         }
-    //       })
-    //       return result
-    //     }
-    //   },
-    //   watch: {
-    //     inputType(newVal, oldVal) {
-    //       // console.log('watch inputType')
-    //       this.formModel[this.rowIndex][this.tableProp] = ''
-    //     },
-    //     rules(newVal, oldVal) {
-    //       //不能正确拿到newVal和oldVal,取消此部清空
-    //       // this.formModel[this.rowIndex][this.tableProp] = ''
-    //     }
-    //   },
-    //   render(h) {
-    //     let itemConfig = {
-    //       props: {
-    //         // label: this.itemLabel,
-    //         prop: this.itemProp,
-    //         rules: this.rules,
-    //         // formatter: this.formData.head[this.headIndex].formatter,
-    //       },
-    //       style: {
-    //         "margin-bottom": "0px",
-    //       }
-    //     };
-    //     let adaptiveConfig = {
-    //       props: {
-    //         // type: this.item.type,
-    //         type: this.inputType,
-    //         placeholder: this.item.placeholder,
-    //         value: this.formModel[this.rowIndex][this.tableProp],
-    //         options: this.formData.head[this.headIndex].options,
-    //         filterable: this.item.filterable,
-    //         changeEvent: this.item.changeEvent,
-    //         visibleChange: this.item.visibleChange,
-    //         choose: this.item.choose,
-    //       },
-    //       on: {
-    //         input: value => {
-    //           this.formModel[this.rowIndex][this.tableProp] = value
-    //         }
-    //       }
-    //     };
-    //     if(this.formData.showType === 'FORM') {
-    //       return (
-    //         <el-form-item {...itemConfig}>
-    //           <input-adapt {...adaptiveConfig}></input-adapt>
-    //         </el-form-item>
-    //       );
-    //     } else if(this.formData.showType === 'TABLE') {
-    //       return (
-    //         <el-form-item {...itemConfig} align='center' class='pointer'>
-    //           {this.showTableValue}
-    //         </el-form-item>
-    //       );
-    //     }
-    //   }
-    // }
   },
   props: {
     view: {
       type: Object,
     }
-    // formData: {
-    //   type: Object,
-    //   required: true, 
-    // },
-    // rowDelete: {
-    //   type: Function,
-    //   default: (index) => {
-    //     // console.log('delete row default',index)
-    //   }
-    // },
-    // value: Array,
-    // required: {
-    //   type: Boolean,
-    //   default: false,
-    // }
   },
   data() {
     return {
-      search: ''
-      // dialogVisiable: false,
-      // view: {},
-      // formModel: this.view.formModel,
     }
   },
   mounted() {
-    // let viewData = {
-    //   id: 11,
-    //   isShow: true,
-    //   title: '批量表',
-    //   code: 'batchForm',
-    //   columnData: [
-    //     columnDataMap.input,
-    //     columnDataMap.select,
-    //     columnDataMap.checkbox,
-    //     columnDataMap.datetime,
-    //   ],
-    // }
-    // let formModelDatas = [{
-    //   input: null,
-    //   select: null,
-    //   checkbox: null,
-    //   datetime: null
-    // },{
-    //   input: null,
-    //   select: null,
-    //   checkbox: null,
-    //   datetime: null
-    // }]
-    // let view = new BatchView(viewData, formModelDatas)
-    // console.log(view)
   },
   computed: {
-    // formModel() {
-    //   return  this.view.formModel
-    // }
-    //   get() {
-    //     return this.value
-    //   },
-    //   set(newValue) {
-    //     this.$emit('input', newValue)
-    //   }
-    // },
-    // minLen() {
-    //   return this.formData.minLen || 0
-    // },
     batchRows() {
       return this.view.batchRows
+    },
+    operations() {
+      return this.view.operations
     }
   },
   methods: {
@@ -261,9 +77,9 @@ export default {
       return key
     },
     renderHeader(h) {
-      if(this.view.formType === 'table') {
+      if(this.view.renderType === 'table') {
         return (<span>操作</span>)
-      }else if(this.view.formType === 'form'){
+      }else if(this.view.renderType === 'form'){
         return (
           <span>
             <el-button

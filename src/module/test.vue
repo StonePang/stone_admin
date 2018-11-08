@@ -1,7 +1,8 @@
 <template>
   <div>
     <!-- <my-form v-if='!loading' :view='view' /> -->
-    <batch-form v-if='!loading' :view='view' />
+    <!-- <batch-form v-if='!loading' :view='view' /> -->
+    <form-adapt v-if='!loading' :view='view' />
   </div>
 </template>
 
@@ -16,6 +17,7 @@ import MyRadio from "~input/radio";
 // import InputAdapt from "~input/input-adapt";
 import MyForm from "~form/form";
 import BatchForm from "~form/batch-form";
+import FormAdapt from "~form/form-adapt";
 import View from "~rules/view";
 import BatchView from "~rules/batch-view";
 import viewData from './view-data'
@@ -33,6 +35,7 @@ export default {
     // InputAdapt,
     MyForm,
     BatchForm,
+    FormAdapt,
   },
   data() {
     return {
@@ -53,9 +56,9 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-      // let view = new View(this.viewData, this.formModelData)
-      // this.view = view
-      // this.loading = false
+      let view = new View(this.viewData, this.formModelData)
+      this.view = view
+      this.loading = false
 
 
       // this.view.addEventListener('created', view => {
@@ -74,37 +77,38 @@ export default {
       //   })
       // })
 
-    let viewData = {
-      id: 11,
-      isShow: true,
-      formType: 'form',
-      title: '批量表',
-      code: 'batchForm',
-      columnData: [
-        columnDataMap.input,
-        columnDataMap.select,
-        columnDataMap.checkbox,
-        columnDataMap.datetime,
-      ],
-      viewRuleData: [
-        viewRuleData['1']
-      ]
-    }
-    let formModelDatas = [{
-      input: null,
-      select: null,
-      checkbox: null,
-      datetime: null
-    },{
-      input: null,
-      select: null,
-      checkbox: null,
-      datetime: null
-    }]
-    let batchView = new BatchView(viewData, formModelDatas)
-    console.log('/////////////////', batchView)
-    this.view = batchView
-    this.loading = false
+  //   let viewData = {
+  //     id: 11,
+  //     isShow: true,
+  //     // formType: 'batchForm',
+  //     formType: 'mainForm',
+  //     title: '批量表',
+  //     code: 'batchForm',
+  //     columnData: [
+  //       columnDataMap.input,
+  //       columnDataMap.select,
+  //       columnDataMap.checkbox,
+  //       columnDataMap.datetime,
+  //     ],
+  //     viewRuleData: [
+  //       viewRuleData['1']
+  //     ],
+  //     subView: [
+  //       viewData
+  //     ]
+  //   }
+  //   // let formModelDatas = undefined
+  //   let formModelDatas = {
+  //     input: null,
+  //     select: null,
+  //     checkbox: null,
+  //     datetime: null
+  //   }
+  //   // let batchView = new BatchView(viewData, formModelDatas)
+  //   let batchView = new View(viewData, formModelDatas)
+  //   console.log('/////////////////', batchView)
+  //   this.view = batchView
+  //   this.loading = false
 
     }, 1000);
   }

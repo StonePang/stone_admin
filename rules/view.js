@@ -47,9 +47,10 @@ class View {
     this.eventBus = new EventBus()
     // this.viewData = viewData
     this.id = viewData.id
-    this.formType = _.defaultValue(viewData.formType, 'form')
+    this.formType = _.defaultValue(viewData.formType, 'mainForm') //mainForm / batchForm
+    this.loadingCheck = _.defaultValue(viewData.loadingCheck, false) //视图加载后是否立即校验
     this.code = _.defaultValue(viewData.code, this.id)
-    this.renderType = _.defaultValue(viewData.renderType, 'form')
+    this.renderType = _.defaultValue(viewData.renderType, 'form') //form / table
     this.title = _.defaultValue(viewData.title, `视图-${this.code}`)
     this.isShow = _.defaultValue(viewData.isShow, true)
     this.disabled = _.defaultValue(viewData.disabled, false)

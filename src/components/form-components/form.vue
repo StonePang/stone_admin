@@ -17,10 +17,7 @@
         </el-col>
       </el-row>
     </el-form>
-    <!-- <template v-if='view.subView'>
-      <my-form v-for='subView in view.subView' :key='subView.id' :view='subView' ref='subforms'/>
-    </template> -->
-    <div v-if='view.subView'>
+    <!-- <div v-if='view.subView'>
       <div v-for='subView in view.subView' :key='subView.id'>
         <el-dialog :title='subView.title' :visible.sync="subView.isShow" width='80%' v-if='subView.isDialog' append-to-body>
           <my-form :view='subView' ref='subforms'/>
@@ -30,8 +27,7 @@
         </el-dialog>
         <my-form :view='subView' ref='subforms' v-else/>
       </div>
-      <!-- <my-form v-for='subView in view.subView' :key='subView.id' :view='subView' ref='subforms'/> -->
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -41,7 +37,7 @@ import MyButton from '~common/button'
 import detailFormItem from '~input/detail-form-item'
 // import Column from '~rules/column'
 export default {
-  name: 'MyForm',
+  name: 'MainForm',
   components: {
     inputAdapt,
     detailFormItem,
@@ -52,20 +48,29 @@ export default {
       type: Object
     },
     //加载完成后是否校验
-    loadingCheck: {
-      type: Boolean,
-      default: false
-    }
+    // loadingCheck: {
+    //   type: Boolean,
+    //   default: false
+    // }
   },
   data() {
     return {
-      columns: this.view.columns,
-      formModel: this.view.formModel,
-      operations: this.view.operations,
+      // columns: this.view.columns,
+      // formModel: this.view.formModel,
+      // operations: this.view.operations,
       gutter: 30,
     }
   },
   computed: {
+    columns() {
+      return this.view.columns
+    },
+    formModel() {
+      return this.view.formModel
+    },
+    operations() {
+      return this.view.operations
+    },
   },
   methods: {
     validateAll() {
@@ -141,7 +146,7 @@ export default {
     }
   },
   mounted() {
-    if(this.loadingCheck) {
+    if(this.view.loadingCheck) {
       this.validate()
     }
   },
