@@ -2,7 +2,8 @@
     1:{
       id: 21,
       affectItems: ['checkbox'],
-      targetViewCode: 'mainForm',
+      // targetViewCode: 'mainForm',
+      targetViewCode: 'batchForm',
       affectType: 'column',
       type: 'disabled',
       sort: 1,
@@ -34,7 +35,8 @@
       {
         bindColumnCode: 'select',
         bindItemType: 'column',
-        targetViewCode: 'mainForm',
+        // targetViewCode: 'mainForm',
+        targetViewCode: 'batchForm',
         conditionType: 3,
         conditionValue: 'value_2',
         isClickResultNow: true,

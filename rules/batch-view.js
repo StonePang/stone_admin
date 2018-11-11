@@ -3,13 +3,16 @@ import Column from './column'
 import TableColumn from './table-column'
 import _ from '~utils/utils'
 import Operation from './operation';
+import EventHandler from './event-handler'
+import EventBus from './event-bus'
+
 
 
 const DEVIDE = '-'
 const TAG = '#'
 class BatchView {
   constructor(viewData, formModelDatas=undefined) {
-    // this.eventBus = new EventBus()
+    this.eventBus = new EventBus()
     this.viewData = viewData
     this.initFormModelData(formModelDatas)
     this.id = viewData.id
@@ -26,10 +29,13 @@ class BatchView {
     // this.initColumns(viewData.columnData, this)
     // this.initOperations(viewData.operationData, this)
     this.initColumns()
+    this.initColumnMap()
     this.initOperations()
+    this.initOperationMap()
     this.initBatchRowData(viewData)
     this.initBatchRows()
     this.initFormModel()
+    this.initViewEventHandler()
   }
 
   get columnData() {
@@ -67,8 +73,17 @@ class BatchView {
   initColumns() {
     let columns = this.columnData.map(data => {
       return new TableColumn(data, this);
+      // return new Column(data, this);
     });
     this.tableColumns = columns
+  }
+
+  initColumnMap() {
+    let columnMap = {}
+    this.tableColumns.forEach(column => {
+      columnMap[column.columnProp] = column
+    })
+    this.columnMap = columnMap
   }
 
   initOperations() {
@@ -76,6 +91,14 @@ class BatchView {
       return new Operation(data, this)
     })
     this.operations = operations
+  }
+
+  initOperationMap() {
+    let operationMap = {}
+    this.operations.forEach(operation => {
+      operationMap[operations.operationProp] = operation
+    })
+    this.operationMap = operationMap
   }
 
   //batchRow中没有操作，操作均在batchView中
@@ -99,55 +122,166 @@ class BatchView {
     this.formModel = formModel
   }
 
-  insertBatchRow(formModelDatas = undefined) {
-    if (!formModelDatas) {
-      formModelDatas = {}
-      this.tableColumns.forEach(column => {
-        let key = column.code
-        formModelDatas[key] = null
+  insertBatchRow() {
+    return (formModelDatas = undefined) => {
+      if (!formModelDatas) {
+        formModelDatas = {}
+        this.tableColumns.forEach(column => {
+          let key = column.code
+          formModelDatas[key] = null
+        })
+      }
+      if (!_.isArray(formModelDatas)) {
+        formModelDatas = [formModelDatas]
+      }
+      formModelDatas.forEach(formModelData => {
+        let batchRow = new View(this.batchRowData, formModelData)
+        this.batchRows.push(batchRow)
+        this.formModel.push(batchRow.formModel);
       })
     }
-    if (!_.isArray(formModelDatas)) {
-      formModelDatas = [formModelDatas]
-    }
-    formModelDatas.forEach(formModelData => {
-      let batchRow = new View(this.batchRowData, formModelData)
-      this.batchRows.push(batchRow)
-      this.formModel.push(batchRow.formModel);
-    })
-    // let batchRow = new View(this.viewData, formModel)
-    // this.batchRows.push(batchRow)
-    // this.formModel.push(batchRow.formModel);
   }
 
-  deleteBatchRow(index) {
-    this.formModel.splice(index, 1);
-    this.batchRows = this.batchRows.filter((batchRow, i) => {
-      return i !==index
-    })
+  deleteBatchRow() {
+    return (index) => {
+      this.formModel.splice(index, 1);
+      this.batchRows = this.batchRows.filter((batchRow, i) => {
+        return i !== index
+      })
+    }
   }
 
   clearFormModel() {
-    // return () => {
-      console.log(this)
+    return () => {
       this.batchRows.forEach(batchView => {
         batchView.triggerEvent('clearFormModel')
       })
-    // }
+    }
   }
-  changeRender(type) {
-    // return (type) => {
+  changeRender() {
+    return (type) => {
       this.batchRows.forEach(batchView => {
         batchView.triggerEvent('changeRender', type)
       })
-    // }
+    }
   }
-  disabledChange(status) {
-    // return () => {
+  disabledChange() {
+    return (status = undefined) => {
+      if (_.invalid(status)) {
+        status = !this.disabled
+        this.disabled = !this.disabled
+      }
       this.batchRows.forEach(batchView => {
         batchView.triggerEvent('disabledChange', status)
       })
-    // }
+    }
+  }
+
+  initViewEventHandler() {
+    let insertBatchRowData = {
+      name: `insertBatchRow`,
+      sort: 1,
+      isSync: true,
+      isTriggerNow: false,
+      isTriggerOnce: false,
+    }
+    let insertBatchRowHandler = new EventHandler(insertBatchRowData)
+    insertBatchRowHandler.addHandler(this.insertBatchRow())
+    let deleteBatchRowData = {
+      name: `deleteBatchRow`,
+      sort: 1,
+      isSync: true,
+      isTriggerNow: false,
+      isTriggerOnce: false,
+    }
+    let deleteBatchRowHandler = new EventHandler(deleteBatchRowData)
+    deleteBatchRowHandler.addHandler(this.deleteBatchRow())
+    let clearFormModelData = {
+      name: `clear`,
+      sort: 1,
+      isSync: true,
+      isTriggerNow: false,
+      isTriggerOnce: false,
+    }
+    let clearHandler = new EventHandler(clearFormModelData)
+    clearHandler.addHandler(this.clearFormModel())
+    let disabledData = {
+      name: `disabled`,
+      sort: 1,
+      isSync: true,
+      isTriggerNow: false,
+      isTriggerOnce: false,
+    }
+    let disabledHandler = new EventHandler(disabledData)
+    disabledHandler.addHandler(this.disabledChange())
+    let changeRenderData = {
+      name: `changeRender`,
+      sort: 1,
+      isSync: true,
+      isTriggerNow: false,
+      isTriggerOnce: false,
+    }
+    let changeRenderHandler = new EventHandler(changeRenderData)
+    changeRenderHandler.addHandler(this.changeRender())
+    let customData = {
+      name: `custom`,
+      sort: 1,
+      isSync: true,
+      isTriggerNow: false,
+      isTriggerOnce: false,
+    }
+    this.customHandler = new EventHandler(customData)
+
+    this.registerEvent('insertBatchRow', insertBatchRowHandler)
+    this.registerEvent('deleteBatchRow', deleteBatchRowHandler)
+    this.registerEvent('clearFormModel', clearHandler)
+    this.registerEvent('disabledChange', disabledHandler)
+    this.registerEvent('changeRender', changeRenderHandler)
+    this.registerEvent('custom', this.customHandler)
+  }
+
+  registerEvent(eventName, eventHandler, ...args) {
+    let viewPrefix = `view:${this.id}-`
+    let name = eventName
+    if (!_.includes(eventName, viewPrefix)) {
+      name = viewPrefix + eventName
+    }
+    this.eventBus.register(name, eventHandler, ...args)
+  }
+
+  triggerEvent(eventName, ...args) {
+    let viewPrefix = `view:${this.id}-`
+    let name = eventName
+    if (!_.includes(eventName, viewPrefix)) {
+      name = viewPrefix + eventName
+    }
+    return this.eventBus.trigger(name, ...args)
+  }
+
+  destroy() {
+    this.eventBus.destroy()
+    console.log('eventBus destroy.')
+  }
+
+  //暴露给外部的执行自定义时间注册的方法，回调参数是view实例
+  addEventListener(type, callback) {
+    let typeMap = {
+      created: true,
+      update: false,
+    }
+    let customData = {
+      name: `custom-${type}`,
+      sort: 1,
+      isSync: false,
+      isTriggerNow: typeMap[type] || false,
+      isTriggerOnce: typeMap[type] || false,
+    }
+    let customHandler = new EventHandler(customData)
+    //将函数添加到eventHandler对象中
+    customHandler.addHandler(() => {
+      callback(this)
+    })
+    this.customHandler.addHandler(customHandler)
   }
 
 }

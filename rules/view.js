@@ -261,7 +261,7 @@ class View {
       name: `disabled`,
       sort: 1,
       isSync: true,
-      isTriggerNow: true,
+      isTriggerNow: false,
       isTriggerOnce: false,
     }
     let disabledHandler = new EventHandler(disabledData)
@@ -307,8 +307,10 @@ class View {
     }
   }
   disabledChange() {
-    return (status) => {
-      // let status = this.disabled
+    return (status = undefined) => {
+      if(_.invalid(status)) {
+        status = !this.disabled
+      }
       this.columns.forEach(column => {
         column.disabled = status
       })

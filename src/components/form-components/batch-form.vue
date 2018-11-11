@@ -126,14 +126,16 @@ export default {
     insertData() {
       // let defaultData = this.defaultFormData()
       console.log(`添加一行`)
-      this.view.insertBatchRow()
-      // this.view.clearFormModel()
-      // this.view.changeRender('table')
-      // this.view.disabledChange(true)
+      // this.view.insertBatchRow()
+      this.view.triggerEvent('insertBatchRow')
+      // this.view.triggerEvent('clearFormModel')
+      // this.view.triggerEvent('disabledChange', true)
+      // this.view.triggerEvent('changeRender', 'table')
     },
     deleteData(index) {
       console.log('删除一行')
-      this.view.deleteBatchRow(index)
+      // this.view.deleteBatchRow(index)
+      this.view.triggerEvent('deleteBatchRow', index)
     },
     actionRowClick(row, event, column, index) {
       // if(this.formData.showType !== 'TABLE' || column.label === 'operation') {

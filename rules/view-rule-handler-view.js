@@ -89,7 +89,6 @@ class ViewRuleHandlerSubView extends ViewRuleHandler {
 
   handlerChangeRender(result) {
     this.handlerEachAffectItem(view => {
-      console.log(this)
       let renderTypeNow = view.renderType
       let renderType = undefined
       if(!result) {
