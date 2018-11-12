@@ -36,6 +36,7 @@ class TableColumn {
     this.isShow = _.defaultValue(columnData.isShow, true)
     this.showChooseAll = _.defaultValue(columnData.showChooseAll, false)
     this.componentRender = columnData.componentRender || null
+    this.isTableColumn = true
     this.initProp()
     // this.initDefaultValue()
     // this.initEventHandler()

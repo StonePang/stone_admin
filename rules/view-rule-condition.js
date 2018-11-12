@@ -8,12 +8,22 @@ class ViewRuleCondition {
     this.init(viewRuleConditionData, view)
   }
 
+  get methodMap() {
+    return {
+      AND: 'every',
+      and: 'every',
+      OR: 'some',
+      or: 'some',
+    }
+  }
+
   init(viewRuleConditionData, view) {
     this.view = view
     this.targetViewProp = viewRuleConditionData.targetViewCode.split(DEVIDE).map(e => {
       return `V${TAG}${e}`
     }).join(DEVIDE)
     this.customCondition = viewRuleConditionData.customCondition || null
+    this.conditionMethod = _.defaultValue(viewRuleConditionData.conditionMethod, 'OR')
     // this.bindItemType = viewRuleConditionData.bindItemType || 'column'
     // this.bindItemProp = `${this.targetViewProp}${DEVIDE}C${TAG}${viewRuleConditionData.bindItem}`
     // this.bindItem = this.view.columnMap[this.bindItemProp]
@@ -47,6 +57,20 @@ class ViewRuleCondition {
   //   return result
   // }
 
+  conditionResultHandler(columnValue, conditionValue, conditionType) {
+    let conditionMap = {
+      1: columnValue > conditionValue,
+      2: columnValue < conditionValue,
+      3: columnValue === conditionValue,
+      4: columnValue >= conditionValue,
+      5: columnValue <= conditionValue,
+      6: columnValue !== conditionValue,
+      7: _.includes(columnValue, conditionValue),
+      8: !_.includes(columnValue, conditionValue),
+    }
+    return conditionMap[conditionType]
+  }
+
   //返回一个Promise
   //promise.reject()  视图条件异常
   //promise.resolve(result) 试图条件完成计算，result为结果
@@ -71,22 +95,36 @@ class ViewRuleCondition {
     //     })
     //   }
     // }
-    console.log(this.view.formModel)
-    // let bindColumnValue = this.findColumnValue(this.bindItem.columnProp)
-    let bindColumnValue = this.view.formModel[this.bindItem.columnProp]
+
+    //绑定字段是批量表格的字段时，绑定值是所有batchRow的对应字段的值
+    let bindColumnValue = undefined
+    if(this.bindItem.isTableColumn) {
+      bindColumnValue = this.bindItem.view.batchRows.map(batchRow => {
+        return batchRow.formModel[this.bindItem.columnProp]
+      })
+    }else {
+      //绑定字段是普通表单字段时，绑定值就是字段对应的值
+      bindColumnValue = [this.view.formModel[this.bindItem.columnProp]]
+    }
+    // let bindColumnValue = this.view.formModel[this.bindItem.columnProp]
     let conditionValue = this.conditionValue
     let conditionType = this.conditionType
-    let conditionMap = {
-      1: bindColumnValue > conditionValue,
-      2: bindColumnValue < conditionValue,
-      3: bindColumnValue === conditionValue,
-      4: bindColumnValue >= conditionValue,
-      5: bindColumnValue <= conditionValue,
-      6: bindColumnValue !== conditionValue,
-      7: _.includes(bindColumnValue, conditionValue),
-      8: !_.includes(bindColumnValue, conditionValue),
-    }
-    let result = conditionMap[conditionType]
+    // let conditionMap = {
+    //   1: bindColumnValue > conditionValue,
+    //   2: bindColumnValue < conditionValue,
+    //   3: bindColumnValue === conditionValue,
+    //   4: bindColumnValue >= conditionValue,
+    //   5: bindColumnValue <= conditionValue,
+    //   6: bindColumnValue !== conditionValue,
+    //   7: _.includes(bindColumnValue, conditionValue),
+    //   8: !_.includes(bindColumnValue, conditionValue),
+    // }
+    // let result = conditionMap[conditionType]
+    let methodName = this.methodMap[this.conditionMethod]
+    //用some / every 方法得到本条条件的结果
+    let result = bindColumnValue[methodName](columnValue => {
+      return this.conditionResultHandler(columnValue, conditionValue, conditionType)
+    })
     console.log('单个视图条件结果', result, this.bindItem.columnProp)
     if(_.invalid(result)) {
       let errMsg = (`视图条件的单条条件类型(${conditionType})不存在，视图条件失败`)
