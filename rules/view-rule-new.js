@@ -131,7 +131,7 @@ class ViewRule {
   //   })
   // }
   registerEvent() {
-    // console.log(this.bindItems)
+    console.log(this.bindItems)
     this.bindItems.forEach(item => {
       // console.log(this.eventHandler)
       // this.eventHandler.addHandler(this.handler())

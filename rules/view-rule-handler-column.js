@@ -7,12 +7,16 @@ const TAG = '#'
 class ViewRuleHandlerColumn extends ViewRuleHandler {
   constructor(viewRuleData, view, ruleType) {
     super(viewRuleData, view, ruleType)
+    this.viewRuleData = viewRuleData
     this.affectType = viewRuleData.affectType
     this.itemMap = this.view.columnMap
-    this.affectItems = viewRuleData.affectItems.map(itemCode => {
+    //处理对象是column，需要考虑mainForm 和 BatchForm的区别
+    //mainForm拿到的是实际字段，batchForm拿到的是batchView中的tableColumn，实际处理column是batchRow中的对应column
+    this.affectColumns = viewRuleData.affectItems.map(itemCode => {
       let key = `${this.targetViewProp}${DEVIDE}C${TAG}${itemCode}`
       return this.itemMap[key]
     })
+    console.log('this.view', this.view)
   }
 
   get handlerMap() {
@@ -23,6 +27,21 @@ class ViewRuleHandlerColumn extends ViewRuleHandler {
       clear: this.handlerClear.bind(this),
       changeValue: this.handlerChangeValue.bind(this),
       changeRender: this.handlerChangeRender.bind(this),
+    }
+  }
+
+  //用get 得到实际处理的column
+  //TODO:get拿到的column在batchForm时会不会动态增减
+  get affectItems() {
+    if(this.view.formType === 'mainForm') {
+      return this.affectColumns
+    } else if (this.view.formType === 'batchForm') {
+      return this.affectColumns.reduce((pre, column) => {
+        let resColumns = this.view.batchRows.map(batchRow => {
+          return batchRow.columnMap[column.columnProp]
+        })
+        return [...pre, ...resColumns]
+      }, [])
     }
   }
 
@@ -58,6 +77,7 @@ class ViewRuleHandlerColumn extends ViewRuleHandler {
 
   handlerDisabled(result) {
     this.handlerEachAffectItem(column => {
+      console.log('handlerDisabled', column, result)
       if (result) {
         if (this.ruleType === 'operation' && this.isToogle) {
           column.disabled = !column.disabled

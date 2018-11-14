@@ -105,7 +105,7 @@ class View {
       }
       // console.log('gua', viewData.subViewData)
     }
-      console.log('gua', viewData.subViewData)
+      // console.log('gua', viewData.subViewData)
   }
 
 
@@ -318,7 +318,7 @@ class View {
   }
   
   registerEvent(eventName, eventHandler, ...args) {
-    let viewPrefix = `view:${this.id}-`
+    let viewPrefix = `view:${this.code}-`
     let name = eventName
     if (!_.includes(eventName, viewPrefix)) {
       name = viewPrefix + eventName
@@ -327,7 +327,7 @@ class View {
   }
 
   triggerEvent(eventName, ...args) {
-    let viewPrefix = `view:${this.id}-`
+    let viewPrefix = `view:${this.code}-`
     let name = eventName
     if (!_.includes(eventName, viewPrefix)) {
       name = viewPrefix + eventName

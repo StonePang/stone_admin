@@ -57,6 +57,18 @@ class ViewRuleCondition {
   //   return result
   // }
 
+  //用get取值，当依赖变化时会自动计算，适用于batchView动态增减行后的动态取值
+  get bindColumnValue() {
+    //绑定字段是批量表格的字段时，绑定值是所有batchRow的对应字段的值
+    if (this.bindItem.isTableColumn) {
+      return this.bindItem.view.batchRows.map(batchRow => {
+        return batchRow.formModel[this.bindItem.columnProp]
+      })
+    } 
+    //绑定字段是普通表单字段时，绑定值就是字段对应的值
+    return [this.view.formModel[this.bindItem.columnProp]]
+  }
+
   conditionResultHandler(columnValue, conditionValue, conditionType) {
     let conditionMap = {
       1: columnValue > conditionValue,
@@ -96,16 +108,16 @@ class ViewRuleCondition {
     //   }
     // }
 
-    //绑定字段是批量表格的字段时，绑定值是所有batchRow的对应字段的值
-    let bindColumnValue = undefined
-    if(this.bindItem.isTableColumn) {
-      bindColumnValue = this.bindItem.view.batchRows.map(batchRow => {
-        return batchRow.formModel[this.bindItem.columnProp]
-      })
-    }else {
-      //绑定字段是普通表单字段时，绑定值就是字段对应的值
-      bindColumnValue = [this.view.formModel[this.bindItem.columnProp]]
-    }
+    // //绑定字段是批量表格的字段时，绑定值是所有batchRow的对应字段的值
+    // let bindColumnValue = undefined
+    // if(this.bindItem.isTableColumn) {
+    //   bindColumnValue = this.bindItem.view.batchRows.map(batchRow => {
+    //     return batchRow.formModel[this.bindItem.columnProp]
+    //   })
+    // }else {
+    //   //绑定字段是普通表单字段时，绑定值就是字段对应的值
+    //   bindColumnValue = [this.view.formModel[this.bindItem.columnProp]]
+    // }
     // let bindColumnValue = this.view.formModel[this.bindItem.columnProp]
     let conditionValue = this.conditionValue
     let conditionType = this.conditionType
@@ -122,7 +134,7 @@ class ViewRuleCondition {
     // let result = conditionMap[conditionType]
     let methodName = this.methodMap[this.conditionMethod]
     //用some / every 方法得到本条条件的结果
-    let result = bindColumnValue[methodName](columnValue => {
+    let result = this.bindColumnValue[methodName](columnValue => {
       return this.conditionResultHandler(columnValue, conditionValue, conditionType)
     })
     console.log('单个视图条件结果', result, this.bindItem.columnProp)

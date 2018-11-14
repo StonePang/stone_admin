@@ -4,7 +4,7 @@ import ViewRuleHandlerColumn from './view-rule-handler-column'
 import ViewRuleHandlerSubView from './view-rule-handler-view'
 import ViewRuleHandlerOperation from './view-rule-handler-operation'
 import EventHandler from './event-handler'
-class ViewRule {
+class OperationRule {
   constructor(operationRuleData, view) {
     this.view = view
     this.id = operationRuleData.id
@@ -139,4 +139,4 @@ class ViewRule {
 
 }
 
-export default ViewRule
+export default OperationRule

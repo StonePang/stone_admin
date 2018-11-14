@@ -53,7 +53,7 @@ class Column {
         
     //   }
     // }
-    this.view.registerEvent(`column:${this.id}`, this.eventBus)
+    this.view.registerEvent(`column:${this.code}`, this.eventBus)
   }
 
   initProp() {
@@ -84,7 +84,7 @@ class Column {
   //注册字段内的事件handler，一种类型注册一个，注册的时候定义name,sort,isSync
   initEventHandler() {
     let eventBusData = {
-      name: `column:${this.id}`,
+      name: `column:${this.code}`,
       isSync: true,
       isTriggerNow: false,
       isTriggerOnce: false,
@@ -92,7 +92,7 @@ class Column {
     let eventBusEventHandler = new EventHandler(eventBusData)
 
     let valueRuleData = {
-      name: `column:${this.id}-value-rule`,
+      name: `column:${this.code}-value-rule`,
       sort: 1,
       isSync: true,
       isTriggerNow: false,
@@ -100,7 +100,7 @@ class Column {
     }
     let valueRuleEventHandler = new EventHandler(valueRuleData)
     let viewRuleData = {
-      name: `column:${this.id}-view-rule`,
+      name: `column:${this.code}-view-rule`,
       sort: 2,
       isSync: true,
       isTriggerNow: false,
@@ -109,7 +109,7 @@ class Column {
     let viewRuleEventHandler = new EventHandler(viewRuleData)
 
     let customData = {
-      name: `column:${this.id}-custom`,
+      name: `column:${this.code}-custom`,
       sort: 3,
       isSync: false,
       isTriggerNow: false,
@@ -151,7 +151,7 @@ class Column {
 
   //将指定函数注册到view的事件中心，定义字段的创建/更新事件
   registerEvent(spaceName, eventHandler) {
-    let name = `column:${this.id}-${spaceName}`
+    let name = `column:${this.code}-${spaceName}`
     console.log(this.eventBus, name)
     let result = this.eventBus.handler.find(item => {
       return item.name === name
@@ -164,7 +164,7 @@ class Column {
   
 
   triggerEvent(...arg) {
-    let eventName = `column:${this.id}`
+    let eventName = `column:${this.code}`
     this.view.triggerEvent(eventName, ...arg)
   }
 
@@ -174,7 +174,7 @@ class Column {
       update: false,
     }
     let customData = {
-      name: `column:${this.id}-custom-${type}`,
+      name: `column:${this.code}-custom-${type}`,
       sort: 1,
       isSync: false,
       isTriggerNow: typeMap[type] || false,

@@ -1,7 +1,7 @@
 import ValidateRule from './validate-rule'
 // import ValueRule from './value-rule'
 import _ from '~utils/utils'
-// import EventHandler from './event-handler'
+import EventHandler from './event-handler'
 
 const DEVIDE = '-'
 const TAG = '#'
@@ -39,14 +39,14 @@ class TableColumn {
     this.isTableColumn = true
     this.initProp()
     // this.initDefaultValue()
-    // this.initEventHandler()
+    this.initEventHandler()
     this.initValidateRule({
       label: this.label,
       required: this.required,
       rules: _.defaultValue(columnData.rules, [])
     })
     // this.initValueRule()
-    // this.view.registerEvent(`column:${this.id}`, this.eventBus)
+    this.view.registerEvent(`column:${this.id}`, this.eventBus)
   }
 
   initProp() {
@@ -74,47 +74,47 @@ class TableColumn {
   //   this.valueRule = new ValueRule(this)
   // }
 
-  // //注册字段内的事件handler，一种类型注册一个，注册的时候定义name,sort,isSync
-  // initEventHandler() {
-  //   let eventBusData = {
-  //     name: `column:${this.id}`,
-  //     isSync: true,
-  //     isTriggerNow: false,
-  //     isTriggerOnce: false,
-  //   }
-  //   let eventBusEventHandler = new EventHandler(eventBusData)
+  //注册字段内的事件handler，一种类型注册一个，注册的时候定义name,sort,isSync
+  initEventHandler() {
+    let eventBusData = {
+      name: `column:${this.code}`,
+      isSync: true,
+      isTriggerNow: false,
+      isTriggerOnce: false,
+    }
+    let eventBusEventHandler = new EventHandler(eventBusData)
 
-  //   let valueRuleData = {
-  //     name: `column:${this.id}-value-rule`,
-  //     sort: 1,
-  //     isSync: true,
-  //     isTriggerNow: false,
-  //     isTriggerOnce: false,
-  //   }
-  //   let valueRuleEventHandler = new EventHandler(valueRuleData)
-  //   let viewRuleData = {
-  //     name: `column:${this.id}-view-rule`,
-  //     sort: 2,
-  //     isSync: true,
-  //     isTriggerNow: false,
-  //     isTriggerOnce: false,
-  //   }
-  //   let viewRuleEventHandler = new EventHandler(viewRuleData)
+    // let valueRuleData = {
+    //   name: `column:${this.id}-value-rule`,
+    //   sort: 1,
+    //   isSync: true,
+    //   isTriggerNow: false,
+    //   isTriggerOnce: false,
+    // }
+    // let valueRuleEventHandler = new EventHandler(valueRuleData)
+    let viewRuleData = {
+      name: `column:${this.code}-view-rule`,
+      sort: 2,
+      isSync: true,
+      isTriggerNow: false,
+      isTriggerOnce: false,
+    }
+    let viewRuleEventHandler = new EventHandler(viewRuleData)
 
-  //   let customData = {
-  //     name: `column:${this.id}-custom`,
-  //     sort: 3,
-  //     isSync: false,
-  //     isTriggerNow: false,
-  //     isTriggerOnce: false,
-  //   }
-  //   this.customHandler = new EventHandler(customData)
+    let customData = {
+      name: `column:${this.code}-custom`,
+      sort: 3,
+      isSync: false,
+      isTriggerNow: false,
+      isTriggerOnce: false,
+    }
+    this.customHandler = new EventHandler(customData)
 
-  //   eventBusEventHandler.addHandler(valueRuleEventHandler)
-  //   eventBusEventHandler.addHandler(viewRuleEventHandler)
-  //   eventBusEventHandler.addHandler(this.customHandler)
-  //   this.eventBus = eventBusEventHandler
-  // }
+    // eventBusEventHandler.addHandler(valueRuleEventHandler)
+    eventBusEventHandler.addHandler(viewRuleEventHandler)
+    eventBusEventHandler.addHandler(this.customHandler)
+    this.eventBus = eventBusEventHandler
+  }
 
   // //将子handler挂载到本事件内的
   // // addHandler(spaceName, handler) {
@@ -142,44 +142,44 @@ class TableColumn {
   //   this.triggerEvent(val)
   // }
 
-  // //将指定函数注册到view的事件中心，定义字段的创建/更新事件
-  // registerEvent(spaceName, eventHandler) {
-  //   let name = `column:${this.id}-${spaceName}`
-  //   console.log(this.eventBus, name)
-  //   let result = this.eventBus.handler.find(item => {
-  //     return item.name === name
-  //   })
-  //   if (!result) {
-  //     console.warn(`(${name})不能绑定在对应字段的事件中心内-->>(${spaceName})不存在`)
-  //   }
-  //   result.addHandler(eventHandler)
-  // }
+  //将指定函数注册到view的事件中心，定义字段的创建/更新事件
+  registerEvent(spaceName, eventHandler) {
+    let name = `column:${this.code}-${spaceName}`
+    console.log(this.eventBus, name)
+    let result = this.eventBus.handler.find(item => {
+      return item.name === name
+    })
+    if (!result) {
+      console.warn(`(${name})不能绑定在对应字段的事件中心内-->>(${spaceName})不存在`)
+    }
+    result.addHandler(eventHandler)
+  }
 
 
-  // triggerEvent(...arg) {
-  //   let eventName = `column:${this.id}`
-  //   this.view.triggerEvent(eventName, ...arg)
-  // }
+  triggerEvent(...arg) {
+    let eventName = `column:${this.code}`
+    this.view.triggerEvent(eventName, ...arg)
+  }
 
-  // addEventListener(type, callback) {
-  //   let typeMap = {
-  //     created: true,
-  //     update: false,
-  //   }
-  //   let customData = {
-  //     name: `column:${this.id}-custom-${type}`,
-  //     sort: 1,
-  //     isSync: false,
-  //     isTriggerNow: typeMap[type] || false,
-  //     isTriggerOnce: typeMap[type] || false,
-  //   }
-  //   let customHandler = new EventHandler(customData)
-  //   //将函数添加到eventHandler对象中
-  //   customHandler.addHandler(() => {
-  //     callback(this)
-  //   })
-  //   this.customHandler.addHandler(customHandler)
-  // }
+  addEventListener(type, callback) {
+    let typeMap = {
+      created: true,
+      update: false,
+    }
+    let customData = {
+      name: `column:${this.code}-custom-${type}`,
+      sort: 1,
+      isSync: false,
+      isTriggerNow: typeMap[type] || false,
+      isTriggerOnce: typeMap[type] || false,
+    }
+    let customHandler = new EventHandler(customData)
+    //将函数添加到eventHandler对象中
+    customHandler.addHandler(() => {
+      callback(this)
+    })
+    this.customHandler.addHandler(customHandler)
+  }
 
   // //处理显示值的方法，用与详情table的显示
   // handlerShowValue() {

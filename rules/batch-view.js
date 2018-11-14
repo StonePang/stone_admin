@@ -5,6 +5,7 @@ import _ from '~utils/utils'
 import Operation from './operation';
 import EventHandler from './event-handler'
 import EventBus from './event-bus'
+import ViewRule from './view-rule-new'
 
 
 
@@ -16,7 +17,7 @@ class BatchView {
     this.viewData = viewData
     this.initFormModelData(formModelDatas)
     this.id = viewData.id
-    this.formType = _.defaultValue(viewData.formType, 'form')
+    this.formType = _.defaultValue(viewData.formType, 'batchForm')
     this.code = _.defaultValue(viewData.code, this.id)
     this.renderType = _.defaultValue(viewData.renderType, 'form')
     this.title = _.defaultValue(viewData.title, `视图-${this.code}`)
@@ -35,6 +36,10 @@ class BatchView {
     this.initBatchRowData(viewData)
     this.initBatchRows()
     this.initFormModel()
+
+    this.initViewRules(this.viewRuleData, this)
+    this.initOperationRules(this.operationRuleData, this)
+
     this.initViewEventHandler()
   }
 
@@ -105,6 +110,7 @@ class BatchView {
   initBatchRowData() {
     let batchRowData = _.cloneDeep(this.viewData)
     batchRowData.operationData = []
+    batchRowData.viewRuleData = []
     this.batchRowData = batchRowData
   }
 
@@ -141,6 +147,22 @@ class BatchView {
       })
     }
   }
+
+  //生成视图条件
+  initViewRules(viewRuleData, view) {
+    let viewRules = viewRuleData.map(data => {
+      return new ViewRule(data, view)
+    })
+    this.viewRules = viewRules
+  }
+
+  initOperationRules(operationRuleData, view) {
+    let operationRules = operationRuleData.map(data => {
+      return new OperationRule(data, view)
+    })
+    this.operationRules = operationRules
+  }
+
 
   deleteBatchRow() {
     return (index) => {
@@ -241,7 +263,7 @@ class BatchView {
   }
 
   registerEvent(eventName, eventHandler, ...args) {
-    let viewPrefix = `view:${this.id}-`
+    let viewPrefix = `view:${this.code}-`
     let name = eventName
     if (!_.includes(eventName, viewPrefix)) {
       name = viewPrefix + eventName
@@ -250,7 +272,7 @@ class BatchView {
   }
 
   triggerEvent(eventName, ...args) {
-    let viewPrefix = `view:${this.id}-`
+    let viewPrefix = `view:${this.code}-`
     let name = eventName
     if (!_.includes(eventName, viewPrefix)) {
       name = viewPrefix + eventName
