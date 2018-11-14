@@ -58,4 +58,7 @@ export default {
     }
     return v1
   },
+  uniqBy(...args) {
+    return _.uniqBy(...args)
+  },
 }

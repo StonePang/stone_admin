@@ -46,7 +46,7 @@ class TableColumn {
       rules: _.defaultValue(columnData.rules, [])
     })
     // this.initValueRule()
-    this.view.registerEvent(`column:${this.id}`, this.eventBus)
+    this.view.registerEvent(`column:${this.code}`, this.eventBus)
   }
 
   initProp() {
@@ -116,6 +116,11 @@ class TableColumn {
     this.eventBus = eventBusEventHandler
   }
 
+  get proxyColumns() {
+    return this.view.batchRows.map(batchRow => {
+      return batchRow.columnMap[this.columnProp]
+    })
+  }
   // //将子handler挂载到本事件内的
   // // addHandler(spaceName, handler) {
   // //   let result = this.EventHandler.find(item => {
@@ -153,6 +158,30 @@ class TableColumn {
       console.warn(`(${name})不能绑定在对应字段的事件中心内-->>(${spaceName})不存在`)
     }
     result.addHandler(eventHandler)
+    this.proxyEvent()
+  }
+
+  //代理column事件，将tableColumn的事件代理到batchRow的对应column上
+  //由于不是用triggerEvent注册到column上，不能实现created的自动触发，需要手动调用triggerEvent触发一次
+  //用于新增batchRow时手动调用，
+  proxyEvent(proxyColumns = this.proxyColumns) {
+    proxyColumns = _.isArray(proxyColumns) ? proxyColumns : [proxyColumns]
+    proxyColumns.forEach(proxyColumn => {
+      this.eventBus.handler.forEach(handler => {
+        let name = handler.name
+        let proxyHandler = proxyColumn.eventBus.handler.find(proxyHandler => {
+          return proxyHandler.name === name
+        })
+        if (!proxyHandler) {
+          proxyColumn.eventBus.addHandler(handler)
+        }else {
+          // proxyHandler.handler = handler.handler
+          let temp = [...proxyHandler.handler, ...handler.handler]
+          proxyHandler.handler = _.uniqBy(temp, 'name')
+        }
+      })
+      proxyColumn.triggerEvent()
+    })
   }
 
 

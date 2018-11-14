@@ -91,7 +91,8 @@ export default {
         columnDataMap.datetime,
       ],
       viewRuleData: [
-        viewRuleData['1']
+        viewRuleData['1'],
+        viewRuleData['2'],
       ],
       subView: [
         viewData

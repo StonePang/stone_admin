@@ -106,12 +106,42 @@ class BatchView {
     this.operationMap = operationMap
   }
 
+  initViewRuleData() {
+    let viewRuleData = this.viewData.viewRuleData
+    let batchViewRuleData = []
+    let batchRowRuleData = []
+    viewRuleData.forEach(data => {
+      let conditionsTargetViewCodes = data.conditions.map(condition => {
+        return condition.targetViewCode
+      })
+      let affectItemsTargetViewCode = data.targetViewCode
+      let targetViewCodes = [...conditionsTargetViewCodes, affectItemsTargetViewCode]
+      let allInThisBatchView = targetViewCodes.every(targetViewCode => {
+        return this.viewRuleTargetViewProp(targetViewCode) === this.viewProp
+      })
+      if (allInThisBatchView) {
+        batchRowRuleData.push(data)
+      }else {
+        batchViewRuleData.push(data)
+      }
+    })
+    let res = {
+      batchRowRuleData,
+      batchViewRuleData,
+    }
+    return res
+  }
+
   //batchRow中没有操作，操作均在batchView中
+  //视图条件：影响绑定字段全在本batchView内的，词条视图条件作为batchRow的view的视图条件，不挂在batchView中。此种视图条件只作用于本行
   initBatchRowData() {
     let batchRowData = _.cloneDeep(this.viewData)
+    let viewRuleData = this.initViewRuleData()
+    batchRowData.formType = 'mainForm'
     batchRowData.operationData = []
-    batchRowData.viewRuleData = []
+    batchRowData.viewRuleData = viewRuleData.batchRowRuleData
     this.batchRowData = batchRowData
+    this.viewData.viewRuleData = viewRuleData.batchViewRuleData
   }
 
   initBatchRows() {
@@ -145,6 +175,7 @@ class BatchView {
         this.batchRows.push(batchRow)
         this.formModel.push(batchRow.formModel);
       })
+      this.proxyColumnEventBus()
     }
   }
 
@@ -163,6 +194,21 @@ class BatchView {
     this.operationRules = operationRules
   }
 
+  viewRuleTargetViewProp(targetViewCode) {
+    return targetViewCode.split(DEVIDE).map(e => {
+      return `V${TAG}${e}`
+    }).join(DEVIDE)
+  }
+
+  //手动代理字段事件，用于新增batchRow后绑定字段相关事件
+  proxyColumnEventBus() {
+    this.tableColumns.forEach(tableColumn => {
+      let proxyColumns = this.batchRows.map(batchRow => {
+        return batchRow.columnMap[tableColumn.columnProp]
+      })
+      tableColumn.proxyEvent(proxyColumns)
+    })
+  }
 
   deleteBatchRow() {
     return (index) => {

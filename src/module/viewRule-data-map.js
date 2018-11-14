@@ -45,9 +45,9 @@
     }, 
     2:{
       id: 22,
-      affectItems: ['datetime'],
+      affectItems: ['input'],
       affectType: 'column',
-      targetViewCode: 'mainForm',
+      targetViewCode: 'batchForm',
       isClear: true,
       sort: 2,
       isTriggerNow: true,
@@ -56,16 +56,11 @@
       isClear: false,
       desc: 'checkbox禁用<--input && select',
       conditions: [{
-        targetViewCode: 'mainForm',
-        bindColumnCode: 'input',
-        conditionType: 3,
-        conditionValue: '123'
-      }, {
-        targetViewCode: 'mainForm',
+        targetViewCode: 'batchForm',
         bindColumnCode: 'select',
         conditionType: 3,
-        conditionValue: 'value_2'
-      }, ],
+        conditionValue: 'value_1'
+      }],
     }, 
     3:{
       id: 25,

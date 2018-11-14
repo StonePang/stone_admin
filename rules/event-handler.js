@@ -32,6 +32,13 @@ class EventHandler {
       if (_.invalid(handler.sort)) {
         handler.sort = 1
       }
+      let name = handler.name
+      let hasName = this.handler.some(handler => {
+        return handler.name === name
+      })
+      if (hasName) {
+        return 
+      }
       this.handler.push(handler)
       this.handler.sort((a, b) => {
         return a.sort > b.sort
@@ -130,7 +137,7 @@ class EventHandler {
     }
     //拍平得到所有异步函数数组
     let handlerQueue = _.flattenDeep(promises(this.handler))
-    // console.log(handlerQueue)
+    console.log('handlerQueue', handlerQueue)
     let queue = new AsyncQueue(handlerQueue)
     return queue.handler(...args)
   }
