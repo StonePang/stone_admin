@@ -199,6 +199,7 @@ export default {
     }
     .form-content {
       margin-left: 100px;
+      overflow-x: auto;
       // border: solid 1px #f1f1f1;
     }
   }

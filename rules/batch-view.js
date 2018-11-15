@@ -64,20 +64,27 @@ class BatchView {
   }
 
   initFormModelData(formModelDatas) {
-    console.log('guagua', this.formModel, formModelDatas)
     if (!formModelDatas && !this.formModel) {
       this.formModelData = []
       return
     }
-    if (!_.isArray(formModelDatas)) {
-      this.formModelData = [formModelDatas]
+    if (formModelDatas) {
+      if (!_.isArray(formModelDatas)) {
+        this.formModelData = [formModelDatas]
+        return
+      }
+      this.formModelData = formModelDatas
       return 
     }
+    // if (!_.isArray(formModelDatas)) {
+    //   this.formModelData = [formModelDatas]
+    //   return 
+    // }
     if(this.formModel) {
       this.formModelData = this.formModel
       return
     }
-    this.formModelData = formModelDatas
+    // this.formModelData = formModelDatas
   }
 
   initColumns() {
@@ -143,6 +150,7 @@ class BatchView {
     let batchRowData = _.cloneDeep(this.viewData)
     let viewRuleData = this.initViewRuleData()
     batchRowData.formType = 'mainForm'
+    batchRowData.formModel = undefined
     batchRowData.operationData = []
     batchRowData.viewRuleData = viewRuleData.batchRowRuleData
     this.batchRowData = batchRowData

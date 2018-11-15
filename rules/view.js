@@ -163,9 +163,7 @@ class View {
   // }
 
   initSubView(subViewData, view) {
-    console.log('initSubView', this.subViewData, subViewData)
     view.subView = []
-    console.log('guagua', subViewData)
     subViewData.forEach(item => {
       item.fatherViewProp = view.viewProp
       let subView = undefined
@@ -175,7 +173,6 @@ class View {
         console.log('haha', item, item.formModel)
         subView = new BatchView(item, item.formModel)
       }
-      console.log('subView', subView)
       view.subView.push(subView)
       let subFormModel = subView.formModel
       // let prop = subView.viewProp
