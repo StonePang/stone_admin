@@ -2,7 +2,8 @@
   <div>
     <!-- <my-form v-if='!loading' :view='view' /> -->
     <!-- <batch-form v-if='!loading' :view='view' /> -->
-    <form-adapt v-if='!loading' :view='view' />
+    <el-button @click="validateAll">validateAll</el-button>
+    <form-adapt v-if='!loading' :view='view' ref='form'/>
   </div>
 </template>
 
@@ -53,6 +54,9 @@ export default {
     }
   },
   methods: {
+    validateAll() {
+      return this.$refs.form.validateAll()
+    }
   },
   mounted() {
     setTimeout(() => {

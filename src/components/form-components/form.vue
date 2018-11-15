@@ -1,8 +1,8 @@
 <template>
   <div class='form-wrap'>
-    <el-button class='opration-top' @click='validateTest'>validate</el-button>
+    <!-- <el-button class='opration-top' @click='validateTest'>validate</el-button>
     <el-button class='opration-top' @click='resetForm'>resetForm</el-button>
-    <el-button class='opration-top' @click='changeRenderType'>rendertype</el-button>
+    <el-button class='opration-top' @click='changeRenderType'>rendertype</el-button> -->
     <template v-for='operation in operations'>
       <my-button v-if='operation.isShow' :operation='operation' :key='operation.id' @click='clickButton'/>
     </template>
@@ -73,12 +73,33 @@ export default {
     },
   },
   methods: {
-    validateAll() {
+    // validateAll() {
+    //   let formValidate = new Promise((resolve, reject) => {
+    //     setTimeout(() => {
+    //       if(!this.$refs.form) {
+    //         return resolve()
+    //       }
+    //       this.$refs.form.validate((valid) => {
+    //         if (valid && this.formModel) {
+    //           resolve();
+    //         } else {
+    //           reject(false);
+    //         }
+    //       });
+    //     }, 2500)
+    //   });
+    //   if(!this.$refs.subforms) {
+    //     return formValidate
+    //   }
+    //   let promises = this.$refs.subforms.map(item => {
+    //     return item.validateAll()
+    //   })
+    //   promises.push(formValidate)
+    //   return Promise.all(promises)
+    // },
+    validate() {
       let formValidate = new Promise((resolve, reject) => {
         setTimeout(() => {
-          if(!this.$refs.form) {
-            return resolve()
-          }
           this.$refs.form.validate((valid) => {
             if (valid && this.formModel) {
               resolve();
@@ -86,28 +107,7 @@ export default {
               reject(false);
             }
           });
-        }, 2500)
-      });
-      if(!this.$refs.subforms) {
-        return formValidate
-      }
-      let promises = this.$refs.subforms.map(item => {
-        return item.validateAll()
-      })
-      promises.push(formValidate)
-      return Promise.all(promises)
-    },
-    validateThisForm() {
-      let formValidate = new Promise((resolve, reject) => {
-        setTimeout(() => {
-          this.$refs.form.validate((valid) => {
-            if (valid && this.formModel) {
-              resolve();
-            } else {
-              reject(false);
-            }
-          });
-        }, 2500)
+        })
       });
       return formValidate
     },
