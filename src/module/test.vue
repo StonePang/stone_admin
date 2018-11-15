@@ -56,9 +56,9 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-      // let view = new View(this.viewData, this.formModelData)
-      // this.view = view
-      // this.loading = false
+      let view = new View(this.viewData, this.formModelData)
+      this.view = view
+      this.loading = false
 
 
       // this.view.addEventListener('created', view => {
@@ -77,39 +77,39 @@ export default {
       //   })
       // })
 
-    let viewData = {
-      id: 11,
-      isShow: true,
-      formType: 'batchForm',
-      // formType: 'mainForm',
-      title: '批量表',
-      code: 'batchForm',
-      columnData: [
-        columnDataMap.input,
-        columnDataMap.select,
-        columnDataMap.checkbox,
-        columnDataMap.datetime,
-      ],
-      viewRuleData: [
-        viewRuleData['1'],
-        viewRuleData['2'],
-      ],
-      subView: [
-        viewData
-      ]
-    }
-    // let formModelDatas = undefined
-    let formModelDatas = {
-      input: null,
-      select: null,
-      checkbox: null,
-      datetime: null
-    }
-    let batchView = new BatchView(viewData, formModelDatas)
-    // let batchView = new View(viewData, formModelDatas)
-    console.log('/////////////////', batchView)
-    this.view = batchView
-    this.loading = false
+    // let viewData = {
+    //   id: 11,
+    //   isShow: true,
+    //   formType: 'batchForm',
+    //   // formType: 'mainForm',
+    //   title: '批量表',
+    //   code: 'batchForm',
+    //   columnData: [
+    //     columnDataMap.input,
+    //     columnDataMap.select,
+    //     columnDataMap.checkbox,
+    //     columnDataMap.datetime,
+    //   ],
+    //   viewRuleData: [
+    //     viewRuleData['1'],
+    //     viewRuleData['2'],
+    //   ],
+    //   subView: [
+    //     viewData
+    //   ]
+    // }
+    // // let formModelDatas = undefined
+    // let formModelDatas = {
+    //   input: null,
+    //   select: null,
+    //   checkbox: null,
+    //   datetime: null
+    // }
+    // let batchView = new BatchView(viewData, formModelDatas)
+    // // let batchView = new View(viewData, formModelDatas)
+    // console.log('/////////////////', batchView)
+    // this.view = batchView
+    // this.loading = false
 
     }, 1000);
   }

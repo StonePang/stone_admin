@@ -64,13 +64,18 @@ class BatchView {
   }
 
   initFormModelData(formModelDatas) {
-    if (!formModelDatas) {
+    console.log('guagua', this.formModel, formModelDatas)
+    if (!formModelDatas && !this.formModel) {
       this.formModelData = []
       return
     }
     if (!_.isArray(formModelDatas)) {
       this.formModelData = [formModelDatas]
       return 
+    }
+    if(this.formModel) {
+      this.formModelData = this.formModel
+      return
     }
     this.formModelData = formModelDatas
   }

@@ -58,6 +58,7 @@ export default {
     }
   },
   mounted() {
+    console.log('haha', this.view)
   },
   computed: {
     batchRows() {

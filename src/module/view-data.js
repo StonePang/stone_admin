@@ -8,6 +8,7 @@ export default {
   isShow: true,
   title: '主表',
   code: 'mainForm',
+  formType: 'mainForm',
   columnData: [
     columnDataMap.input,
     columnDataMap.select,
@@ -15,8 +16,8 @@ export default {
     columnDataMap.datetime,
   ],
   viewRuleData: [
-    viewRuleDataMap['1'],
-    viewRuleDataMap['2'],
+    // viewRuleDataMap['1'],
+    // viewRuleDataMap['2'],
     // viewRuleDataMap['3'],
     // viewRuleDataMap['5'],
     // viewRuleDataMap['6'],
@@ -28,12 +29,14 @@ export default {
   operationRuleData: [
     operationRuleDataMap['1']
   ],
-  subViewData: [{
+  subViewData: [
+    {
     id: 2,
     title: '子表',
     isShow: true,
     isDialog: false,
     code: 'subForm',
+    formType: 'mainForm',
     columnData: [
       columnDataMap.textarea,
       columnDataMap.date,
@@ -49,5 +52,25 @@ export default {
       operationRuleData: [
         operationRuleDataMap['2']
       ],
-  }]
+  }, 
+  {
+    id: 3,
+    isShow: true,
+    formType: 'batchForm',
+    // formType: 'mainForm',
+    title: '批量表',
+    code: 'batchForm',
+    columnData: [
+      columnDataMap.input,
+      columnDataMap.select,
+      columnDataMap.checkbox,
+      columnDataMap.datetime,
+    ],
+    viewRuleData: [
+      // viewRuleData['1'],
+      // viewRuleData['2'],
+    ],
+    // subView: []
+  }
+]
 }

@@ -6,6 +6,7 @@ import OperationRule from './operation-rule'
 import EventBus from './event-bus'
 import _ from '~utils/utils'
 import EventHandler from './event-handler'
+import BatchView from './batch-view';
 
 
 const DEVIDE = '-'
@@ -105,7 +106,7 @@ class View {
       }
       // console.log('gua', viewData.subViewData)
     }
-      // console.log('gua', viewData.subViewData)
+      console.log('gua', formModelData, this.subViewData)
   }
 
 
@@ -162,12 +163,19 @@ class View {
   // }
 
   initSubView(subViewData, view) {
+    console.log('initSubView', this.subViewData, subViewData)
     view.subView = []
     console.log('guagua', subViewData)
     subViewData.forEach(item => {
       item.fatherViewProp = view.viewProp
-      let subView = new View(item)
-      console.log('guag', subView)
+      let subView = undefined
+      if (item.formType === 'mainForm') {
+        subView = new View(item, item.formModel)
+      } else if (item.formType === 'batchForm') {
+        console.log('haha', item, item.formModel)
+        subView = new BatchView(item, item.formModel)
+      }
+      console.log('subView', subView)
       view.subView.push(subView)
       let subFormModel = subView.formModel
       // let prop = subView.viewProp
