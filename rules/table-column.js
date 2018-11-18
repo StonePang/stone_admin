@@ -180,6 +180,7 @@ class TableColumn {
           proxyHandler.handler = _.uniqBy(temp, 'name')
         }
       })
+      console.log('proxyColumn', proxyColumn)
       proxyColumn.triggerEvent()
     })
   }

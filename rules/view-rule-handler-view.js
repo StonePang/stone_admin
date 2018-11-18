@@ -9,7 +9,12 @@ class ViewRuleHandlerSubView extends ViewRuleHandler {
     super(viewRuleData, view, ruleType)
     this.affectType = viewRuleData.affectType
     this.itemMap = this.view.viewMap
+    this.isViewSelf = _.defaultValue(viewRuleData.isViewSelf, true)
     this.affectItems = viewRuleData.affectItems.map(viewCode => {
+      if (this.isViewSelf) {
+        let key = this.targetViewProp
+        return this.itemMap[key]
+      }
       let key = `${this.targetViewProp}${DEVIDE}V${TAG}${viewCode}`
       return this.itemMap[key]
     })

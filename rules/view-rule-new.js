@@ -48,7 +48,7 @@ class ViewRule {
   initViewRuleHandler(viewRuleData, view) {
     if(this.affectType === 'column') {
       this.viewRuleHandler = new ViewRuleHandlerColumn(viewRuleData, view, 'column')
-    } else if (this.affectType === 'subView') {
+    } else if (this.affectType === 'view') {
       this.viewRuleHandler = new ViewRuleHandlerSubView(viewRuleData, view, 'column')
     } else if (this.affectType === 'operation') {
       this.viewRuleHandler = new ViewRuleHandlerOperation(viewRuleData, view, 'column')
@@ -111,7 +111,7 @@ class ViewRule {
         console.log(this, `视图条件结果--->>>${result}`)
         //有自定义进行自定义函数
         if (this.customHandler) {
-          this.customHandler(this.view, result)
+          this.customHandler(this.viewRuleHandler.affectItems, result)
         }else {
           this.viewRuleHandler.handler(result)
         }

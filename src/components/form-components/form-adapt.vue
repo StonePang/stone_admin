@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if='view.isShow'>
     <main-form v-if='formType==="mainForm"' :view='view' ref='form'/>
     <batch-form v-else-if='formType==="batchForm"' :view='view' ref='form'/>
     <h1 v-else>{{errMsg}}</h1>

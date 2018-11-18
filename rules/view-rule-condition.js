@@ -30,7 +30,7 @@ class ViewRuleCondition {
     this.initBindItem(viewRuleConditionData)
     this.conditionType = viewRuleConditionData.conditionType
     this.conditionValue = viewRuleConditionData.conditionValue
-    this.isClickResultNow = _.defaultValue(viewRuleConditionData.isClickResult, false)
+    // this.isClickResultNow = _.defaultValue(viewRuleConditionData.isClickResult, false)
   }
 
   initBindItem(viewRuleConditionData) {

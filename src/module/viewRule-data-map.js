@@ -1,45 +1,37 @@
     export default {
     1:{
       id: 21,
-      affectItems: ['checkbox'],
-      // targetViewCode: 'mainForm',
-      targetViewCode: 'batchForm',
-      affectType: 'column',
-      type: 'disabled',
-      sort: 1,
+      desc: '对mainForm的测试',
       disabled: false,
+      type: 'disabled',
+      affectType: 'column',
+      conditionType: 'OR',
+      affectItems: ['checkbox'],
+      targetViewCode: 'mainForm-batchForm',
+      isViewSelf: false,
+      sort: 1,
       isTriggerNow: true,
       isTriggerOnce: false,
-      conditionType: 'or',
-      changeValue: ['value_3'],
+      // changeValue: ['value_3'],
+      changeValue: 'new value',
       changeRender: 'table',
       isClear: false,
-      desc: 'datetime隐藏<--input && select',
-      // customHandler: (view, result) => {
-      //   if(result) {
-      //     view.triggerEvent('update', 'clearFormModel')
-      //   }
+      isToogle: false,
+      // customHandler: (affectItems, result) => {
+      //   console.log('affectItems, result', affectItems, result)
       // },
       conditions: [
-      //   {
-      //   bindColumnCode: 1,
-      //   targetViewCode: '1',
-      //   conditionType: 3,
-      //   conditionValue: '123',
-      //   // customCondition: view => {
-      //   //   let value = view.formModel[view.columns[0].columnProp]
-      //   //   let result = value === '21'
-      //   //   return Promise.resolve(result)
-      //   // }
-      // },
+        {
+          bindColumnCode: 'input',
+          targetViewCode: 'mainForm',
+          conditionType: 3,
+          conditionValue: '1',
+      },
       {
         bindColumnCode: 'select',
-        bindItemType: 'column',
-        // targetViewCode: 'mainForm',
-        targetViewCode: 'batchForm',
+        targetViewCode: 'mainForm',
         conditionType: 3,
         conditionValue: 'value_2',
-        isClickResultNow: true,
       }
     ]
     }, 
