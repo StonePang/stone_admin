@@ -27,15 +27,17 @@ class BatchView {
     this.prop = `V${TAG}${this.code}`
     this.viewProp = viewData.fatherViewProp ? `${viewData.fatherViewProp}${DEVIDE}${this.prop}` : this.prop
 
-    // this.initColumns(viewData.columnData, this)
-    // this.initOperations(viewData.operationData, this)
+    this.initBatchRowData(viewData)
+    this.initBatchRows()
+    this.initFormModel()
+    
     this.initColumns()
     this.initColumnMap()
     this.initOperations()
     this.initOperationMap()
-    this.initBatchRowData(viewData)
-    this.initBatchRows()
-    this.initFormModel()
+    // this.initBatchRowData(viewData)
+    // this.initBatchRows()
+    // this.initFormModel()
 
     this.initViewRules(this.viewRuleData, this)
     this.initOperationRules(this.operationRuleData, this)

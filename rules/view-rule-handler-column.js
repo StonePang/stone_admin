@@ -45,6 +45,26 @@ class ViewRuleHandlerColumn extends ViewRuleHandler {
     }
   }
 
+  //字段属性改变，column和tableColumn不相同
+  columnHandler(column, propName, status) {
+    if (propName === "changeColumnValue") {
+      if (column.isTableColumn) {
+        column.value = status
+        column.triggerEvent("changeColumnValue");
+        // column.triggerEvent("changeColumnValue", status);
+      }else {
+        column.changeColumnValue(status)
+      }
+    }else {
+      column[propName] = status
+      console.log(propName, column[propName])
+
+      if (column.isTableColumn) {
+        column.triggerEvent(propName)
+      }
+    }
+  }
+
   handler(result) {
     // return result => {
       let handlerFn = this.handlerMap[this.type]
@@ -61,35 +81,41 @@ class ViewRuleHandlerColumn extends ViewRuleHandler {
     this.handlerEachAffectItem(column => {
       if(result) {
         if (this.ruleType === 'operation' && this.isToogle) {
-          column.isShow = !column.isShow
+          // column.isShow = !column.isShow
+          this.columnHandler(column, 'isShow', !column.isShow)
         }else {
-          column.isShow = !status
+          // column.isShow = !status
+          this.columnHandler(column, 'isShow', !status)
         }
         if (this.isClear) {
           // this.setColumnValue(column.columnProp, null)
-          column.changeColumnValue(null)
+          this.columnHandler(column, 'changeColumnValue', null)
         }
       } else {
-        column.isShow = status
+        // column.isShow = status
+        this.columnHandler(column, 'isShow', status)
       }
     })
   }
 
   handlerDisabled(result) {
     this.handlerEachAffectItem(column => {
-      console.log('handlerDisabled', column, result)
+      // console.log('handlerDisabled', column, result)
       if (result) {
         if (this.ruleType === 'operation' && this.isToogle) {
-          column.disabled = !column.disabled
+          this.columnHandler(column, 'disabled', !column.disabled)
+          // column.disabled = !column.disabled
         }else {
-          column.disabled = true
+          this.columnHandler(column, 'disabled', true)
+          // column.disabled = true
         }
         if (this.isClear) {
           // this.setColumnValue(column.columnProp, null)
-          column.changeColumnValue(null)
+          this.columnHandler(column, 'changeColumnValue', null)
         }
       } else {
-        column.disabled = false
+        this.columnHandler(column, 'disabled', false)
+        // column.disabled = false
       }
     })
   }
@@ -98,7 +124,7 @@ class ViewRuleHandlerColumn extends ViewRuleHandler {
     this.handlerEachAffectItem(column => {
       if(result) {
         // this.setColumnValue(column.columnProp, null)
-        column.changeColumnValue(null)
+        this.columnHandler(column, 'changeColumnValue', null)
       }
     })
   }
@@ -109,7 +135,7 @@ class ViewRuleHandlerColumn extends ViewRuleHandler {
     this.handlerEachAffectItem(column => {
       if (result) {
         // this.setColumnValue(column.columnProp, newValue)
-        column.changeColumnValue(newValue)
+        this.columnHandler(column, 'changeColumnValue', newValue)
       }
     })
   }
@@ -117,18 +143,23 @@ class ViewRuleHandlerColumn extends ViewRuleHandler {
   handlerChangeRender(result) {
     this.handlerEachAffectItem(column => {
       if(result) {
+        let renderType
         if (this.ruleType === 'operation' && this.isToogle) {
-          column.renderType = _.toogleValue(column.renderType, 'form', 'table')
+          renderType = _.toogleValue(column.renderType, 'form', 'table')
         } else {
-          column.renderType = this.changeRender === 'form' ? 'form' : 'table'
+          renderType = this.changeRender === 'form' ? 'form' : 'table'
         }
+        this.columnHandler(column, 'renderType', renderType)
+
         // column.renderType = this.changeRender === 'form' ? 'form' : 'table'
         if(this.isClear) {
           // this.setColumnValue(column.columnProp, null)
-          column.changeColumnValue(null)
+          this.columnHandler(column, 'changeColumnValue', null)
         }
       } else {
-        column.renderType = this.changeRender === 'form' ? 'table' : 'form'
+        let renderType = this.changeRender === 'form' ? 'table' : 'form'
+        this.columnHandler(column, 'renderType', renderType)
+
       }
     })
   }

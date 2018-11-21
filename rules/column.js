@@ -162,7 +162,6 @@ class Column {
     result.addHandler(eventHandler)
   }
   
-
   triggerEvent(...arg) {
     let eventName = `column:${this.code}`
     this.view.triggerEvent(eventName, ...arg)

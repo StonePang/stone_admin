@@ -45,8 +45,13 @@ class TableColumn {
       required: this.required,
       rules: _.defaultValue(columnData.rules, [])
     })
-    // this.initValueRule()
+    // this.registerEvent('disabled', this.disabledhandler)
     this.view.registerEvent(`column:${this.code}`, this.eventBus)
+    this.registerEvent('disabled', this.disabledHandler())
+    this.registerEvent('isShow', this.isShowHandler())
+    this.registerEvent('renderType', this.renderTypeHandler())
+    this.registerEvent('changeColumnValue', this.changeColumnValueHandler())
+
   }
 
   initProp() {
@@ -84,14 +89,42 @@ class TableColumn {
     }
     let eventBusEventHandler = new EventHandler(eventBusData)
 
-    // let valueRuleData = {
-    //   name: `column:${this.id}-value-rule`,
-    //   sort: 1,
-    //   isSync: true,
-    //   isTriggerNow: false,
-    //   isTriggerOnce: false,
-    // }
-    // let valueRuleEventHandler = new EventHandler(valueRuleData)
+    let disabledData = {
+      name: `column:${this.code}-disabled`,
+      sort: 4,
+      isSync: true,
+      isTriggerNow: true,
+      isTriggerOnce: false,
+    }
+    let disabledHandler = new EventHandler(disabledData)
+
+    let isShowData = {
+      name: `column:${this.code}-isShow`,
+      sort: 5,
+      isSync: true,
+      isTriggerNow: true,
+      isTriggerOnce: false,
+    }
+    let isShowHandler = new EventHandler(isShowData)
+
+    let renderTypeData = {
+      name: `column:${this.code}-renderType`,
+      sort: 6,
+      isSync: true,
+      isTriggerNow: true,
+      isTriggerOnce: false,
+    }
+    let renderTypeHandler = new EventHandler(renderTypeData)
+
+    let changeColumnValueData = {
+      name: `column:${this.code}-changeColumnValue`,
+      sort: 7,
+      isSync: true,
+      isTriggerNow: true,
+      isTriggerOnce: false,
+    }
+    let changeColumnValueHandler = new EventHandler(changeColumnValueData)
+    
     let viewRuleData = {
       name: `column:${this.code}-view-rule`,
       sort: 2,
@@ -110,11 +143,68 @@ class TableColumn {
     }
     this.customHandler = new EventHandler(customData)
 
-    // eventBusEventHandler.addHandler(valueRuleEventHandler)
+    eventBusEventHandler.addHandler(disabledHandler)
+    eventBusEventHandler.addHandler(isShowHandler)
+    eventBusEventHandler.addHandler(renderTypeHandler)
+    eventBusEventHandler.addHandler(changeColumnValueHandler)
     eventBusEventHandler.addHandler(viewRuleEventHandler)
     eventBusEventHandler.addHandler(this.customHandler)
     this.eventBus = eventBusEventHandler
   }
+
+  disabledHandler() {
+    return () => {
+      this.proxyColumns.forEach(column => {
+        column.disabled = this.disabled
+      })
+    }
+  }
+  isShowHandler() {
+    return () => {
+      // console.log('isShow', this.isShow)
+      this.proxyColumns.forEach(column => {
+        column.isShow = this.isShow
+      })
+    }
+  }
+  renderTypeHandler() {
+    return () => {
+      this.proxyColumns.forEach(column => {
+        column.renderType = this.renderType
+      })
+    }
+  }
+  changeColumnValueHandler() {
+    return () => {
+      let value = _.defaultValue(this.value, null)
+      console.log('guavalue', value)
+      this.proxyColumns.forEach(column => {
+        // let newValue = _.cloneDeep(value)
+        console.log(value, column)
+        column.changeColumnValue(value)
+      })
+    }
+  }
+
+  setProp() {
+    let propStatus = {
+      disabled: true,
+      isShow: true,
+      renderType: true,
+      changeColumnValue: true
+    }
+    let handlers = this.eventBus.handler.filter(handler => {
+      let name = handler.name.split('-')[1]
+      console.log('name', name)
+      return propStatus[name]
+    })
+    console.log(handlers, this.eventBus)
+    handlers.forEach(handler => {
+      handler.trigger()
+    })
+  }
+
+
 
   get proxyColumns() {
     return this.view.batchRows.map(batchRow => {
@@ -158,6 +248,7 @@ class TableColumn {
       console.warn(`(${name})不能绑定在对应字段的事件中心内-->>(${spaceName})不存在`)
     }
     result.addHandler(eventHandler)
+    // debugger
     this.proxyEvent()
   }
 
@@ -165,9 +256,19 @@ class TableColumn {
   //由于不是用triggerEvent注册到column上，不能实现created的自动触发，需要手动调用triggerEvent触发一次
   //用于新增batchRow时手动调用，
   proxyEvent(proxyColumns = this.proxyColumns) {
+    let map = {
+      disabled: true,
+      isShow: true,
+      renderType: true,
+      changeColumnValue: true
+    }
     proxyColumns = _.isArray(proxyColumns) ? proxyColumns : [proxyColumns]
     proxyColumns.forEach(proxyColumn => {
-      this.eventBus.handler.forEach(handler => {
+      let filterHandler = this.eventBus.handler.filter(handler => {
+        let key = handler.name.split('-')[1]
+        return !map[key]
+      })
+      filterHandler.forEach(handler => {
         let name = handler.name
         let proxyHandler = proxyColumn.eventBus.handler.find(proxyHandler => {
           return proxyHandler.name === name
@@ -183,12 +284,22 @@ class TableColumn {
       console.log('proxyColumn', proxyColumn)
       proxyColumn.triggerEvent()
     })
+    // let setPropHandler = this.eventBus.handler.find(handler => {
+    //   return handler.name === `column:${this.code}-setProp`
+    // })
+    // setPropHandler.trigger()
+    this.setProp()
   }
 
-
-  triggerEvent(...arg) {
-    let eventName = `column:${this.code}`
-    this.view.triggerEvent(eventName, ...arg)
+  //直接触发字段上的eventhandler
+  triggerEvent(name, ...arg) {
+    let eventName = `column:${this.code}-${name}`
+    // this.view.triggerEvent(eventName, ...arg)
+    let eventHandler = this.eventBus.handler.find(handler => {
+      return handler.name === eventName
+    })
+    console.log('gua', eventHandler)
+    eventHandler.trigger(...arg)
   }
 
   addEventListener(type, callback) {
