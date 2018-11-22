@@ -216,17 +216,6 @@ class View {
 
   initViewMap() {
     let map = {}
-    // map[this.viewProp] = this
-    // subView.forEach(view => {
-    //   let key = view.viewProp
-    //   let e = map[key]
-    //   if (_.invalid(e)) {
-    //     map[key] = view
-    //   } else {
-    //     console.warn(`子视图(${key})已经存在于subViewMap,不覆盖`)
-    //   }
-    // })
-    // this.viewMap = map
     map[this.viewProp] = this
     this.viewMap = map
   }

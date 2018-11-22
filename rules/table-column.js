@@ -191,11 +191,11 @@ class TableColumn {
       disabled: true,
       isShow: true,
       renderType: true,
-      changeColumnValue: true
+      changeColumnValue: false,
     }
     let handlers = this.eventBus.handler.filter(handler => {
       let name = handler.name.split('-')[1]
-      console.log('name', name)
+      // console.log('name', name)
       return propStatus[name]
     })
     console.log(handlers, this.eventBus)
@@ -298,7 +298,7 @@ class TableColumn {
     let eventHandler = this.eventBus.handler.find(handler => {
       return handler.name === eventName
     })
-    console.log('gua', eventHandler)
+    console.log('gua', eventHandler, ...arg)
     eventHandler.trigger(...arg)
   }
 

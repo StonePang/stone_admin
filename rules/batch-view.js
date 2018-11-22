@@ -30,6 +30,7 @@ class BatchView {
     this.initBatchRowData(viewData)
     this.initBatchRows()
     this.initFormModel()
+    this.initViewMap()
     
     this.initColumns()
     this.initColumnMap()
@@ -87,6 +88,12 @@ class BatchView {
       return
     }
     // this.formModelData = formModelDatas
+  }
+
+  initViewMap() {
+    let map = {}
+    map[this.viewProp] = this
+    this.viewMap = map
   }
 
   initColumns() {

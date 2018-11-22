@@ -46,12 +46,16 @@ class ViewRuleHandlerColumn extends ViewRuleHandler {
   }
 
   //字段属性改变，column和tableColumn不相同
-  columnHandler(column, propName, status) {
+  columnHandler(column, propName, status, result = undefined) {
     if (propName === "changeColumnValue") {
       if (column.isTableColumn) {
-        column.value = status
-        column.triggerEvent("changeColumnValue");
-        // column.triggerEvent("changeColumnValue", status);
+        if(result) {
+          column.value = status
+          column.triggerEvent("changeColumnValue");
+        }else {
+          column.value = null;
+          console.log('change value false', column.value)
+        }
       }else {
         column.changeColumnValue(status)
       }
@@ -135,7 +139,9 @@ class ViewRuleHandlerColumn extends ViewRuleHandler {
     this.handlerEachAffectItem(column => {
       if (result) {
         // this.setColumnValue(column.columnProp, newValue)
-        this.columnHandler(column, 'changeColumnValue', newValue)
+        this.columnHandler(column, 'changeColumnValue', newValue, result)
+      }else {
+        this.columnHandler(column, "changeColumnValue", newValue, result);
       }
     })
   }
