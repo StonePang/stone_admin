@@ -6,13 +6,13 @@
     <p class='form-title'>{{view.title}}</p>
     <el-form  label-position="left" label-width="0" class='form-content' :model="{formModel:view.formModel}" ref='form' show-message validate-on-rule-change	>
       <!-- 表格主体 -->
-      <el-table :data="view.formModel" style="width: 100%" stripe border empty-text="暂无数据" @row-click='actionRowClick'>
+      <el-table :data="view.formModel" style="width: 100%" stripe border empty-text="暂无数据" :header-row-style="{'background-color': 'grey'}" @row-click='actionRowClick'>
         <!-- 索引序号 -->
         <el-table-column type="index" :index="indexMethod" label="序号" width="55" fixed="left" align='center'>
         </el-table-column>
         <!-- 表格内容 -->
         <template v-for='(column, index) in view.tableColumns'>
-          <el-table-column v-if='column.isShow' :prop="column.columnProp" :key='column.columnProp + index' header-align='center' :render-header="(h)=>renderLable(h, column)">
+          <el-table-column v-if='column.isShow' :prop="column.columnProp" :key='column.columnProp + index' header-align='center' class='table-header' :render-header="(h)=>renderLable(h, column)">
             <template slot-scope="scope">
               <el-form-item :rules='columnInBatchRow(scope.$index, column.columnProp).rules' :prop='formItemProp(scope.$index, column.columnProp)' :key='formItemProp(scope.$index, column.columnProp)'>
                 <input-adapt v-if='columnInBatchRow(scope.$index, column.columnProp).renderType==="form"' :column='columnInBatchRow(scope.$index, column.columnProp)' 
@@ -176,35 +176,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .step-form{
-    // padding: 20px 20px 0 0;
-    box-sizing: border-box;
-    width: 100%;
     .form-title {
-      width: 100px;
-      height: 40px;
-      text-align: right;
-      vertical-align: middle;
-      float: left;
-      font-size: 14px;
-      color: #606266;
-      line-height: 40px;
-      padding: 0 12px 0 0;
-      box-sizing: border-box;
-      .required-tag {
-        color: #f56c6c;
-        margin-right: 4px;     
-      }
+      font-family: STHeitiSC-Medium;
+      font-size: 18px;
+      color: #2f3748;
+      line-height: 43px;
+      height: 43px;
+      // .required-tag {
+      //   color: #f56c6c;
+      //   margin-right: 4px;     
+      // }
     }
     .form-content {
-      margin-left: 100px;
+      // margin-left: 100px;
       overflow-x: auto;
+      width: 1200px;
       // border: solid 1px #f1f1f1;
     }
-  }
-  .pointer {
-    cursor: pointer;
-  }
+    .table-header {
+      background-color: grey;
+    }
 </style>
 
 

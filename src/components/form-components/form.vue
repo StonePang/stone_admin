@@ -1,10 +1,10 @@
 <template>
-  <div class='form-wrap'>
+  <div >
     <!-- <template v-for='operation in operations'>
       <my-button v-if='operation.isShow' :operation='operation' :key='operation.id' @click='clickButton'/>
     </template> -->
     <p class='form-title'>{{view.title}}</p>
-    <el-form :model="formModel" ref='form' class='form-content' show-message label-width="100px" validate-on-rule-change style='width: 1200px'>
+    <el-form :model="formModel" ref='form' class='form-content' show-message label-width="100px" validate-on-rule-change>
       <el-row :gutter='gutter'>
         <el-col v-for='(item, index) in columns' v-if='item.isShow' :key='index' :span='item.isFull?24:12' :push='0'>
           <el-form-item  :label="item.label + ' : '" :prop='item.columnProp' :rules='item.rules' class='form-item'>
@@ -154,36 +154,25 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  .form-wrap{
-    // width: 1200px;
-    margin-top: 50px;
-    background-color: #a39c9c10;
-    .opration-top {
-      // text-align: left;
-    }
-    .form-title {
-      font-family: STHeitiSC-Medium;
-      font-size: 18px;
-      color: #2f3748;
-      // background: #fcfdff;
-      line-height: 43px;
-      height: 43px;
-      // padding-left: 20px;
-      // border-bottom: solid 1px #f1f1f1;
-      // text-align: left
-    }
-    .form-content {
-      max-width: 100%;
-      // padding: 20px 20px 0 0;
-      background-color: rgba(201, 196, 196, 0.24);
-      font-family: STHeitiSC-Medium;
-      font-size: 14px;
-      color: #a39c9c;
-      .form-item {
-        background-color: #bfc6d446;
-        .form-input {
-          // background-color: #2f374846;
-        }
+  .form-title {
+    font-family: STHeitiSC-Medium;
+    font-size: 18px;
+    color: #2f3748;
+    line-height: 43px;
+    height: 43px;
+  }
+  .form-content {
+    max-width: 100%;
+    width: 1200px;
+    // padding: 20px 20px 0 0;
+    background-color: rgba(201, 196, 196, 0.24);
+    font-family: STHeitiSC-Medium;
+    font-size: 14px;
+    color: #a39c9c;
+    .form-item {
+      background-color: #bfc6d446;
+      .form-input {
+        // background-color: #2f374846;
       }
     }
   }

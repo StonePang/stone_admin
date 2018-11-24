@@ -1,5 +1,5 @@
 <template>
-  <div v-if='view.isShow'>
+  <div v-if='view.isShow' class='form-wrap'>
     <template v-for='operation in view.operations'>
       <my-button v-if='operation.isShow' :operation='operation' :key='operation.id' @click='clickButton'/>
     </template>
@@ -83,4 +83,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  .form-wrap{
+    margin-top: 50px;
+    background-color: #a39c9c10;
+  }
+</style>
+
 
