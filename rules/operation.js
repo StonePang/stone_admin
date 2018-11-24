@@ -31,7 +31,7 @@ class Operation {
   }
 
   triggerClick(vm) {
-    console.log('trigger click')
+    console.log('trigger click', vm)
     this.vm = vm
     this.triggerEvent(vm)
   } 
@@ -42,6 +42,7 @@ class Operation {
         return Promise.resolve()
       }
       let validateMethod = this.isValidateAll ? 'validateAll' : 'validateThisForm'
+      console.log('validateMethod', validateMethod, this.vm[validateMethod]())
       return this.vm[validateMethod]().then(() => {
         console.log('validate res')
         return Promise.resolve()
@@ -118,14 +119,14 @@ class Operation {
 
   initEventHandler() {
     let eventBusData = {
-      name: `operation:${this.id}`,
+      name: `operation:${this.code}`,
       isSync: false,
       isTriggerNow: false,
       isTriggerOnce: false,
     }
     let eventBusEventHandler = new EventHandler(eventBusData)
 
-    let prefix = `operation:${this.id}-`
+    let prefix = `operation:${this.code}-`
     let validateData = {
       name: `${prefix}validate`,
       sort: 1,
@@ -141,7 +142,7 @@ class Operation {
       isTriggerOnce: false,
     }
     let operationRuleData = {
-      name: `operation:${this.id}-operation-rule`,
+      name: `operation:${this.code}-operation-rule`,
       sort: 3,
       isSync: false,
       isTriggerNow: false,
@@ -163,7 +164,7 @@ class Operation {
 
   //将指定函数注册到view的事件中心，定义字段的创建/更新事件
   // registerEvent(type, spaceName, eventHandler) {
-  //   let eventName = `operation:${this.id}`
+  //   let eventName = `operation:${this.code}`
   //   if (type !== 'created' && type !== 'update') {
   //     console.log(`operation---(${type})类型的事件总线不存在，事件注册失败`)
   //     return
@@ -178,7 +179,7 @@ class Operation {
   // }
 
   registerEvent(spaceName, eventHandler) {
-    let name = `operation:${this.id}-${spaceName}`
+    let name = `operation:${this.code}-${spaceName}`
     console.log(this.eventBus, name)
     let result = this.eventBus.handler.find(item => {
       return item.name === name
@@ -192,6 +193,7 @@ class Operation {
 
   triggerEvent(...args) {
     let eventName = `operation:${this.code}`
+    console.log('eventName', eventName)
     this.view.triggerEvent(eventName, ...args).then(()=>{
       console.log('operation then')
     }).catch((err) => {

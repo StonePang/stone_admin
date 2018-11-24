@@ -1,5 +1,5 @@
 import View from './view'
-import Column from './column'
+// import Column from './column'
 import TableColumn from './table-column'
 import _ from '~utils/utils'
 import Operation from './operation';
@@ -122,13 +122,14 @@ class BatchView {
   initOperationMap() {
     let operationMap = {}
     this.operations.forEach(operation => {
-      operationMap[operations.operationProp] = operation
+      operationMap[operation.operationProp] = operation
     })
     this.operationMap = operationMap
   }
 
   initViewRuleData() {
     let viewRuleData = this.viewData.viewRuleData
+    console.log('viewRuleData', this.viewData.viewRuleData)
     let batchViewRuleData = []
     let batchRowRuleData = []
     viewRuleData.forEach(data => {
@@ -140,6 +141,7 @@ class BatchView {
       let allInThisBatchView = targetViewCodes.every(targetViewCode => {
         return this.viewRuleTargetViewProp(targetViewCode) === this.viewProp
       })
+      console.log('allInThisBatchView', allInThisBatchView)
       if (allInThisBatchView) {
         batchRowRuleData.push(data)
       }else {

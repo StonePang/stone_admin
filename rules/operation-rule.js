@@ -48,7 +48,7 @@ class OperationRule {
   initViewRuleHandler(operationRuleData, view) {
     if (this.affectType === 'column') {
       this.viewRuleHandler = new ViewRuleHandlerColumn(operationRuleData, view, 'operation')
-    } else if (this.affectType === 'subView') {
+    } else if (this.affectType === 'view') {
       this.viewRuleHandler = new ViewRuleHandlerSubView(operationRuleData, view, 'operation')
     } else if (this.affectType === 'operation') {
       this.viewRuleHandler = new ViewRuleHandlerOperation(operationRuleData, view, 'operation')

@@ -1,5 +1,8 @@
 <template>
   <div v-if='view.isShow'>
+    <template v-for='operation in view.operations'>
+      <my-button v-if='operation.isShow' :operation='operation' :key='operation.id' @click='clickButton'/>
+    </template>
     <main-form v-if='formType==="mainForm"' :view='view' ref='form'/>
     <batch-form v-else-if='formType==="batchForm"' :view='view' ref='form'/>
     <h1 v-else>{{errMsg}}</h1>
@@ -19,11 +22,13 @@
 <script>
 import MainForm from './form'
 import BatchForm from './batch-form'
+import MyButton from '~common/button'
 export default {
   name: 'FormAdapt',
   components: {
     MainForm,
     BatchForm,
+    MyButton,
   },
   props: {
     view: {
@@ -49,22 +54,11 @@ export default {
     }
   },
   methods: {
+    clickButton(operation) {
+      operation.triggerClick(this)
+    },
     validateAll() {
-      let formValidate = new Promise((resolve, reject) => {
-        setTimeout(() => {
-          if(!this.$refs.form) {
-            return resolve()
-          }
-          this.$refs.form.validate((valid) => {
-            // if (valid && this.formModel) {
-            if (valid) {
-              resolve();
-            } else {
-              reject(false);
-            }
-          });
-        })
-      });
+      let formValidate = this.$refs.form.validate()
       if(!this.$refs.subforms) {
         return formValidate
       }
@@ -75,18 +69,7 @@ export default {
       return Promise.all(promises)
     },
     validateThisForm() {
-      let formValidate = new Promise((resolve, reject) => {
-        setTimeout(() => {
-          this.$refs.form.validate((valid) => {
-            // if (valid && this.formModel) {
-            if (valid) {
-              resolve();
-            } else {
-              reject(false);
-            }
-          });
-        })
-      });
+      let formValidate = this.$refs.form.validate()
       return formValidate
     },
     resetForm() {

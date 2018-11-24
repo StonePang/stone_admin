@@ -1,11 +1,8 @@
 <template>
   <div class='form-wrap'>
-    <!-- <el-button class='opration-top' @click='validateTest'>validate</el-button>
-    <el-button class='opration-top' @click='resetForm'>resetForm</el-button>
-    <el-button class='opration-top' @click='changeRenderType'>rendertype</el-button> -->
-    <template v-for='operation in operations'>
+    <!-- <template v-for='operation in operations'>
       <my-button v-if='operation.isShow' :operation='operation' :key='operation.id' @click='clickButton'/>
-    </template>
+    </template> -->
     <p class='form-title'>{{view.title}}</p>
     <el-form :model="formModel" ref='form' class='form-content' show-message label-width="100px" validate-on-rule-change style='width: 1200px'>
       <el-row :gutter='gutter'>
@@ -100,11 +97,12 @@ export default {
     validate() {
       let formValidate = new Promise((resolve, reject) => {
         setTimeout(() => {
-          this.$refs.form.validate((valid) => {
-            if (valid && this.formModel) {
-              resolve();
+          this.$refs.form.validate((valid, msg) => {
+            if (valid) {
+              resolve(valid);
             } else {
-              reject(false);
+              let title = this.view.title
+              reject(`表单--(${title})--校验未通过`, msg);
             }
           });
         })

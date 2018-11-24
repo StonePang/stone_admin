@@ -42,16 +42,16 @@ export default {
       columnDataMap.date,
     ],
     viewRuleData: [
-      // viewRuleDataMap['4'],
+      viewRuleDataMap['2'],
       // viewRuleDataMap['7'],
     ],
     operationData: [
-        operationdataMap['2'],
-        operationdataMap['3'],
-      ],
-      operationRuleData: [
-        operationRuleDataMap['2']
-      ],
+      operationdataMap['2'],
+      operationdataMap['3'],
+    ],
+    operationRuleData: [
+      operationRuleDataMap['2']
+    ],
   }, 
   {
     id: 3,
@@ -66,9 +66,12 @@ export default {
       columnDataMap.checkbox,
       columnDataMap.datetime,
     ],
+    operationData: [
+      operationdataMap['4'],
+    ],
     viewRuleData: [
       // viewRuleData['1'],
-      // viewRuleData['2'],
+      // viewRuleDataMap['2'],
     ],
     // subView: []
   }

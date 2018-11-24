@@ -1,8 +1,8 @@
 <template>
   <div>
-    <template v-for='operation in operations'>
+    <!-- <template v-for='operation in operations'>
       <my-button v-if='operation.isShow' :operation='operation' :key='operation.id' @click='clickButton'/>
-    </template>
+    </template> -->
     <p class='form-title'>{{view.title}}</p>
     <el-form  label-position="left" label-width="0" class='form-content' :model="{formModel:view.formModel}" ref='form' show-message validate-on-rule-change	>
       <!-- 表格主体 -->
@@ -152,17 +152,16 @@ export default {
     validate() {
       //form table均会校验
       return new Promise((resolve, reject) => {
-        this.$refs.form.validate((valid) => {
+        this.$refs.form.validate((valid, msg) => {
           setTimeout(() =>{
-            if (valid && this.formModel) {
-              let result = {}
-              result[this.formData.formName] = this.formModel
-              // console.log('step form result ', result)
-              resolve(result);
+            if (valid) {
+              // let result = {}
+              // result[this.formData.formName] = this.formModel
+              resolve(valid);
             } else {
               // console.log('error', this.formData)
               let title = this.view.title
-              reject(`批量表单--(${title})--校验未通过`);
+              reject(`批量表单--(${title})--校验未通过`, msg);
             }
           });
         });

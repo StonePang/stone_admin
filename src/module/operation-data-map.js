@@ -51,6 +51,21 @@ export default {
     isValidate: false,
     isApi: false,
     api: true,
+  },
+  4: {
+    id: 4,
+    isShow: true,
+    label: '批量表按钮',
+    code: 'test-4',
+    disabled: false,
+    loading: false,
+    displayType: 'primary',
+    size: 'small',
+    isValidate: true,
+    isValidateAll: false,
+    isApi: false,
+    api: true,
   }
+
 
 }

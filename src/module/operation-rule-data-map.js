@@ -4,9 +4,10 @@ export default {
     affectItems: ['subForm'],
     targetViewCode: 'mainForm',
     operationId: 1,
-    affectType: 'subView',
+    affectType: 'view',
     type: 'disabled',
     sort: 1,
+    isViewSelf: false,
     isTriggerNow: false,
     isTriggerOnce: true,
     conditionType: 'or',
@@ -22,11 +23,11 @@ export default {
     conditions: [
       {
         bindColumnCode: 'select',
-        bindItemType: 'column',
+        // bindItemType: 'column',
         targetViewCode: 'mainForm',
         conditionType: 3,
         conditionValue: 'value_1',
-        isClickResultNow: true,
+        // isClickResultNow: true,
       }
     ]
   },
