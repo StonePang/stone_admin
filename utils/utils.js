@@ -4,6 +4,9 @@ export default {
   isArray(arg) {
     return _.isArray(arg)
   },
+  isObject(arg) {
+    return _.isObject(arg)
+  },
   isEmptyArray(arg) {
     return _.isEmpty(arg) && _.isArray(arg)
   },
@@ -39,6 +42,9 @@ export default {
   },
   mapKeys(object, callback) {
     return _.mapKeys(object, callback)
+  },
+  mapValues(object, callback) {
+    return _.mapValues(object, callback)
   },
   cloneDeep(object) {
     return _.cloneDeep(object)

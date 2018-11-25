@@ -26,6 +26,7 @@ class ValueRule {
       select: this.handlerDict.bind(this),
       radio: this.handlerDict.bind(this),
       checkbox: this.handlerDict.bind(this),
+      switch: this.handlerSwitch.bind(this),
       date: this.handlerDate.bind(this),
       datetime: this.handlerDate.bind(this),
       year: this.handlerDate.bind(this),
@@ -107,6 +108,13 @@ class ValueRule {
     }
     let showValue = oneLabel(value)
     return showValue.join(',')
+  }
+
+  handlerSwitch() {
+    if(!this.value) {
+      return '否'
+    }
+    return '是'
   }
 
   handlerDate(type) {

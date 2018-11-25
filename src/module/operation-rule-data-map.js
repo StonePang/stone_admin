@@ -5,15 +5,16 @@ export default {
     targetViewCode: 'mainForm',
     operationId: 1,
     affectType: 'view',
-    type: 'disabled',
+    type: 'changeRender',
     sort: 1,
     isViewSelf: false,
     isTriggerNow: false,
-    isTriggerOnce: true,
+    isTriggerOnce: false,
     conditionType: 'or',
     changeValue: ['value_3'],
     changeRender: 'table',
     isClear: false,
+    isToogle: true,
     desc: 'datetime隐藏<--input && select',
     // customHandler: (view, result) => {
     //   if(result) {

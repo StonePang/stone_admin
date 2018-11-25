@@ -149,8 +149,10 @@ class EventHandler {
     } else {
       result = this.triggerAsync(...args)
     }
+    console.log('result', result, this)
     if(this.isTriggerOnce) {
       this.handler = []
+      console.log('isTriggerOnce', this.handler)
     }
     return result
   }

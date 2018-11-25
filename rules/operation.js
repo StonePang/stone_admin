@@ -30,7 +30,35 @@ class Operation {
     // this.registerEvent('update', 'api', this.handlerapi())
   }
 
+  //得到提交数据模型的方法
+  getSubmitModel(formModel) {
+    let res = _.mapKeys(formModel, (value, key) => {
+      let tempArr = key.split(TAG)
+      let newKey = tempArr[tempArr.length - 1]
+      return newKey
+    })
+    let result = _.mapValues(res, (value, key) => {
+      let newValue
+      if(_.isArray(value)) {
+        newValue = value.map(ele => {
+          if (_.isObject(ele)) {
+            return this.getSubmitModel(ele)
+          }
+          return ele
+        })
+      }else if(_.isObject(value)) {
+        newValue = this.getSubmitModel(value)
+      }else {
+        newValue = value
+      }
+      return newValue
+    })
+    return result
+  }
+
   triggerClick(vm) {
+    let submitModel = this.getSubmitModel(this.view.formModel)
+    this.view.submitModel = submitModel
     console.log('trigger click', vm)
     this.vm = vm
     this.triggerEvent(vm)

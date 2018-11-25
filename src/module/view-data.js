@@ -40,6 +40,7 @@ export default {
     columnData: [
       columnDataMap.textarea,
       columnDataMap.date,
+      columnDataMap.switch,
     ],
     viewRuleData: [
       viewRuleDataMap['2'],

@@ -130,5 +130,18 @@ export default {
     isFull: false,
     isShow: true,
     rules: []
+  },
+  switch: {
+    id: 43,
+    desc: 'switch',
+    type: "switch",
+    code: "switch",
+    label: "switch",
+    placeholder: "switch",
+    disabled: false,
+    required: true,
+    isFull: false,
+    isShow: true,
+    rules: []
   }
 }

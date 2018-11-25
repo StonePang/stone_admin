@@ -6,6 +6,7 @@ export default {
   subForm: {
     textarea: 'gua',
     date: null,
+    switch: null,
   },
   batchForm: [{
     input: null,

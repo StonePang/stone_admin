@@ -108,6 +108,11 @@ export default {
         config.props.resize = 'none'
         config.props.clearable = true
         config.on.input = this.onInput
+      } else if (this.type === 'switch') {
+        config.props.activeColor = '#13ce66'
+        config.props.inactiveColor = '#ff4949'
+        config.props.activeText = '是'
+        config.props.inactiveText = '否'
       } else {
         config.props.type = 'text'
         config.props.clearable = true
@@ -140,6 +145,9 @@ export default {
     }
     if(this.type === 'input') {
       return (<el-input {...config} placeholder={config.props.placeholder}></el-input>)
+    }
+    if(this.type === 'switch') {
+      return (<el-switch {...config}/>)
     }
     return (<el-input {...config} placeholder={config.props.placeholder}></el-input>)
   }
