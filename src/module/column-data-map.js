@@ -9,18 +9,19 @@ export default {
     disabled: false,
     isFull: false,
     isShow: true,
-    required: false,
-    rules: [{
-        ruleType: "length",
-        min: 2,
-        max: 13
-      },
-      // {
-        // ruleType: "custom",
-        // reg: /(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/,
-        // message: "手机号码格式不正确"
-      // }
-    ]
+    required: true,
+    // rules: [
+    //   {
+    //     ruleType: "length",
+    //     min: 2,
+    //     max: 13
+    //   },
+    //   // {
+    //     // ruleType: "custom",
+    //     // reg: /(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/,
+    //     // message: "手机号码格式不正确"
+    //   // }
+    // ]
   },
   select: {
     id: 2,

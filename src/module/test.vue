@@ -21,9 +21,11 @@ import BatchForm from "~form/batch-form";
 import FormAdapt from "~form/form-adapt";
 import View from "~rules/view";
 import BatchView from "~rules/batch-view";
-import viewData from './view-data'
+import viewData from '~admin/column/view-data'
+// import viewData from './view-data'
 import columnDataMap from './column-data-map'
-import formModelData from './form-model-data'
+// import formModelData from './form-model-data'
+import formModelData from '~admin/column/form-model'
 import viewRuleData from './viewRule-data-map'
 
 export default {

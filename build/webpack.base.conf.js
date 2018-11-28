@@ -32,6 +32,7 @@ module.exports = {
       '~input': resolve('src/components/input-components'),
       '~form': resolve('src/components/form-components'),
       '~common': resolve('src/components/common-components'),
+      '~admin': resolve('src/admin'),
       '~rules': resolve('rules'),
     }
   },
