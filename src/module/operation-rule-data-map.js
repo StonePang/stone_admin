@@ -13,6 +13,7 @@ export default {
     conditionType: 'or',
     changeValue: ['value_3'],
     changeRender: 'table',
+    changeType: null,
     isClear: false,
     isToogle: true,
     desc: 'datetime隐藏<--input && select',

@@ -27,6 +27,7 @@ class ViewRuleHandlerColumn extends ViewRuleHandler {
       clear: this.handlerClear.bind(this),
       changeValue: this.handlerChangeValue.bind(this),
       changeRender: this.handlerChangeRender.bind(this),
+      changeType: this.handlerChangeType.bind(this),
     }
   }
 
@@ -165,8 +166,19 @@ class ViewRuleHandlerColumn extends ViewRuleHandler {
       } else {
         let renderType = this.changeRender === 'form' ? 'table' : 'form'
         this.columnHandler(column, 'renderType', renderType)
-
       }
+    })
+  }
+
+  handlerChangeType(result) {
+    this.handlerEachAffectItem(column => {
+      let changeType = this.changeType
+      let oldType = column.type
+      if (result && changeType !== oldType) {
+        this.columnHandler(column, 'type', changeType)
+        //改变column.type以后强制清空值
+        this.columnHandler(column, 'changeColumnValue', null)
+      } 
     })
   }
 }

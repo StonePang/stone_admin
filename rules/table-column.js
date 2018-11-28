@@ -116,9 +116,18 @@ class TableColumn {
     }
     let renderTypeHandler = new EventHandler(renderTypeData)
 
+    let colummnTypeData = {
+      name: `column:${this.code}-type`,
+      sort: 7,
+      isSync: true,
+      isTriggerNow: true,
+      isTriggerOnce: false,
+    }
+    let colummnTypeHandler = new EventHandler(colummnTypeData)
+
     let changeColumnValueData = {
       name: `column:${this.code}-changeColumnValue`,
-      sort: 7,
+      sort: 8,
       isSync: true,
       isTriggerNow: true,
       isTriggerOnce: false,
@@ -147,6 +156,7 @@ class TableColumn {
     eventBusEventHandler.addHandler(isShowHandler)
     eventBusEventHandler.addHandler(renderTypeHandler)
     eventBusEventHandler.addHandler(changeColumnValueHandler)
+    eventBusEventHandler.addHandler(colummnTypeHandler)
     eventBusEventHandler.addHandler(viewRuleEventHandler)
     eventBusEventHandler.addHandler(this.customHandler)
     this.eventBus = eventBusEventHandler
@@ -174,6 +184,13 @@ class TableColumn {
       })
     }
   }
+  columnTypeHandler() {
+    return () => {
+      this.proxyColumns.forEach(column => {
+        column.type = this.type
+      })
+    }
+  }
   changeColumnValueHandler() {
     return () => {
       let value = _.defaultValue(this.value, null)
@@ -192,6 +209,7 @@ class TableColumn {
       isShow: true,
       renderType: true,
       changeColumnValue: false,
+      type: true,
     }
     let handlers = this.eventBus.handler.filter(handler => {
       let name = handler.name.split('-')[1]
@@ -260,7 +278,8 @@ class TableColumn {
       disabled: true,
       isShow: true,
       renderType: true,
-      changeColumnValue: true
+      changeColumnValue: true,
+      type: true,
     }
     proxyColumns = _.isArray(proxyColumns) ? proxyColumns : [proxyColumns]
     proxyColumns.forEach(proxyColumn => {

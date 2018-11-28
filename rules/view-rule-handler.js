@@ -17,6 +17,7 @@ class ViewRuleHandler {
     this.isToogle = _.defaultValue(viewRuleData.isToogle, false)
     this.changeValue = viewRuleData.changeValue
     this.changeRender = viewRuleData.changeRender
+    this.changeType = viewRuleData.changeType || null
     this.targetViewProp = String(viewRuleData.targetViewCode).split(DEVIDE).map(e => {
       return `V${TAG}${e}`
     }).join(DEVIDE)

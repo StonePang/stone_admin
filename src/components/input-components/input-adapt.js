@@ -117,6 +117,9 @@ export default {
         config.props.type = 'text'
         config.props.clearable = true
         config.on.input = this.onInput
+        if(this.type !== 'input') {
+          console.warn(`字段(${this.column.code})的渲染类型(${this.type})不存在，渲染为默认的input`)
+        }
       }
       return config
     },
