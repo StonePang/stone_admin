@@ -111,7 +111,10 @@ class ViewRule {
         console.log(this, `视图条件结果--->>>${result}`)
         //有自定义进行自定义函数
         if (this.customHandler) {
-          this.customHandler(this.viewRuleHandler.affectItems, result)
+          let bindColumnValues = this.conditions.map(condition => {
+            return condition.bindColumnValue
+          })
+          this.customHandler(this.viewRuleHandler.affectItems, result, bindColumnValues)
         }else {
           this.viewRuleHandler.handler(result)
         }

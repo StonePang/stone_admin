@@ -89,7 +89,7 @@ class ViewRuleCondition {
   handlerResult() {
     if (this.customCondition) {
       console.warn(`自定义视图条件的单条条件结果，customCondition(view),返回Promise.resolve(true/false)`, this)
-      return this.customCondition(this.view)
+      return this.customCondition(this.bindColumnValue, this.bindItem, this.view)
     }
     // if(this.bindItemType === 'operation') {
     //   let isClick = this.bindItem.loading

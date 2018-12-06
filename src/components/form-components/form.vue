@@ -4,7 +4,7 @@
       <my-button v-if='operation.isShow' :operation='operation' :key='operation.id' @click='clickButton'/>
     </template> -->
     <p class='form-title'>{{view.title}}</p>
-    <el-form :model="formModel" ref='form' class='form-content' show-message label-width="100px" validate-on-rule-change>
+    <el-form :model="formModel" ref='form' class='form-content' show-message label-width="150px" validate-on-rule-change>
       <el-row :gutter='gutter'>
         <el-col v-for='(item, index) in columns' v-if='item.isShow' :key='index' :span='item.isFull?24:12' :push='0'>
           <el-form-item  :label="item.label + ' : '" :prop='item.columnProp' :rules='item.rules' class='form-item'>
